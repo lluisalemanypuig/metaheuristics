@@ -68,7 +68,7 @@ bool brkga::are_set_sizes_correct() const {
 
 // PUBLIC
 
-brkga::brkga() : genetic_algorithms() {
+brkga::brkga() : genetic_algorithm() {
 	N_ELITE = 0;
 	
 	reset_algorithm();
@@ -80,7 +80,7 @@ brkga::brkga
 	size_t c_size, double in_p,
 	random_number_generator *r
 )
-: genetic_algorithms(ps, mps, n_gen, c_size, in_p, r)
+: genetic_algorithm(ps, mps, n_gen, c_size, in_p, r)
 {
 	N_ELITE = ess;
 	
@@ -116,7 +116,7 @@ bool brkga::execute_algorithm(problem *best, double& current_best_f) {
 		return false;
 	}
 	
-	timing bbegin, bend, send, begin, end;
+	double bbegin, bend, send, begin, end;
 	
 	#ifdef GENETIC_DEBUG
 	cout << "BRKGA - Generating initial population (" << pop_size << ")" << endl;

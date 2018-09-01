@@ -1,11 +1,11 @@
-#include "chromosome.hpp"
+#include <metaheuristics/algorithms/genetic_algorithms/chromosome.hpp>
 
 namespace metaheuristics {
 namespace structures {
 	
 chromosome::chromosome() {
 	n_genes = 0;
-	genes = NULL;
+	genes = nullptr;
 }
 
 chromosome::~chromosome() {
@@ -15,22 +15,23 @@ chromosome::~chromosome() {
 // MEMORY HANDLING
 
 void chromosome::init() {
-	if (n_genes > 0) {
-		genes = (double *)malloc(n_genes*sizeof(double));
-	}
+	assert(n_genes > 0);
+	genes = (double *)malloc(n_genes*sizeof(double));
 }
 
 void chromosome::clear() {
-	if (genes != NULL) {
+	if (genes != nullptr) {
 		n_genes = 0;
 		free(genes);
-		genes = NULL;
+		genes = nullptr;
 	}
 }
 
 // OPERATORS
 
 chromosome& chromosome::operator= (const chromosome& c) {
+	assert(c.n_genes > 0);
+	
 	if (n_genes != c.n_genes) {
 		clear();
 		n_genes = c.n_genes;
@@ -43,10 +44,12 @@ chromosome& chromosome::operator= (const chromosome& c) {
 }
 
 double& chromosome::operator[] (size_t i) {
+	assert(i < n_genes);
 	return genes[i];
 }
 
 const double& chromosome::operator[] (size_t i) const {
+	assert(i < n_genes);
 	return genes[i];
 }
 
@@ -59,9 +62,9 @@ void chromosome::set_size(size_t Ng) {
 // GETTERS
 
 size_t chromosome::size() const {
-	return (genes != NULL ? n_genes : 0);
+	return (genes != nullptr ? n_genes : 0);
 }
 	
-}
-}
+} // -- namespace structures
+} // -- namespace metaheuristics
 

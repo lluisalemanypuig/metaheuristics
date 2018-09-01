@@ -1,4 +1,4 @@
-#include "metaheuristic.hpp"
+#include <metaheuristics/algorithms/metaheuristic.hpp>
 
 namespace metaheuristics {
 namespace algorithms {
@@ -13,5 +13,12 @@ metaheuristic::metaheuristic(random_number_generator *r) {
 metaheuristic::~metaheuristic() {
 }
 
+// MODIFIERS
+
+void metaheuristic::set_rng(random_number_generator *_rng) {
+	rng = _rng;
 }
-}
+
+} // -- namespace algorithms
+} // -- namespace metaheuristics
+

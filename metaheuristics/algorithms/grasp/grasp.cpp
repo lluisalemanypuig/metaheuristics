@@ -1,4 +1,4 @@
-#include "grasp.hpp"
+#include <metaheuristics/algorithms/grasp/grasp.hpp>
 
 namespace metaheuristics {
 namespace algorithms {
@@ -87,7 +87,7 @@ bool grasp::execute_algorithm(problem *best, double& current_best_f) {
 	
 	reset_algorithm();
 	
-	timing bbegin, bend, begin, end;
+	double bbegin, bend, begin, end;
 	
 	local_search ls(MAX_ITER_LOCAL, LSP);
 	current_best_f = -numeric_limits<double>::max();
@@ -182,6 +182,7 @@ bool grasp::execute_algorithm(problem *best, double& current_best_f) {
 			end = now();
 			construct_time += elapsed_time(begin, end);
 			
+			#ifdef GRASP_VERBOSE
 			cout << setw(8)  << "R.C."
 				 << setw(15) << " "
 				 << setw(18) << elapsed_time(bbegin, now())
@@ -193,6 +194,7 @@ bool grasp::execute_algorithm(problem *best, double& current_best_f) {
 				 << setw(18) << elapsed_time(bbegin, now())
 				 << setw(18) << -1
 				 << setw(12) << it << endl;
+			#endif
 		}
 		
 		delete r;
@@ -214,6 +216,6 @@ void grasp::print_performance() const {
 	cout << endl;
 }
 
-}
-}
+} // -- namespace algorithms
+} // -- namespace metaheuristics
 

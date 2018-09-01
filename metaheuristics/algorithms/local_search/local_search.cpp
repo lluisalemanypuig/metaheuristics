@@ -1,4 +1,4 @@
-#include "local_search.hpp"
+#include <metaheuristics/algorithms/local_search/local_search.hpp>
 
 namespace metaheuristics {
 namespace algorithms {
@@ -80,7 +80,7 @@ bool local_search::execute_algorithm(problem *best, double& current_best_f) {
 	     << endl;
 	#endif
 	
-	timing bbegin, bend, begin, end;
+	double bbegin, bend, begin, end;
 	
 	bool improvement = true;
 	
@@ -149,6 +149,6 @@ void local_search::print_performance() const {
 	cout << endl;
 }
 
-}
-}
+} // -- namespace algorithms
+} // -- namespace metaheuristics
 

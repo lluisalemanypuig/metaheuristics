@@ -23,6 +23,15 @@ class metaheuristic {
 		/// Destructor
 		virtual ~metaheuristic();
 		
+		// MODIFIERS
+		
+		/**
+		 * @brief Sets the random number generator.
+		 * 
+		 * The caller is made responsible for freeing this object
+		 */
+		void set_rng(random_number_generator *rng);
+		
 		/**
 		 * @brief Sets the algorithm to its original state
 		 * 
@@ -40,6 +49,6 @@ class metaheuristic {
 		virtual bool execute_algorithm(problem *p, double& c) = 0;
 };
 
-}
-}
+} // -- namespace algorithms
+} // -- namespace metaheuristics
 

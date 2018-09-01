@@ -1,4 +1,4 @@
-#include "genetic_algorithms.hpp"
+#include <metaheuristics/algorithms/genetic_algorithms/genetic_algorithm.hpp>
 
 namespace metaheuristics {
 namespace algorithms {
@@ -7,7 +7,7 @@ namespace algorithms {
 
 // Information display functions
 
-void genetic_algorithms::print_current_population() const {
+void genetic_algorithm::print_current_population() const {
 	cout << "    * Current population:" << endl;
 	for (size_t i = 0; i < pop_size; ++i) {
 		cout << "        " << i << ": " << population[i] << endl;
@@ -17,7 +17,7 @@ void genetic_algorithms::print_current_population() const {
 
 // Algorithm-related functions
 
-void genetic_algorithms::initialize_population(const problem *p) {
+void genetic_algorithm::initialize_population(const problem *p) {
 	for (size_t i = 0; i < pop_size; ++i) {
 		
 		#if GENETIC_DEBUG
@@ -33,7 +33,7 @@ void genetic_algorithms::initialize_population(const problem *p) {
 	}
 }
 
-void genetic_algorithms::generate_mutants(const problem *p, size_t A, size_t B, population_set& next_gen, size_t& m) {
+void genetic_algorithm::generate_mutants(const problem *p, size_t A, size_t B, population_set& next_gen, size_t& m) {
 	for (m = A; m < B; ++m) {
 		generate_mutant(p, next_gen[m]);
 		
@@ -43,7 +43,7 @@ void genetic_algorithms::generate_mutants(const problem *p, size_t A, size_t B, 
 	}
 }
 
-void genetic_algorithms::generate_crossovers(const problem *p, population_set& next_gen, size_t& m) {
+void genetic_algorithm::generate_crossovers(const problem *p, population_set& next_gen, size_t& m) {
 	size_t par1_idx, par2_idx;
 	
 	for (; m < pop_size; ++m) {	
@@ -58,17 +58,18 @@ void genetic_algorithms::generate_crossovers(const problem *p, population_set& n
 
 // Population-generation functions
 
-void genetic_algorithms::evaluate_individual(const problem *p, individual& i) const {
+void genetic_algorithm::evaluate_individual(const problem *p, individual& i) const {
 	// decode chromosome into a solution
 	problem *copy = p->clone();
 	
 	try {
+		// decode the chromosome into a solution of the problem
 		double F = copy->decode(i.get_chromosome());
 		
 		#ifdef GENETIC_DEBUG
 		bool sane = copy->sanity_check();
 		if (not sane) {
-			cerr << "void genetic_algorithms::evaluate_individual:" << endl;
+			cerr << "void genetic_algorithm::evaluate_individual:" << endl;
 			cerr << "    Decoded solution from chromosome is not sane" << endl;
 		}
 		#endif
@@ -88,7 +89,7 @@ void genetic_algorithms::evaluate_individual(const problem *p, individual& i) co
 	}
 }
 
-void genetic_algorithms::generate_mutant(const problem *p, individual& i) {
+void genetic_algorithm::generate_mutant(const problem *p, individual& i) {
 	// generate chromosome
 	rng->get_n_rand(&i.get_chromosome()[0], i.get_chromosome().size());
 	
@@ -96,7 +97,7 @@ void genetic_algorithms::generate_mutant(const problem *p, individual& i) {
 	evaluate_individual(p, i);
 }
 
-void genetic_algorithms::crossover(const problem *p, size_t par1_idx, size_t par2_idx, individual& son) {
+void genetic_algorithm::crossover(const problem *p, size_t par1_idx, size_t par2_idx, individual& son) {
 	const individual& parent1 = population[par1_idx];
 	const individual& parent2 = population[par2_idx];
 	
@@ -115,7 +116,7 @@ void genetic_algorithms::crossover(const problem *p, size_t par1_idx, size_t par
 
 // PUBLIC
 
-genetic_algorithms::genetic_algorithms() : metaheuristic() {
+genetic_algorithm::genetic_algorithms() : metaheuristic() {
 	pop_size = 0;
 	N_MUTANT = 0;
 	N_GEN = 0;
@@ -125,7 +126,7 @@ genetic_algorithms::genetic_algorithms() : metaheuristic() {
 	reset_algorithm();
 }
 
-genetic_algorithms::genetic_algorithms
+genetic_algorithm::genetic_algorithms
 (
 	size_t ps, size_t mps, size_t n_gen,
 	size_t c_size, double in_p,
@@ -142,20 +143,16 @@ genetic_algorithms::genetic_algorithms
 	reset_algorithm();
 }
 
-genetic_algorithms::~genetic_algorithms() { }
+genetic_algorithm::~genetic_algorithms() { }
 
-void genetic_algorithms::set_rng(random_number_generator *_rng) {
-	rng = _rng;
-}
-
-void genetic_algorithms::reset_algorithm() {
+void genetic_algorithm::reset_algorithm() {
 	total_time = 0.0;
 	initial_time = 0.0;
 	crossover_time = 0.0;
 	mutant_time = 0.0;
 }
 
-const individual& genetic_algorithms::get_best_individual() const {
+const individual& genetic_algorithm::get_best_individual() const {
 	double f = -numeric_limits<double>::max();
 	size_t best = 0;
 	
@@ -169,11 +166,12 @@ const individual& genetic_algorithms::get_best_individual() const {
 	return population[best];
 }
 
-const individual& genetic_algorithms::get_individual(size_t i) const {
+const individual& genetic_algorithm::get_individual(size_t i) const {
+	assert(i < pop_size);
 	return population[i];
 }
 
-size_t genetic_algorithms::population_size() const {
+size_t genetic_algorithm::population_size() const {
 	return population.size();
 }
 

@@ -1,7 +1,7 @@
 #include <metaheuristics/misc/time.hpp>
 
 namespace metaheuristics {
-namespace timing {
+namespace double {
 
 	double now() {
 		struct timeval tim;
@@ -15,6 +15,6 @@ namespace timing {
 		return (end - begin >= 0.0 ? end - begin : 0.0);
 	}
 
-} // -- namespace timing
+} // -- namespace double
 } // -- namespace metaheuristics
 

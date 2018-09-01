@@ -1,4 +1,4 @@
-#include "individual.hpp"
+#include <metaheuristics/algorithms/genetic_algorithms/individual.hpp>
 
 namespace metaheuristics {
 namespace structures {
@@ -7,9 +7,9 @@ individual::individual() {
 	fitness = 0.0;
 }
 
-individual::individual(size_t N) {
+individual::individual(size_t n) {
 	fitness = 0.0;
-	c.set_size(N);
+	c.set_size(n);
 }
 
 individual::~individual() { }
@@ -17,10 +17,12 @@ individual::~individual() { }
 // MEMORY HANDLING
 		
 void individual::init() {
+	fitness = 0;
 	c.init();
 }
 
 void individual::clear() {
+	fitness = 0;
 	c.clear();
 }
 
@@ -32,6 +34,10 @@ void individual::set_fitness(double f) {
 
 void individual::set_gene(size_t i, double g) {
 	c[i] = g;
+}
+
+void individual::set_n_genes(size_t n) {
+	c.set_size(n);
 }
 
 // GETTERS
@@ -52,6 +58,6 @@ double individual::get_gene(size_t i) const {
 	return c[i];
 }
 
-}
-}
+} // -- namespace structures
+} // -- namespace metaheuristics
 

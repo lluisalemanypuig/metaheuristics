@@ -12,12 +12,12 @@ using namespace std;
 using namespace std;
 
 // Custom includes
-#include "random/random_number_generator.hpp"
-#include "algorithms/genetic_algorithms/genetic_algorithms.hpp"
-#include "algorithms/genetic_algorithms/chromosome.hpp"
-#include "algorithms/genetic_algorithms/individual.hpp"
-#include "algorithms/problem.hpp"
-#include "misc/timing.hpp"
+#include <metaheuristics/random/random_number_generator.hpp>
+#include <metaheuristics/algorithms/genetic_algorithms/genetic_algorithm.hpp>
+#include <metaheuristics/algorithms/genetic_algorithms/chromosome.hpp>
+#include <metaheuristics/algorithms/genetic_algorithms/individual.hpp>
+#include <metaheuristics/algorithms/problem.hpp>
+#include <metaheuristics/misc/time.hpp>
 
 namespace metaheuristics {
 namespace algorithms {

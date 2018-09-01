@@ -59,7 +59,7 @@ class problem {
 		 * @brief Constructs an empty solution
 		 * 
 		 * Must copy, at least, the reference to the random number
-		 * generator through the @ref copy_problem() function.
+		 * generator through the @ref copy() function.
 		 */
 		virtual problem *empty() const = 0;
 		
@@ -103,7 +103,8 @@ class problem {
 			cost <= min_cost + alpha*(max_cost - min_cost)
 		 \endverbatim
 		 * 
-		 * @param[in] 
+		 * @param[in] rng The random number generator
+		 * @param[in] alpha Parameter used to build the Restricted Candidate List.
 		 * @returns Returns the evaluation of the solution
 		 */
 		virtual double random_construct(random_generator *rng, double alpha) throw(infeasible_exception) = 0;
@@ -155,8 +156,11 @@ class problem {
 		/**
 		 * @brief Clears the memory used by the instance of this problem.
 		 * 
-		 * @post Everything is reset so that the method @ref construct()
+		 * @post Everything is reset so that any of the constructive methods
 		 * would create a solution to the problem if it were to be called.
+		 * 
+		 * The constructive methods are @ref greedy_construct() and
+		 * @ref random_construct().
 		 */
 		virtual void clear() = 0;
 		

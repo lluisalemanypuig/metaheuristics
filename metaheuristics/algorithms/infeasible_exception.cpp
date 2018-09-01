@@ -1,4 +1,4 @@
-#include "infeasible_exception.hpp"
+#include <metaheuristics/algorithms/infeasible_exception.hpp>
 
 namespace metaheuristics {
 namespace structures {
@@ -17,6 +17,6 @@ const char* infeasible_exception::what() const throw() {
 	return message.c_str();
 }
 	
-}
-}
+} // -- namespace structures
+} // -- namespace metaheuristics
 

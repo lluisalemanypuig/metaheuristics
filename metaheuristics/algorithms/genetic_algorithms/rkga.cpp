@@ -1,4 +1,4 @@
-#include "rkga.hpp"
+#include <metaheuristics/algorithms/genetic_algorithms/rkga.hpp>
 
 namespace metaheuristics {
 namespace algorithms {
@@ -28,9 +28,7 @@ bool rkga::are_set_sizes_correct() const {
 
 // PUBLIC
 
-rkga::rkga() : genetic_algorithms() {
-	
-}
+rkga::rkga() : genetic_algorithm() { }
 
 rkga::rkga
 (
@@ -38,7 +36,7 @@ rkga::rkga
 	size_t c_size, double in_p,
 	random_number_generator *r
 )
-: genetic_algorithms(ps, mps, n_gen, c_size, in_p, r)
+: genetic_algorithm(ps, mps, n_gen, c_size, in_p, r)
 {
 }
 
@@ -60,7 +58,7 @@ bool rkga::execute_algorithm(problem *best, double& current_best_f) {
 	
 	reset_algorithm();
 	
-	timing bbegin, bend, send, begin, end;
+	double bbegin, bend, send, begin, end;
 	
 	#ifdef GENETIC_DEBUG
 	cout << "RKGA - Generating initial population (" << pop_size << ")" << endl;
