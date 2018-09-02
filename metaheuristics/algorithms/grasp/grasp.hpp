@@ -15,7 +15,7 @@ namespace metaheuristics {
 namespace algorithms {
 
 /**
- * @brief GRASP metaheuristic algorithm
+ * @brief GRASP metaheuristic algorithm.
  * 
  * Implementation of the Greedy Randomised Adaptative-Search Procedure.
  * 
@@ -41,58 +41,58 @@ namespace algorithms {
  */
 class grasp : public metaheuristic {
 	private:
-		/// Total execution time of the algorithm
+		/// Total execution time of the algorithm.
 		double total_time;
 		/// Total execution time spent in constructing the initial
 		/// randomised solution.
 		double construct_time;
-		/// Total execution time spent in the Local Search
+		/// Total execution time spent in the Local Search.
 		double local_search_time;
 		
-		/// Maximum number of iterations of the GRASP algorithm
+		/// Maximum number of iterations of the GRASP algorithm.
 		size_t MAX_ITER_GRASP;
-		/// Maximum number of iterations of the Local Search procedure
+		/// Maximum number of iterations of the Local Search procedure.
 		size_t MAX_ITER_LOCAL;
-		/// Parameter used to construct the Restricted Candidate List
+		/// Parameter used to construct the Restricted Candidate List.
 		double alpha;
-		/// Policy for the Local Search procedure
+		/// Policy for the Local Search procedure.
 		local_search_policy LSP;
 		
 	public:
-		/// Default constructor
+		/// Default constructor.
 		grasp();
-		/// Constructor with several parameters
+		/// Constructor with several parameters.
 		grasp
 		(
 			size_t m_GRASP, size_t m_LOCAL, double a,
 			const local_search_policy& lsp,
 			random_number_generator *rng
 		);
-		/// Destructor
+		/// Destructor.
 		~grasp();
 		
 		// SETTERS
 		
 		/**
-		 * @brief Sets the policy for the Local Search procedure
+		 * @brief Sets the policy for the Local Search procedure.
 		 * 
 		 * Sets the value of @ref LSP to @e lsp.
 		 */
 		void set_local_search_policy(const local_search_policy& lsp); 
 		/**
-		 * @brief Sets the maximum number of iterations of the GRASP algorithm
+		 * @brief Sets the maximum number of iterations of the GRASP algorithm.
 		 * 
 		 * Sets the value of @ref MAX_ITER_GRAPS to @e max.
 		 */
 		void set_max_iterations_grasp(size_t max);
 		/**
-		 * @brief Sets the maximum number of iterations of the Local Search procedure
+		 * @brief Sets the maximum number of iterations of the Local Search procedure.
 		 * 
 		 * Sets the value of @ref MAX_ITER_LOCAL to @e max.
 		 */
 		void set_max_iterations_local(size_t max);
 		/**
-		 * @brief Resets the algorithm to its initial state
+		 * @brief Resets the algorithm to its initial state.
 		 * 
 		 * Sets to 0 the internal variables @ref total_time, @ref construct_time,
 		 * @ref local_search_time.
@@ -105,42 +105,42 @@ class grasp : public metaheuristic {
 		// GETTERS
 		
 		/**
-		 * @brief Returns the total execution time of the algorithm
+		 * @brief Returns the total execution time of the algorithm.
 		 * @returns Returns the value that @ref total_time has at
-		 * the end of the execution of @ref execute_algorithm()
+		 * the end of the execution of @ref execute_algorithm().
 		 */
 		double get_total_time() const;
 		/**
-		 * @brief Returns the total time needed for the construction of random solutions
+		 * @brief Returns the total time needed for the construction of random solutions.
 		 * @returns Returns the value that @ref construct_time has at
-		 * the end of the execution of @ref execute_algorithm()
+		 * the end of the execution of @ref execute_algorithm().
 		 */
 		double get_construct_time() const;
 		/**
-		 * @brief Returns the total time spent in the Local Search procedure
+		 * @brief Returns the total time spent in the Local Search procedure.
 		 * @returns Returns the value that @ref local_search_time has at
-		 * the end of the execution of @ref execute_algorithm()
+		 * the end of the execution of @ref execute_algorithm().
 		 */
 		double get_local_search_time() const;
 		
 		/**
-		 * @brief Returns the policy of the search
-		 * @returns Returns the value of @ref LSP
+		 * @brief Returns the policy of the search.
+		 * @returns Returns the value of @ref LSP.
 		 */
 		local_search_policy get_local_search_policy() const;
 		/**
-		 * @brief Returns the maximum number of iterations of the GRASP algorithm
-		 * @returns Returns the value of @ref MAX_ITER_GRAPS
+		 * @brief Returns the maximum number of iterations of the GRASP algorithm.
+		 * @returns Returns the value of @ref MAX_ITER_GRASP.
 		 */
 		size_t get_max_iterations_grasp() const;
 		/**
-		 * @brief Returns the maximum number of iterations of the Local Search procedure
-		 * @returns Returns the value of @ref MAX_ITER_LOCAL
+		 * @brief Returns the maximum number of iterations of the Local Search procedure.
+		 * @returns Returns the value of @ref MAX_ITER_LOCAL.
 		 */
 		size_t get_max_iterations_local() const;
 		
 		/**
-		 * @brief Execute the GRASP algorithm
+		 * @brief Execute the GRASP algorithm.
 		 * 
 		 * GRASP stands for Greedy Randomised Adaptative-Search Procedure.
 		 * 
@@ -165,16 +165,15 @@ class grasp : public metaheuristic {
 		 * 
 		 * @param[in] p The instance of the problem.
 		 * @param[in] c The cost of the instance p at the beginning of
-		 * the execution
+		 * the execution.
 		 * @param[out] p Whence the algorithm has finished p contains
-		 * an improved solution to the problem
-		 * 
-		 * @pre The method @ref reset_algorithm does not need to be called
+		 * an improved solution to the problem.
+		 * @pre The method @ref reset_algorithm does not need to be called.
 		 */
 		bool execute_algorithm(problem *p, double& c);
 		
 		/**
-		 * @brief Prints a summary of the performance of the algorithm
+		 * @brief Prints a summary of the performance of the algorithm.
 		 * 
 		 * Prints to standard output a message with the following format:
 		\verbatim

@@ -7,22 +7,27 @@ using namespace std;
 
 namespace metaheuristics {
 namespace structures {
-
-/// Exception 
+ 
+/**
+ * @brief Infeasibility cxception
+ * 
+ * This exception is used in those cases in which a solution
+ * is infeasible.
+ */
 class infeasible_exception : public exception {
 	protected:
-		/// The message of the exception
+		/// The message of the exception.
 		string message;
 		
 	public:
-		/// Default constructor
+		/// Default constructor.
 		infeasible_exception();
-		/// Constructor with message
+		/// Constructor with message.
 		infeasible_exception(const string& msg);
-		/// Destructor
+		/// Destructor.
 		~infeasible_exception() throw();
 		
-		/// Returns the message of the exception
+		/// Returns the message of the exception.
 		virtual const char* what() const throw();
 };
 

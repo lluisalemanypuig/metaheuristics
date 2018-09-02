@@ -84,37 +84,37 @@ class allocator_individual {
 };
 
 /**
- * @brief Definition of individual
+ * @brief Definition of individual.
  * 
  * An individual (in the context of genetic algorithms) is a chromosome
  * (see @ref c) and its value of fitness (see @ref fitness).
  */
 class individual {
 	private:
-		/// The chromosome of the individual
+		/// The chromosome of the individual.
 		chromosome c;
-		/// The fitness of the individual
+		/// The fitness of the individual.
 		double fitness;
 	
 	public:
-		/// Default constructor
+		/// Default constructor.
 		individual();
 		/**
-		 * @brief Constructor with number of genes
+		 * @brief Constructor with number of genes.
 		 * @param n Number of genes of chromosome @ref c.
 		 */
 		individual(size_t n);
-		/// Destructor
+		/// Destructor.
 		~individual();
 		
 		// MEMORY HANDLING
 		
 		/**
-		 * @brief Initialises the individual
+		 * @brief Initialises the individual.
 		 * 
 		 * Allocates the necessary for the chromosome.
 		 * Sets @ref fitness to 0.
-		 * @pre The same preconditions as @ref chromosome::init()
+		 * @pre The same preconditions as @ref chromosome::init().
 		 */
 		void init();
 		/**
@@ -127,7 +127,7 @@ class individual {
 		
 		// OPERATORS
 		
-		/// Operator <<
+		/// Operator <<.
 		inline friend
 		ostream& operator<< (ostream& os, const individual& i) {
 			os << "fitness= " << i.fitness << ", chromosome= " << i.c;
@@ -137,39 +137,39 @@ class individual {
 		// SETTERS
 		
 		/**
-		 * @brief Sets the fitness of this individual
+		 * @brief Sets the fitness of this individual.
 		 * 
 		 * Sets the value of @ref fitness to @e f.
 		 */
 		void set_fitness(double f);
 		/**
-		 * @brief Sets the value of the i-th gene of this individual
+		 * @brief Sets the value of the i-th gene of this individual.
 		 * 
-		 * Sets the i-th value of @ref chromosome::genes to @e g
+		 * Sets the i-th value of @ref chromosome::genes to @e g.
 		 */
 		void set_gene(size_t i, double g);
 		/**
-		 * @brief Sets the number of genes of this individual's chromosome
+		 * @brief Sets the number of genes of this individual's chromosome.
 		 * 
-		 * Sets the value of @ref chromosome::n_genes to @e n
+		 * Sets the value of @ref chromosome::n_genes to @e n.
 		 */
 		void set_n_genes(size_t n);
 		
 		// GETTERS
 		
-		/// Returns a non-constant refernce of @ref c
+		/// Returns a non-constant refernce of @ref c.
 		chromosome& get_chromosome();
-		/// Returns a constant refernce of @ref c
+		/// Returns a constant refernce of @ref c.
 		const chromosome& get_chromosome() const;
 		
 		/**
-		 * @brief Returns the fitness of this individual
-		 * @returns Returns the value of @ref fitness
+		 * @brief Returns the fitness of this individual.
+		 * @returns Returns the value of @ref fitness.
 		 */
 		double get_fitness() const;
 		/**
-		 * @brief Returns the i-th gene of this individual
-		 * @returns Returns the i-th value of @ref chromosome::genes
+		 * @brief Returns the i-th gene of this individual.
+		 * @returns Returns the i-th value of @ref chromosome::genes.
 		 */
 		double get_gene(size_t i) const;
 };

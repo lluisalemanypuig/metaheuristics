@@ -70,6 +70,6 @@ class brkga : public genetic_algorithms {
 		void print_performance() const;
 };
 
-}
-}
+} // -- namespace algorithms
+} // -- namespace metaheuristics
 

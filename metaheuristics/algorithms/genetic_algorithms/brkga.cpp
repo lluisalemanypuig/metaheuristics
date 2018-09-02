@@ -255,6 +255,6 @@ void brkga::print_performance() const {
 	cout << endl;
 }
 
-}
-}
+} // -- namespace algorithms
+} // -- namespace metaheuristics
 

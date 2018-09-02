@@ -15,7 +15,7 @@ namespace structures {
 using namespace random;
 
 /**
- * @brief Local Search Policy
+ * @brief Local Search Policy.
  * 
  * Policies when finding better solutions in the neighbourhood of
  * a problem:
@@ -29,7 +29,7 @@ enum local_search_policy {
 };
 
 /**
- * @brief Definition of the problem to be solved
+ * @brief Definition of the problem to be solved.
  * 
  * This interface defines several functions to handle a problem's
  * solution.
@@ -41,22 +41,21 @@ enum local_search_policy {
 class problem {
 	protected:
 		/**
-		 * @brief Number of neighbours explored in the 
-		 * @ref best_neighbour(pair<problem*, double>&, const local_search_policy&)
-		 * function.
+		 * @brief Number of neighbours explored in the execution of
+		 * the procedure.
 		 */
 		size_t n_neighbours_explored;
 	
 	public:
-		/// Default constructor
+		/// Default constructor.
 		problem();
-		/// Destructor
+		/// Destructor.
 		virtual ~problem();
 		
 		// Constructing a solution
 		
 		/**
-		 * @brief Constructs an empty solution
+		 * @brief Constructs an empty solution.
 		 * 
 		 * Must copy, at least, the reference to the random number
 		 * generator through the @ref copy() function.
@@ -74,7 +73,7 @@ class problem {
 		virtual double greedy_construct() throw(infeasible_exception) = 0;
 		
 		/**
-		 * @brief Find the best neighbour of this problem
+		 * @brief Find the best neighbour of this problem.
 		 * 
 		 * Explores this solution's neighbourhood and stores:
 		 * - the best neighbour if BI is true (best improvement)
@@ -83,7 +82,7 @@ class problem {
 		 * The best neighbour is the solution that maximises the
 		 * @ref evaluate() function.
 		 * 
-		 * @param[out] best_neighbour The best neighbour of this problem
+		 * @param[out] best_neighbour The best neighbour of this problem.
 		 * @param[in] p The local search policy.
 		 * 
 		 * @post Sets @ref n_neighbours_explored to the amounts of
@@ -93,11 +92,11 @@ class problem {
 		
 		/**
 		 * @brief Constructs a randomized solution using the restricted
-		 * candidate list method
+		 * candidate list method.
 		 * 
 		 * The restricted candidate list built in the function must be
 		 * built using the parameter @e alpha (a candidate should be
-		 * in the list only if its cost satisfies
+		 * in the list only if its cost satisfies.
 		 *
 		 \verbatim
 			cost <= min_cost + alpha*(max_cost - min_cost)
@@ -105,20 +104,20 @@ class problem {
 		 * 
 		 * @param[in] rng The random number generator
 		 * @param[in] alpha Parameter used to build the Restricted Candidate List.
-		 * @returns Returns the evaluation of the solution
+		 * @returns Returns the evaluation of the solution.
 		 */
 		virtual double random_construct(random_generator *rng, double alpha) throw(infeasible_exception) = 0;
 		
 		/**
 		 * @brief Constructs a solution from a given chromosome.
-		 * @returns Returns the evaluation of the solution
+		 * @returns Returns the evaluation of the solution.
 		 */
 		virtual double decode(const chromosome& c) throw(infeasible_exception) = 0;
 		
 		// Evaluating a solution
 		
 		/**
-		 * @brief Evaluates this instance of the problem
+		 * @brief Evaluates this instance of the problem.
 		 * @returns Returns a floating point value representing its cost.
 		 */
 		virtual double evaluate() const = 0;
@@ -129,7 +128,7 @@ class problem {
 		virtual void print(const string& tab = "", ostream& os = cout) const = 0;
 		
 		/**
-		 * @brief Checks all constraints regarding solution feasibility
+		 * @brief Checks all constraints regarding solution feasibility.
 		 * @returns Returns true if the solution is feasible. Returns false
 		 * if otherwise.
 		 */
@@ -138,16 +137,16 @@ class problem {
 		// Memory handling
 		
 		/**
-		 * @brief Creates a new instance of the problem
+		 * @brief Creates a new instance of the problem.
 		 * 
 		 * Returns a new object with the contents of this instance.
 		 */
 		virtual problem *clone() const = 0;
 		
 		/**
-		 * @brief Creates a new instance of the problem
+		 * @brief Creates a new instance of the problem.
 		 * 
-		 * Copies the contents of the instance @e p
+		 * Copies the contents of the instance @e p.
 		 * 
 		 * @param[in] p The object to be copied.
 		 */
@@ -167,12 +166,15 @@ class problem {
 		// Getters
 		
 		/**
-		 * @brief Returns the number of neighbours that have been explored
+		 * @brief Returns the number of neighbours that have been explored.
 		 * 
 		 * @returns When the
 		 * @ref best_neighbour(pair<problem*, double>&, const local_search_policy&)
-		 * function is called a number of neighbours are explored. This
-		 * function returns this amount.
+		 * function is called a number of neighbours are explored.
+		 * 
+		 * The variable @ref n_neighbours_explored is modified accordingly.
+		 * 
+		 * This function returns the value of @ref n_neighbours_explored.
 		 */
 		size_t get_n_neighbours_explored() const;
 };

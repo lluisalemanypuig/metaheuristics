@@ -17,7 +17,7 @@ using namespace structures;
 using namespace mtime;
 
 /**
- * @brief Local Search heuristic algorithm
+ * @brief Local Search heuristic algorithm.
  * 
  * Given a maximum number of iterations and a local search policy
  * (see @ref metaheuristics::structures::local_search_policy) apply
@@ -41,27 +41,27 @@ using namespace mtime;
  */
 class local_search : public metaheuristic {
 	private:
-		/// Total execution time of the algorithm
+		/// Total execution time of the algorithm.
 		double total_time;
-		/// Total execution time to explore the different neighbourhoods
+		/// Total execution time to explore the different neighbourhoods.
 		double neighbourhood_time;
 		
-		/// Maximum number of iterations
+		/// Maximum number of iterations.
 		size_t MAX_ITER;
-		/// Current iteration of the algorithm
+		/// Current iteration of the algorithm.
 		size_t ITERATION;
-		/// Policy of the local search
+		/// Policy of the local search.
 		local_search_policy LSP;
 				
 	public:
-		/// Default constructor
+		/// Default constructor.
 		local_search();
 		/// 
 		/**
-		 * @brief Constructor with maximum number of iterations and search policy
-		 * @param m Maximum number of iterations of the algorithm
-		 * @param lsp Local Search policy
-		 * (see @ref metaheuristics::structures::local_search_policy)
+		 * @brief Constructor with maximum number of iterations and search policy.
+		 * @param m Maximum number of iterations of the algorithm.
+		 * @param lsp Local Search policy (see
+		 * @ref metaheuristics::structures::local_search_policy).
 		 */
 		local_search(size_t m, const local_search_policy& lsp);
 		/// Destructor
@@ -70,19 +70,19 @@ class local_search : public metaheuristic {
 		// SETTERS
 		
 		/**
-		 * @brief Sets the local search policy
+		 * @brief Sets the local search policy.
 		 * 
 		 * Sets the value of @ref LSP to @e lsp.
 		 */
 		void set_local_search_policy(const local_search_policy& lsp);
 		/**
-		 * @brief Sets the maximum number of iterations of the algorithm
+		 * @brief Sets the maximum number of iterations of the algorithm.
 		 * 
 		 * Sets the value of @ref MAX_ITER to @e m.
 		 */
 		void set_max_iterations(size_t m);
 		/**
-		 * @brief Resets the algorithm to its initial state
+		 * @brief Resets the algorithm to its initial state.
 		 * 
 		 * Sets to 0 the internal variables @ref total_time, @ref neighbourhood_time,
 		 * @ref MAX_ITER, @ref ITERATION. The policy @ref LSP is not
@@ -93,36 +93,36 @@ class local_search : public metaheuristic {
 		// GETTERS
 		
 		/**
-		 * @brief Returns the total execution time of the algorithm
+		 * @brief Returns the total execution time of the algorithm.
 		 * @returns Returns the value that @ref total_time has at
-		 * the end of the execution of @ref execute_algorithm()
+		 * the end of the execution of @ref execute_algorithm().
 		 */
 		double get_total_time() const;
 		/**
-		 * @brief Returns the execution time needed to explore the neighbourhood
+		 * @brief Returns the execution time needed to explore the neighbourhood.
 		 * @returns Returns the value that @ref neighbourhood_time has at
-		 * the end of the execution of @ref execute_algorithm()
+		 * the end of the execution of @ref execute_algorithm().
 		 */
 		double get_neighbourhood_time() const;
 		/**
-		 * @brief Returns the execution time needed to explore the neighbourhood
+		 * @brief Returns the execution time needed to explore the neighbourhood.
 		 * @returns Returns the value the variable @ref ITERATION has at
-		 * the end of the execution of @ref execute_algorithm()
+		 * the end of the execution of @ref execute_algorithm().
 		 */
 		size_t get_n_iterations() const;
 		/**
-		 * @brief Returns the policy of the search
-		 * @returns Returns the value of @ref LSP
+		 * @brief Returns the policy of the search.
+		 * @returns Returns the value of @ref LSP.
 		 */
 		local_search_policy get_local_search_policy() const;
 		/**
-		 * @brief Returns the number of iterations
-		 * @returns Returns the value of @ref MAX_ITER
+		 * @brief Returns the number of iterations.
+		 * @returns Returns the value of @ref MAX_ITER.
 		 */
 		size_t get_max_iterations() const;
 		
 		/**
-		 * @brief Execute the local search algorithm
+		 * @brief Execute the local search algorithm.
 		 * 
 		 * Given an instance of a problem @e p, with cost @e c,
 		 * this algorithm works as follows: 
@@ -136,20 +136,19 @@ class local_search : public metaheuristic {
 		 * 
 		 * The number of iterations can be set in the constructor
 		 * (see @ref local_search(size_t, const local_search_policy&))
-		 * or in the method @ref set_max_iterations(size_t)
+		 * or in the method @ref set_max_iterations(size_t).
 		 * 
 		 * @param[in] p The instance of the problem.
 		 * @param[in] c The cost of the instance p at the beginning of
-		 * the execution
+		 * the execution.
 		 * @param[out] p Whence the algorithm has finished p contains
-		 * an improved solution to the problem
-		 * 
-		 * @pre The method @ref reset_algorithm does not need to be called
+		 * an improved solution to the problem.
+		 * @pre The method @ref reset_algorithm does not need to be called.
 		 */
 		bool execute_algorithm(problem *p, double& c);
 		
 		/**
-		 * @brief Prints a summary of the performance of the algorithm
+		 * @brief Prints a summary of the performance of the algorithm.
 		 * 
 		 * Prints to standard output a message with the following format:
 		\verbatim

@@ -19,11 +19,7 @@ void rkga::get_two_parents(size_t& p1, size_t& p2) {
 // Sanity check
 
 bool rkga::are_set_sizes_correct() const {
-	bool correct = true;
-	if (N_MUTANT >= pop_size) {
-		correct = false;
-	}
-	return correct;
+	return N_MUTANT < pop_size;
 }
 
 // PUBLIC
@@ -73,7 +69,7 @@ bool rkga::execute_algorithm(problem *best, double& current_best_f) {
 	#ifdef GENETIC_DEBUG
 	print_current_population();
 	#endif
-
+	
 	#ifdef GENETIC_VERBOSE
 	cout << setw(4)  << " "
 		 << setw(18) << "Elaps. Time (s)"
@@ -168,6 +164,6 @@ void rkga::print_performance() const {
 	cout << endl;
 }
 
-}
-}
+} // -- namespace algorithms
+} // -- namespace metaheuristics
 

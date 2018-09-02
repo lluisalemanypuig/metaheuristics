@@ -175,6 +175,6 @@ size_t genetic_algorithm::population_size() const {
 	return population.size();
 }
 
-}
-}
+} // -- namespace algorithms
+} // -- namespace metaheuristics
 

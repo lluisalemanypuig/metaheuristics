@@ -9,18 +9,18 @@ namespace algorithms {
 using namespace structures;
 using namespace random;
 
-/// Interface for the two functions common to all algorithms
+/// Interface for the two functions common to all algorithms.
 class metaheuristic {
 	protected:
-		/// Random number generator
+		/// Random number generator.
 		random_generator<> *rng;
 	
 	public:
-		/// Default constructor
+		/// Default constructor.
 		metaheuristic();
-		/// Constructor with random generator
+		/// Constructor with random generator.
 		metaheuristic(random_generator<> *rng);
-		/// Destructor
+		/// Destructor.
 		virtual ~metaheuristic();
 		
 		// MODIFIERS
@@ -28,12 +28,12 @@ class metaheuristic {
 		/**
 		 * @brief Sets the random number generator.
 		 * 
-		 * The caller is made responsible for freeing this object
+		 * The caller is made responsible for freeing this object.
 		 */
 		void set_rng(random_number_generator *rng);
 		
 		/**
-		 * @brief Sets the algorithm to its original state
+		 * @brief Sets the algorithm to its original state.
 		 * 
 		 * For example, if the algorithm has variables storing the
 		 * number of iterations, execution time, ... here is where
@@ -42,7 +42,7 @@ class metaheuristic {
 		virtual void reset_algorithm() = 0;
 		
 		/**
-		 * @brief Starts the execution of the algorithm
+		 * @brief Starts the execution of the algorithm.
 		 * @returns Returns true if it terminates succesfully. Returns
 		 * false if otherwise.
 		 */
