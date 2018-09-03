@@ -114,19 +114,26 @@ void genetic_algorithm::crossover(const problem *p, size_t par1_idx, size_t par2
 	evaluate_individual(p, son);
 }
 
+void genetic_algorithm::reset_genetic_algorithm() {
+	total_time = 0.0;
+	initial_time = 0.0;
+	crossover_time = 0.0;
+	mutant_time = 0.0;
+}
+
 // PUBLIC
 
-genetic_algorithm::genetic_algorithms() : metaheuristic() {
+genetic_algorithm::genetic_algorithm() : metaheuristic() {
 	pop_size = 0;
 	N_MUTANT = 0;
 	N_GEN = 0;
 	chrom_size = 0;
 	in_prob = 0;
 	
-	reset_algorithm();
+	reset_genetic_algorithm();
 }
 
-genetic_algorithm::genetic_algorithms
+genetic_algorithm::genetic_algorithm
 (
 	size_t ps, size_t mps, size_t n_gen,
 	size_t c_size, double in_p,
@@ -143,13 +150,10 @@ genetic_algorithm::genetic_algorithms
 	reset_algorithm();
 }
 
-genetic_algorithm::~genetic_algorithms() { }
+genetic_algorithm::~genetic_algorithm() { }
 
 void genetic_algorithm::reset_algorithm() {
-	total_time = 0.0;
-	initial_time = 0.0;
-	crossover_time = 0.0;
-	mutant_time = 0.0;
+	reset_genetic_algorithm();
 }
 
 const individual& genetic_algorithm::get_best_individual() const {

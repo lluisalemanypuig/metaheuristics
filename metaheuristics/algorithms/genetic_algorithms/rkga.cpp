@@ -19,6 +19,7 @@ void rkga::get_two_parents(size_t& p1, size_t& p2) {
 // Sanity check
 
 bool rkga::are_set_sizes_correct() const {
+	// there must be at least one crossover individual
 	return N_MUTANT < pop_size;
 }
 

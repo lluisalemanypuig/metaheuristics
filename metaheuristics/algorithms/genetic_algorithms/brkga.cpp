@@ -1,4 +1,4 @@
-#include "brkga.hpp"
+#include <metaheuristics/algorithms/genetic_algorithms/brkga.hpp>
 
 namespace metaheuristics {
 namespace algorithms {
@@ -25,6 +25,8 @@ void brkga::get_two_parents(size_t& p1, size_t& p2) {
 }
 
 void brkga::copy_elite_individuals(const problem *p, population_set& next_gen, size_t& m) {
+	assert(m < pop_size);
+	
 	for (size_t it = 0; it < N_ELITE; ++it) {
 		next_gen[m + it] = population[ elite_set[it].second ];
 	}
@@ -32,6 +34,8 @@ void brkga::copy_elite_individuals(const problem *p, population_set& next_gen, s
 }
 
 bool brkga::is_elite_individual(size_t idx) const {
+	assert(idx < pop_size);
+	
 	bool is_elite = false;
 	size_t it = 0;
 	while (it < N_ELITE and not is_elite) {
@@ -59,11 +63,8 @@ void brkga::track_elite_individuals() {
 // Sanity check
 
 bool brkga::are_set_sizes_correct() const {
-	bool correct = true;
-	if (N_ELITE + N_MUTANT >= pop_size) {
-		correct = false;
-	}
-	return correct;
+	// there must be at least one crossover individual
+	return N_ELITE + N_MUTANT < pop_size;
 }
 
 // PUBLIC
@@ -90,11 +91,9 @@ brkga::brkga
 brkga::~brkga() { }
 
 void brkga::reset_algorithm() {
-	total_time = 0.0;
-	initial_time = 0.0;
-	crossover_time = 0.0;
-	mutant_time = 0.0;
 	elite_copying_time = 0.0;
+	
+	reset_genetic_algorithm();
 }
 
 const individual& brkga::get_best_individual() const {

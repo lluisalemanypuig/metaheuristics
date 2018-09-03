@@ -17,16 +17,17 @@ using namespace std;
 #include <metaheuristics/algorithms/genetic_algorithms/chromosome.hpp>
 #include <metaheuristics/algorithms/genetic_algorithms/individual.hpp>
 #include <metaheuristics/algorithms/metaheuristic.hpp>
+#include <metaheuristics/algorithms/infeasible_exception.hpp>
 #include <metaheuristics/algorithms/problem.hpp>
 #include <metaheuristics/random/random_number_generator.hpp>
 #include <metaheuristics/misc/time.hpp>
 
 namespace metaheuristics {
 namespace algorithms {
-
-using namespace timing;
+	
 using namespace structures;
 using namespace random;
+using namespace timing;
 
 /**
  * @brief Abstract class to implement genetic algorithms.
@@ -34,8 +35,8 @@ using namespace random;
  * In this context, a "mutant individual" is an individual whose
  * chromosome has been randomly generated.
  * 
- * This class need the following methods of class @ref problem implemented:
- * - @ref problem::decode
+ * This class need the following methods of class @ref structures::problem implemented:
+ * - @ref problem::decode(const chromosome&)
  * 
  */
 class genetic_algorithm : public metaheuristic {
@@ -71,8 +72,8 @@ class genetic_algorithm : public metaheuristic {
 		 * @brief Typedef for the population set.
 		 * 
 		 * Basically, a shorthand for the vector that contains elements
-		 * of type @ref individual and uses an allocator specially for
-		 * that class (see @ref structures::allocator_individual).
+		 * of type @ref structures::individual and uses an allocator specially
+		 * for that class (see @ref structures::allocator_individual).
 		 */
 		typedef vector<individual, allocator_individual<individual> > population_set;
 		/// The population of individuals.
@@ -144,7 +145,7 @@ class genetic_algorithm : public metaheuristic {
 		 * @brief Generates a mutant individual.
 		 * 
 		 * Generates its random chromosome, and evaluates the individual
-		 * (see @ref evaluate_individual(const problem*, individual&).
+		 * (see @ref evaluate_individual(const problem*, individual&)const.
 		 * @param[in] p The problem for which a solution will be generated
 		 * with @e i's chromosome.
 		 * @param[out] i Inidividual from which the solution is generated.
@@ -167,7 +168,15 @@ class genetic_algorithm : public metaheuristic {
 		 * individuals.
 		 */
 		void crossover(const problem *p, size_t i, size_t j, individual& son);
-	
+		
+		/**
+		 * @brief Resets the genetic algorithm to a partial initial state.
+		 * 
+		 * It sets the variables @ref total_time,
+		 * @ref initial_time, @ref crossover_time, @ref mutant_time.
+		 */
+		void reset_genetic_algorithm();
+		
 	public:
 		/// Default constructor.
 		genetic_algorithm(); 
@@ -200,8 +209,7 @@ class genetic_algorithm : public metaheuristic {
 		/**
 		 * @brief Resets the algorithm to its initial state.
 		 * 
-		 * For example, it sets the variables @ref total_time,
-		 * @ref initial_time, @ref crossover_time, @ref mutant_time.
+		 * This implementation should call @ref reset_genetic_algorithm().
 		 */
 		virtual void reset_algorithm();
 		

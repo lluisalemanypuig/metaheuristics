@@ -6,7 +6,7 @@ namespace algorithms {
 metaheuristic::metaheuristic() {
 }
 
-metaheuristic::metaheuristic(random_number_generator *r) {
+metaheuristic::metaheuristic(random_generator<> *r) {
 	rng = r;
 }
 
@@ -15,7 +15,7 @@ metaheuristic::~metaheuristic() {
 
 // MODIFIERS
 
-void metaheuristic::set_rng(random_number_generator *_rng) {
+void metaheuristic::set_rng(random_generator<> *_rng) {
 	rng = _rng;
 }
 

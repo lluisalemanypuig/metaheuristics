@@ -12,6 +12,7 @@ using namespace std;
 
 namespace metaheuristics {
 namespace structures {
+
 using namespace random;
 
 /**
@@ -110,7 +111,7 @@ class problem {
 		
 		/**
 		 * @brief Constructs a solution from a given chromosome.
-		 * @returns Returns the evaluation of the solution.
+		 * @returns Returns the evaluation of the solution (its cost).
 		 */
 		virtual double decode(const chromosome& c) throw(infeasible_exception) = 0;
 		

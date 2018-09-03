@@ -82,7 +82,7 @@ class grasp : public metaheuristic {
 		/**
 		 * @brief Sets the maximum number of iterations of the GRASP algorithm.
 		 * 
-		 * Sets the value of @ref MAX_ITER_GRAPS to @e max.
+		 * Sets the value of @ref MAX_ITER_GRASP to @e max.
 		 */
 		void set_max_iterations_grasp(size_t max);
 		/**
@@ -160,8 +160,9 @@ class grasp : public metaheuristic {
 		 * - Return BEST
 		 * 
 		 * The number of iterations can be set in the constructor
-		 * (see @ref local_search(size_t, const local_search_policy&))
-		 * or in the method @ref set_max_iterations(size_t)
+		 * (see @ref grasp(size_t,size_t,double,const local_search_policy&,random_number_generator*))
+		 * or in the methods @ref set_max_iterations_grasp(size_t),
+		 * @ref set_max_iterations_local(size_t).
 		 * 
 		 * @param[in] p The instance of the problem.
 		 * @param[in] c The cost of the instance p at the beginning of
