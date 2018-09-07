@@ -1,20 +1,23 @@
 #include <metaheuristics/misc/time.hpp>
 
 namespace metaheuristics {
-namespace double {
+namespace timing {
 
-	double now() {
-		struct timeval tim;
-		struct rusage ru;
-		getrusage(RUSAGE_SELF, &ru);
-		tim = ru.ru_utime;
-		return ((double)tim.tv_sec + (double)tim.tv_usec/1000000.0);
+	time_point now() {
+		return high_resolution_clock::now();
 	}
 
-	double elapsed_time(const double& begin, const double& end) {
-		return (end - begin >= 0.0 ? end - begin : 0.0);
+	double elapsed_seconds(const time_point& begin, const time_point& end) {
+		return duration<double, seconds::period>( end - begin ).count();
 	}
 
-} // -- namespace double
+	double elapsed_milliseconds(const time_point& begin, const time_point& end) {
+		return duration<double, milliseconds::period>( end - begin ).count();
+	}
+
+	double elapsed_microseconds(const time_point& begin, const time_point& end) {
+		return duration<double, microseconds::period>( end - begin ).count();
+	}
+
+} // -- namespace timing
 } // -- namespace metaheuristics
-
