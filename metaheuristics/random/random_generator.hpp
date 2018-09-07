@@ -17,9 +17,9 @@ namespace random {
  * that will implement the interface)
  */
 template<
-	class G = default_random_engine,	// class used for the random engine
-	typename T = size_t					// type of the distribution
-										// int, double, unsigned int, size_t, ...
+	class G,		// class used for the random engine
+	typename T		// type of the distribution
+					// int, double, unsigned int, size_t, ...
 >
 class random_generator {
 	protected:
