@@ -1,0 +1,39 @@
+
+# ----------
+# -- MISC --
+
+TIME_DPS = $(MISC_DIR)/time.hpp
+
+# ------------
+# -- RANDOM --
+
+RND_DPS = 	$(RND_DIR)/random_generator.hpp $(RND_DIR)/random_generator.cpp 	\
+			$(RND_DIR)/crandom_generator.cpp $(RND_DIR)/drandom_generator.cpp
+
+# ----------------
+# -- ALGORITHMS --
+
+# STRUCTURES
+INF_EXC_DPS		= $(ALGS_DIR)/infeasible_exception.hpp
+CHROMOSOME_DPS	= $(GEN_ALGS_DIR)/chromosome.hpp
+INDIVIDUAL_DPS	= $(GEN_ALGS_DIR)/individual.hpp $(CHROMOSOME_DPS)
+PROBLEM_DPS		= $(ALGS_DIR)/problem.hpp $(INF_EXC_DPS) $(RND_DPS)				\
+				  $(CHROMOSOME_DPS)
+
+# HEURISTICS
+METAHEURISTIC_DPS	= $(ALGS_DIR)/metaheuristic.hpp $(PROBLEM_DPS)				\
+					  $(RND_DPS)
+LOCAL_SEARCH_DPS	= $(LS_ALGS_DIR)/local_search.hpp $(METAHEURISTIC_DPS)		\
+					  $(PROBLEM_DPS) $(TIME_DPS)
+GRASP_DPS			= $(GRASP_ALGS_DIR)/grasp.hpp $(METAHEURISTIC_DPS)			\
+					  $(LOCAL_SEARCH_DPS) $(PROBLEM_DPS) $(RND_DPS)
+GENETIC_ALG_DPS		= $(GEN_ALGS_DIR)/genetic_algorithm.hpp						\
+					  $(CHROMOSOME_DPS) $(INDIVIDUAL_DPS) $(METAHEURISTIC_DPS)	\
+					  $(INF_EXC_DPS) $(PROBLEM_DPS) $(RND_DPS) $(TIME_DPS)
+RKGA_DPS			= $(GEN_ALGS_DIR)/rkga.hpp 									\
+					  $(GENETIC_ALG_DPS) $(CHROMOSOME_DPS) $(INDIVIDUAL_DPS)	\
+					  $(PROBLEM_DPS) $(RND_DPS) $(TIME_DPS)
+BRKGA_DPS			= $(GEN_ALGS_DIR)/brkga.hpp 								\
+					  $(GENETIC_ALG_DPS) $(CHROMOSOME_DPS) $(INDIVIDUAL_DPS)	\
+					  $(PROBLEM_DPS) $(RND_DPS) $(TIME_DPS)
+

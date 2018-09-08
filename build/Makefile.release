@@ -1,0 +1,48 @@
+
+###############
+# RELEASE FLAGS
+
+REL_FLAGS = -O3 -DNDEBUG $(GEN_FLAGS)
+
+###############
+# RELEASE OBJECTS
+
+RELEASE_OBJECTS =							\
+	$(REL_BIN_DIR)/time.o					\
+	$(REL_BIN_DIR)/infeasible_exception.o	\
+	$(REL_BIN_DIR)/individual.o				\
+	$(REL_BIN_DIR)/chromosome.o
+
+###########
+# DIRECTORY
+
+releasedirectory: $(REL_BIN_DIR)
+$(REL_BIN_DIR):
+	mkdir -p $(REL_BIN_DIR)
+
+##############
+# MAKE LIBRARY
+
+$(REL_BIN_DIR)/libmetaheuristics.a: $(RELEASE_OBJECTS)
+	ar cqs $(REL_BIN_DIR)/libmetaheuristics.a $(RELEASE_OBJECTS)
+
+$(REL_BIN_DIR)/infeasible_exception.o: $(ALGS_DIR)/infeasible_exception.cpp $(INF_EXC_DPS)
+	g++ $(REL_FLAGS) -c $< -o $@ -I$(INCLUDE)
+
+$(REL_BIN_DIR)/individual.o: $(GEN_ALGS_DIR)/individual.cpp $(INDIVIDUAL_DPS)
+	g++ $(REL_FLAGS) -c $< -o $@ -I$(INCLUDE)
+
+$(REL_BIN_DIR)/chromosome.o: $(GEN_ALGS_DIR)/chromosome.cpp $(CHROMOSOME_DPS)
+	g++ $(REL_FLAGS) -c $< -o $@ -I$(INCLUDE)
+
+$(REL_BIN_DIR)/time.o: $(MISC_DIR)/time.cpp $(TIME_DPS)
+	g++ $(REL_FLAGS) -c $< -o $@ -I$(INCLUDE)
+
+############
+
+releaseclean:
+	rm -f $(RELEASE_OBJECTS)
+
+releasedistclean:
+	make -f $(RULES_DIR)/Makefile releaseclean
+	rm -f $(REL_BIN_DIR)/libmetaheuristics.a
