@@ -1,6 +1,6 @@
 #include <metaheuristics/random/random_generator.hpp>
 
-namespace mataheuristics {
+namespace metaheuristics {
 namespace random {
 
 template<class G, typename T>
@@ -18,5 +18,5 @@ void random_generator<G,T>::seed_random_engine() {
 }
 
 } // -- namespace random
-} // -- namespace mataheuristics
+} // -- namespace metaheuristics
 

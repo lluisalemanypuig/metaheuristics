@@ -1,6 +1,6 @@
 #include <metaheuristics/random/random_generator.hpp>
 
-namespace mataheuristics {
+namespace metaheuristics {
 namespace random {
 
 template<class G, typename cT>
@@ -34,5 +34,5 @@ cT crandom_generator<G,cT>::get_binomial() {
 }
 	
 } // -- namespace random
-} // -- namespace mataheuristics
+} // -- namespace metaheuristics
 

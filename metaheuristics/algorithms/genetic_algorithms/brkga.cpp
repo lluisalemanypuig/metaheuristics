@@ -4,8 +4,9 @@ namespace metaheuristics {
 namespace algorithms {
 
 // Information display functions
-		
-void brkga::print_elite_set() const {
+
+template<class G, typename dT, typename cT>
+void brkga<G,dT,cT>::print_elite_set() const {
 	for (size_t it = 0; it < N_ELITE; ++it) {
 		cout << "        elite idx= " << elite_set[it].second << endl;
 	}
@@ -14,7 +15,8 @@ void brkga::print_elite_set() const {
 
 // Population-generation functions
 
-void brkga::get_two_parents(size_t& p1, size_t& p2) {
+template<class G, typename dT, typename cT>
+void brkga<G,dT,cT>::get_two_parents(size_t& p1, size_t& p2) {
 	size_t idx1 = rng->get_next_rand_int(0, N_ELITE - 1);
 	p1 = elite_set[idx1].second;
 	
@@ -24,7 +26,8 @@ void brkga::get_two_parents(size_t& p1, size_t& p2) {
 	}
 }
 
-void brkga::copy_elite_individuals(const problem *p, population_set& next_gen, size_t& m) {
+template<class G, typename dT, typename cT>
+void brkga<G,dT,cT>::copy_elite_individuals(const problem *p, population_set& next_gen, size_t& m) {
 	assert(m < pop_size);
 	
 	for (size_t it = 0; it < N_ELITE; ++it) {
@@ -33,7 +36,8 @@ void brkga::copy_elite_individuals(const problem *p, population_set& next_gen, s
 	m += N_ELITE;
 }
 
-bool brkga::is_elite_individual(size_t idx) const {
+template<class G, typename dT, typename cT>
+bool brkga<G,dT,cT>::is_elite_individual(size_t idx) const {
 	assert(idx < pop_size);
 	
 	bool is_elite = false;
@@ -46,7 +50,8 @@ bool brkga::is_elite_individual(size_t idx) const {
 	}
 }
 
-void brkga::track_elite_individuals() {
+template<class G, typename dT, typename cT>
+void brkga<G,dT,cT>::track_elite_individuals() {
 	// sort individuals by their fitness
 	priority_queue<pair<double, size_t> > fitness_individual;
 	for (size_t i = 0; i < pop_size; ++i) {
@@ -62,47 +67,55 @@ void brkga::track_elite_individuals() {
 
 // Sanity check
 
-bool brkga::are_set_sizes_correct() const {
+template<class G, typename dT, typename cT>
+bool brkga<G,dT,cT>::are_set_sizes_correct() const {
 	// there must be at least one crossover individual
 	return N_ELITE + N_MUTANT < pop_size;
 }
 
 // PUBLIC
 
-brkga::brkga() : genetic_algorithm() {
+template<class G, typename dT, typename cT>
+brkga<G,dT,cT>::brkga() : genetic_algorithm<G,dT,cT>() {
 	N_ELITE = 0;
 	
 	reset_algorithm();
 }
 
-brkga::brkga
+template<class G, typename dT, typename cT>
+brkga<G,dT,cT>::brkga
 (
 	size_t ps, size_t mps, size_t ess, size_t n_gen,
 	size_t c_size, double in_p,
-	random_number_generator *r
+	drandom_generator<G,dT> *drng,
+	crandom_generator<G,cT> *crng
 )
-: genetic_algorithm(ps, mps, n_gen, c_size, in_p, r)
+: genetic_algorithm<G,dT,cT>(ps, mps, n_gen, c_size, in_p, drng, crng)
 {
 	N_ELITE = ess;
 	
 	reset_algorithm();
 }
 
-brkga::~brkga() { }
+template<class G, typename dT, typename cT>
+brkga<G,dT,cT>::~brkga() { }
 
-void brkga::reset_algorithm() {
+template<class G, typename dT, typename cT>
+void brkga<G,dT,cT>::reset_algorithm() {
 	elite_copying_time = 0.0;
 	
 	reset_genetic_algorithm();
 }
 
-const individual& brkga::get_best_individual() const {
+template<class G, typename dT, typename cT>
+const individual& brkga<G,dT,cT>::get_best_individual() const {
 	return population[ elite_set[0].second ];
 }
 
-bool brkga::execute_algorithm(problem *best, double& current_best_f) {
+template<class G, typename dT, typename cT>
+bool brkga<G,dT,cT>::execute_algorithm(problem *best, double& current_best_f) {
 	if (not are_set_sizes_correct()) {
-		cerr << "brkga::execute_algorithm:" << endl;
+		cerr << "brkga<G,dT,cT>::execute_algorithm:" << endl;
 		cerr << "    Sizes chosen will lead to errors:" << endl;
 		cerr << "        NUMBER OF MUTANTS + NUMBER OF ELITE >= POPULATION SIZE" << endl;
 		cerr << "        " << N_MUTANT + N_ELITE << " >= " << pop_size << endl;
@@ -111,7 +124,7 @@ bool brkga::execute_algorithm(problem *best, double& current_best_f) {
 	
 	if (rng == NULL) {
 		cerr << "BRKGA : Error" << endl;
-		cerr << "bool brkga::execute_algorithm - RNG is not set" << endl;
+		cerr << "bool brkga<G,dT,cT>::execute_algorithm - RNG is not set" << endl;
 		return false;
 	}
 	
@@ -241,7 +254,8 @@ bool brkga::execute_algorithm(problem *best, double& current_best_f) {
 	return true;
 }
 
-void brkga::print_performance() const {
+template<class G, typename dT, typename cT>
+void brkga<G,dT,cT>::print_performance() const {
 	cout << "BRKGA algorithm performance:" << endl;
 	cout << "    Total generation time:             " << total_time << " s" << endl;
 	cout << "    Average generation average:        " << total_time/N_GEN << " s" << endl;

@@ -1,4 +1,4 @@
-#include <metaheuristics/algorithms/problems>
+#include <metaheuristics/algorithms/problem.hpp>
 
 namespace metaheuristics {
 namespace structures {
@@ -7,13 +7,13 @@ namespace structures {
 
 // PUBLIC
 
-problem::problem() {
+problem<G,dT>::problem() {
 	n_neighbours_explored = 0;
 }
 
-problem::~problem() { }
+problem<G,dT>::~problem() { }
 
-size_t problem::get_n_neighbours_explored() const {
+size_t problem<G,dT>::get_n_neighbours_explored() const {
 	return n_neighbours_explored;
 }
 

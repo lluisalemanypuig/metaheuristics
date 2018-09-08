@@ -7,7 +7,8 @@ namespace algorithms {
 
 // Information display functions
 
-void genetic_algorithm::print_current_population() const {
+template<class G, typename dT, typename cT>
+void genetic_algorithm<G,dT,cT>::print_current_population() const {
 	cout << "    * Current population:" << endl;
 	for (size_t i = 0; i < pop_size; ++i) {
 		cout << "        " << i << ": " << population[i] << endl;
@@ -17,7 +18,8 @@ void genetic_algorithm::print_current_population() const {
 
 // Algorithm-related functions
 
-void genetic_algorithm::initialize_population(const problem *p) {
+template<class G, typename dT, typename cT>
+void genetic_algorithm<G,dT,cT>::initialize_population(const problem<G,dT> *p) {
 	for (size_t i = 0; i < pop_size; ++i) {
 		
 		#if GENETIC_DEBUG
@@ -33,7 +35,8 @@ void genetic_algorithm::initialize_population(const problem *p) {
 	}
 }
 
-void genetic_algorithm::generate_mutants(const problem *p, size_t A, size_t B, population_set& next_gen, size_t& m) {
+template<class G, typename dT, typename cT>
+void genetic_algorithm<G,dT,cT>::generate_mutants(const problem<G,dT> *p, size_t A, size_t B, population_set& next_gen, size_t& m) {
 	for (m = A; m < B; ++m) {
 		generate_mutant(p, next_gen[m]);
 		
@@ -43,7 +46,8 @@ void genetic_algorithm::generate_mutants(const problem *p, size_t A, size_t B, p
 	}
 }
 
-void genetic_algorithm::generate_crossovers(const problem *p, population_set& next_gen, size_t& m) {
+template<class G, typename dT, typename cT>
+void genetic_algorithm<G,dT,cT>::generate_crossovers(const problem<G,dT> *p, population_set& next_gen, size_t& m) {
 	size_t par1_idx, par2_idx;
 	
 	for (; m < pop_size; ++m) {	
@@ -58,18 +62,19 @@ void genetic_algorithm::generate_crossovers(const problem *p, population_set& ne
 
 // Population-generation functions
 
-void genetic_algorithm::evaluate_individual(const problem *p, individual& i) const {
+template<class G, typename dT, typename cT>
+void genetic_algorithm<G,dT,cT>::evaluate_individual(const problem<G,dT> *p, individual& i) const {
 	// decode chromosome into a solution
-	problem *copy = p->clone();
+	problem<G,dT> *copy = p->clone();
 	
 	try {
-		// decode the chromosome into a solution of the problem
+		// decode the chromosome into a solution of the problem<G,dT>
 		double F = copy->decode(i.get_chromosome());
 		
 		#ifdef GENETIC_DEBUG
 		bool sane = copy->sanity_check();
 		if (not sane) {
-			cerr << "void genetic_algorithm::evaluate_individual:" << endl;
+			cerr << "void genetic_algorithm<G,dT,cT>::evaluate_individual:" << endl;
 			cerr << "    Decoded solution from chromosome is not sane" << endl;
 		}
 		#endif
@@ -89,7 +94,8 @@ void genetic_algorithm::evaluate_individual(const problem *p, individual& i) con
 	}
 }
 
-void genetic_algorithm::generate_mutant(const problem *p, individual& i) {
+template<class G, typename dT, typename cT>
+void genetic_algorithm<G,dT,cT>::generate_mutant(const problem<G,dT> *p, individual& i) {
 	// generate chromosome
 	rng->get_n_rand(&i.get_chromosome()[0], i.get_chromosome().size());
 	
@@ -97,7 +103,8 @@ void genetic_algorithm::generate_mutant(const problem *p, individual& i) {
 	evaluate_individual(p, i);
 }
 
-void genetic_algorithm::crossover(const problem *p, size_t par1_idx, size_t par2_idx, individual& son) {
+template<class G, typename dT, typename cT>
+void genetic_algorithm<G,dT,cT>::crossover(const problem<G,dT> *p, size_t par1_idx, size_t par2_idx, individual& son) {
 	const individual& parent1 = population[par1_idx];
 	const individual& parent2 = population[par2_idx];
 	
@@ -114,7 +121,8 @@ void genetic_algorithm::crossover(const problem *p, size_t par1_idx, size_t par2
 	evaluate_individual(p, son);
 }
 
-void genetic_algorithm::reset_genetic_algorithm() {
+template<class G, typename dT, typename cT>
+void genetic_algorithm<G,dT,cT>::reset_genetic_algorithm() {
 	total_time = 0.0;
 	initial_time = 0.0;
 	crossover_time = 0.0;
@@ -123,7 +131,8 @@ void genetic_algorithm::reset_genetic_algorithm() {
 
 // PUBLIC
 
-genetic_algorithm::genetic_algorithm() : metaheuristic() {
+template<class G, typename dT, typename cT>
+genetic_algorithm<G,dT,cT>::genetic_algorithm() : metaheuristic<G,dT,cT>() {
 	pop_size = 0;
 	N_MUTANT = 0;
 	N_GEN = 0;
@@ -133,13 +142,15 @@ genetic_algorithm::genetic_algorithm() : metaheuristic() {
 	reset_genetic_algorithm();
 }
 
-genetic_algorithm::genetic_algorithm
+template<class G, typename dT, typename cT>
+genetic_algorithm<G,dT,cT>::genetic_algorithm
 (
 	size_t ps, size_t mps, size_t n_gen,
 	size_t c_size, double in_p,
-	random_number_generator *r
+	drandom_generator<G,dT> *drng,
+	crandom_generator<G,cT> *crng
 )
-: metaheuristic(r)
+: metaheuristic<G,dT,cT>(drng,crng)
 {
 	pop_size = ps;
 	N_MUTANT = mps;
@@ -150,13 +161,16 @@ genetic_algorithm::genetic_algorithm
 	reset_algorithm();
 }
 
-genetic_algorithm::~genetic_algorithm() { }
+template<class G, typename dT, typename cT>
+genetic_algorithm<G,dT,cT>::~genetic_algorithm() { }
 
-void genetic_algorithm::reset_algorithm() {
+template<class G, typename dT, typename cT>
+void genetic_algorithm<G,dT,cT>::reset_algorithm() {
 	reset_genetic_algorithm();
 }
 
-const individual& genetic_algorithm::get_best_individual() const {
+template<class G, typename dT, typename cT>
+const individual& genetic_algorithm<G,dT,cT>::get_best_individual() const {
 	double f = -numeric_limits<double>::max();
 	size_t best = 0;
 	
@@ -170,12 +184,14 @@ const individual& genetic_algorithm::get_best_individual() const {
 	return population[best];
 }
 
-const individual& genetic_algorithm::get_individual(size_t i) const {
+template<class G, typename dT, typename cT>
+const individual& genetic_algorithm<G,dT,cT>::get_individual(size_t i) const {
 	assert(i < pop_size);
 	return population[i];
 }
 
-size_t genetic_algorithm::population_size() const {
+template<class G, typename dT, typename cT>
+size_t genetic_algorithm<G,dT,cT>::population_size() const {
 	return population.size();
 }
 

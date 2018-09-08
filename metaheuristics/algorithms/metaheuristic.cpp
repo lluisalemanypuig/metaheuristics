@@ -3,20 +3,31 @@
 namespace metaheuristics {
 namespace algorithms {
 
-metaheuristic::metaheuristic() {
+template<class G, typename dT, typename cT>
+metaheuristic<G,dT,cT>::metaheuristic() {
+	drng = nullptr;
+	crng = nullptr;
 }
 
-metaheuristic::metaheuristic(random_generator<> *r) {
-	rng = r;
+template<class G, typename dT, typename cT>
+metaheuristic<G,dT,cT>::metaheuristic(drandom_generator<G,dT> *_drng, crandom_generator<G,cT> *_crng) {
+	drng = _drng;
+	crng = _crng;
 }
 
-metaheuristic::~metaheuristic() {
-}
+template<class G, typename dT, typename cT>
+metaheuristic<G,dT,cT>::~metaheuristic() { }
 
 // MODIFIERS
 
-void metaheuristic::set_rng(random_generator<> *_rng) {
-	rng = _rng;
+template<class G, typename dT, typename cT>
+void metaheuristic<G,dT,cT>::set_drng(drandom_generator<G,dT> *rng) {
+	drng = rng;
+}
+
+template<class G, typename dT, typename cT>
+void metaheuristic<G,dT,cT>::set_crng(crandom_generator<G,cT> *rng) {
+	crng = rng;
 }
 
 } // -- namespace algorithms

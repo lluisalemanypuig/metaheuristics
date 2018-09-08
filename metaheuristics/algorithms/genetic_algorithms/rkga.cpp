@@ -7,7 +7,8 @@ namespace algorithms {
 
 // Algorithm-related functions
 
-void rkga::get_two_parents(size_t& p1, size_t& p2) {
+template<class G, typename dT, typename cT>
+void rkga<G,dT,cT>::get_two_parents(size_t& p1, size_t& p2) {
 	p1 = rng->get_next_rand_int(0, population.size() - 1);
 	
 	p2 = rng->get_next_rand_int(0, population.size() - 1);
@@ -18,28 +19,34 @@ void rkga::get_two_parents(size_t& p1, size_t& p2) {
 
 // Sanity check
 
-bool rkga::are_set_sizes_correct() const {
+template<class G, typename dT, typename cT>
+bool rkga<G,dT,cT>::are_set_sizes_correct() const {
 	// there must be at least one crossover individual
 	return N_MUTANT < pop_size;
 }
 
 // PUBLIC
 
-rkga::rkga() : genetic_algorithm() { }
+template<class G, typename dT, typename cT>
+rkga<G,dT,cT>::rkga() : genetic_algorithm<G,dT,cT>() { }
 
-rkga::rkga
+template<class G, typename dT, typename cT>
+rkga<G,dT,cT>::rkga
 (
 	size_t ps, size_t mps, size_t n_gen,
 	size_t c_size, double in_p,
-	random_number_generator *r
+	drandom_generator *drng,
+	crandom_generator *crng
 )
-: genetic_algorithm(ps, mps, n_gen, c_size, in_p, r)
+: genetic_algorithm<G,dT,cT>(ps, mps, n_gen, c_size, in_p, drng, crng)
 {
 }
 
-rkga::~rkga() { }
+template<class G, typename dT, typename cT>
+rkga<G,dT,cT>::~rkga() { }
 
-bool rkga::execute_algorithm(problem *best, double& current_best_f) {
+template<class G, typename dT, typename cT>
+bool rkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best_f) {
 	if (not are_set_sizes_correct()) {
 		cerr << "Sizes chosen will lead to errors:" << endl;
 		cerr << "    N_MUTANT >= pop_size" << endl;
@@ -49,7 +56,7 @@ bool rkga::execute_algorithm(problem *best, double& current_best_f) {
 	
 	if (rng == NULL) {
 		cerr << "RKGA : Error" << endl;
-		cerr << "bool rkga::execute_algorithm - RNG is not set" << endl;
+		cerr << "bool rkga<G,dT,cT>::execute_algorithm - RNG is not set" << endl;
 		return false;
 	}
 	
@@ -154,7 +161,8 @@ bool rkga::execute_algorithm(problem *best, double& current_best_f) {
 	return true;
 }
 
-void rkga::print_performance() const {
+template<class G, typename dT, typename cT>
+void rkga<G,dT,cT>::print_performance() const {
 	cout << "RKGA algorithm performance:" << endl;
 	cout << "    Total generation average:          " << total_time << endl;
 	cout << "    Average generation average:        " << total_time/N_GEN << endl;
