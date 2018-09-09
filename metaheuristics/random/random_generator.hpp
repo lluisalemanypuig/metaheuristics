@@ -29,7 +29,7 @@ class random_generator {
 	public:
 		/// Class constructor
 		random_generator();
-
+		
 		/// Class destructor
 		virtual ~random_generator();
 		
@@ -42,19 +42,22 @@ class random_generator {
 		 * @param b Upper bound of the interval of the distribution
 		 */
 		virtual void init_uniform(T a, T b) = 0;
-
+		
 		/**
 		 * @brief Initialise the binomial distribution
 		 * @param n Number of independent experiments of the distribution
 		 * @param p Probability of success of each experiment
 		 */
 		virtual void init_binomial(T n, double p) = 0;
-
+		
 		/// Compute a pseudo-random number uniformly at random
 		virtual T get_uniform() = 0;
-
+		
 		/// Compute a pseudo-random binomal number
 		virtual T get_binomial() = 0;
+		
+		/// Generate @e N uniform values and stores them in @e u
+		virtual void make_n_uniform(T *u, size_t N) = 0;
 		
 }; // -- class random_generator
 
@@ -76,19 +79,21 @@ class drandom_generator : public random_generator<G,dT> {
 	private:
 		/// Object to generate integer numbers uniformly at random
 		uniform_int_distribution<dT> U;
-
+		
 		/// Object to generate the numbers following a binomial distribution
 		binomial_distribution<dT> B;
 		
 	public:
 		drandom_generator();
 		~drandom_generator();
-
+		
 		void init_uniform(dT a, dT b);
 		void init_binomial(dT a, double p);
-
+		
 		dT get_uniform();
 		dT get_binomial();
+		
+		void make_n_uniform(dT *u, size_t N);
 		
 }; // -- class drandom_generator
 
@@ -102,7 +107,7 @@ class drandom_generator : public random_generator<G,dT> {
  */
 template<
 	class G = default_random_engine,	// class used for the random engine
-	typename cT = float					// type of the continuous distributions
+	typename cT = double				// type of the continuous distributions
 										// float, double
 >
 class crandom_generator : public random_generator<G,cT> {
@@ -115,16 +120,18 @@ class crandom_generator : public random_generator<G,cT> {
 		crandom_generator();
 		/// Destructor
 		~crandom_generator();
-
+		
 		void init_uniform(cT a, cT b);
-
-		/// The CRNG leaves this method's body empty
+		
+		/// This method's body is empty
 		void init_binomial(cT a, double p);
-
+		
 		cT get_uniform();
-
-		/// In the CRNG this method always returns 0.
+		
+		/// This method always returns 0.
 		cT get_binomial();
+		
+		void make_n_uniform(cT *u, size_t N);
 		
 }; // -- class crandom_generator
 

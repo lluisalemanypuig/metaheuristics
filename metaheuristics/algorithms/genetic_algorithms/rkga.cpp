@@ -9,11 +9,11 @@ namespace algorithms {
 
 template<class G, typename dT, typename cT>
 void rkga<G,dT,cT>::get_two_parents(size_t& p1, size_t& p2) {
-	p1 = rng->get_next_rand_int(0, population.size() - 1);
+	p1 = GA<G,dT,cT>::population_rng->get_uniform();
 	
-	p2 = rng->get_next_rand_int(0, population.size() - 1);
+	p2 = GA<G,dT,cT>::population_rng->get_uniform();
 	while (p2 == p1) {
-		p2 = rng->get_next_rand_int(0, population.size() - 1);
+		p2 = GA<G,dT,cT>::population_rng->get_uniform();
 	}
 }
 
@@ -22,7 +22,7 @@ void rkga<G,dT,cT>::get_two_parents(size_t& p1, size_t& p2) {
 template<class G, typename dT, typename cT>
 bool rkga<G,dT,cT>::are_set_sizes_correct() const {
 	// there must be at least one crossover individual
-	return N_MUTANT < pop_size;
+	return rkga<G,dT,cT>::N_MUTANT < rkga<G,dT,cT>::pop_size;
 }
 
 // PUBLIC
@@ -34,11 +34,9 @@ template<class G, typename dT, typename cT>
 rkga<G,dT,cT>::rkga
 (
 	size_t ps, size_t mps, size_t n_gen,
-	size_t c_size, double in_p,
-	drandom_generator *drng,
-	crandom_generator *crng
+	size_t c_size, double in_p
 )
-: genetic_algorithm<G,dT,cT>(ps, mps, n_gen, c_size, in_p, drng, crng)
+: genetic_algorithm<G,dT,cT>(ps, mps, n_gen, c_size, in_p)
 {
 }
 
@@ -50,29 +48,29 @@ bool rkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best_
 	if (not are_set_sizes_correct()) {
 		cerr << "Sizes chosen will lead to errors:" << endl;
 		cerr << "    N_MUTANT >= pop_size" << endl;
-		cerr << "    " << N_MUTANT << " >= " << pop_size << endl;
+		cerr << "    " << GA<G,dT,cT>::N_MUTANT << " >= " << GA<G,dT,cT>::pop_size << endl;
 		return false;
 	}
 	
-	if (rng == NULL) {
-		cerr << "RKGA : Error" << endl;
-		cerr << "bool rkga<G,dT,cT>::execute_algorithm - RNG is not set" << endl;
-		return false;
-	}
+	// initialise random number generators
+	GA<G,dT,cT>::initialise_generators();
 	
-	reset_algorithm();
+	GA<G,dT,cT>::reset_algorithm();
 	
-	double bbegin, bend, send, begin, end;
+	time_point bbegin, bend, send, begin, end;
 	
 	#ifdef GENETIC_DEBUG
 	cout << "RKGA - Generating initial population (" << pop_size << ")" << endl;
 	#endif
 	
 	begin = now();
-	population = population_set(pop_size, chrom_size);
-	initialize_population(best);
+	size_t __pop_size = GA<G,dT,cT>::pop_size;
+	size_t __chrom_size = GA<G,dT,cT>::chrom_size;
+	GA<G,dT,cT>::population.clear();
+	GA<G,dT,cT>::population.resize(__pop_size, __chrom_size);
+	GA<G,dT,cT>::initialize_population(best);
 	end = now();
-	initial_time += elapsed_time(begin, end);
+	GA<G,dT,cT>::initial_time += elapsed_seconds(begin, end);
 	
 	#ifdef GENETIC_DEBUG
 	print_current_population();
@@ -93,10 +91,10 @@ bool rkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best_
 		 << setw(12) << -1 << endl;
 	#endif
 	
-	population_set next_gen(pop_size, chrom_size);
+	population_set next_gen(GA<G,dT,cT>::pop_size, GA<G,dT,cT>::chrom_size);
 	
 	bbegin = now();
-	for (size_t G = 1; G <= N_GEN; ++G) {
+	for (size_t g = 1; g <= GA<G,dT,cT>::N_GEN; ++g) {
 		#ifdef GENETIC_DEBUG
 		cout << "RKGA - Generating " << G << "-th generation" << endl;
 		print_current_population();
@@ -105,9 +103,9 @@ bool rkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best_
 		
 		size_t m = 0;
 		begin = now();
-		generate_mutants(best, 0, N_MUTANT, next_gen, m);
+		GA<G,dT,cT>::generate_mutants(best, 0, GA<G,dT,cT>::N_MUTANT, next_gen, m);
 		end = now();
-		mutant_time += elapsed_time(begin, end);
+		GA<G,dT,cT>::mutant_time += elapsed_seconds(begin, end);
 		
 		#ifdef GENETIC_DEBUG
 		cout << endl;
@@ -115,16 +113,16 @@ bool rkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best_
 		#endif
 		
 		begin = now();
-		generate_crossovers(best, next_gen, m);
+		GA<G,dT,cT>::generate_crossovers(best, next_gen, m);
 		end = now();
-		crossover_time += elapsed_time(begin, end);
+		GA<G,dT,cT>::crossover_time += elapsed_seconds(begin, end);
 		
 		#ifdef GENETIC_DEBUG
 		cout << endl;
 		cout << "    * Swapping generations..." << endl;
 		#endif
 		
-		population = next_gen;
+		GA<G,dT,cT>::population = next_gen;
 		send = now();
 		
 		#ifdef GENETIC_DEBUG
@@ -133,7 +131,7 @@ bool rkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best_
 		
 		#ifdef GENETIC_VERBOSE
 		double best_fit = get_best_individual().get_fitness();
-		double etime = elapsed_time(bbegin, send);
+		double etime = elapsed_seconds(bbegin, send);
 		
 		if (best_fit > prev_best_fit) {
 			prev_best_fit = best_fit;
@@ -149,13 +147,13 @@ bool rkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best_
 		#endif
 	}
 	bend = now();
-	total_time += elapsed_time(bbegin, bend);
+	GA<G,dT,cT>::total_time += elapsed_seconds(bbegin, bend);
 	
 	#ifdef GENETIC_DEBUG
 	cout << "Generated all generations in " << total_time << " s" << endl;
 	#endif
 	
-	const individual& fittest_individual = get_best_individual();
+	const individual& fittest_individual = GA<G,dT,cT>::get_best_individual();
 	current_best_f = best->decode(fittest_individual.get_chromosome());
 	
 	return true;
@@ -164,12 +162,12 @@ bool rkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best_
 template<class G, typename dT, typename cT>
 void rkga<G,dT,cT>::print_performance() const {
 	cout << "RKGA algorithm performance:" << endl;
-	cout << "    Total generation average:          " << total_time << endl;
-	cout << "    Average generation average:        " << total_time/N_GEN << endl;
-	cout << "    Total mutant generation time:      " << mutant_time << endl;
-	cout << "    Average mutant generation time:    " << mutant_time/N_GEN << endl;
-	cout << "    Total crossover generation time:   " << crossover_time << endl;
-	cout << "    Average crossover generation time: " << crossover_time/N_GEN << endl;
+	cout << "    Total generation average:          " << GA<G,dT,cT>::total_time << endl;
+	cout << "    Average generation average:        " << GA<G,dT,cT>::total_time/GA<G,dT,cT>::N_GEN << endl;
+	cout << "    Total mutant generation time:      " << GA<G,dT,cT>::mutant_time << endl;
+	cout << "    Average mutant generation time:    " << GA<G,dT,cT>::mutant_time/GA<G,dT,cT>::N_GEN << endl;
+	cout << "    Total crossover generation time:   " << GA<G,dT,cT>::crossover_time << endl;
+	cout << "    Average crossover generation time: " << GA<G,dT,cT>::crossover_time/GA<G,dT,cT>::N_GEN << endl;
 	cout << endl;
 }
 

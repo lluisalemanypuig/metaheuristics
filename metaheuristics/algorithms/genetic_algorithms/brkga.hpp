@@ -16,7 +16,7 @@ using namespace std;
 #include <metaheuristics/structures/chromosome.hpp>
 #include <metaheuristics/structures/individual.hpp>
 #include <metaheuristics/structures/problem.hpp>
-#include <metaheuristics/misc/timing.hpp>
+#include <metaheuristics/misc/time.hpp>
 
 namespace metaheuristics {
 namespace algorithms {
@@ -49,6 +49,10 @@ template<
 >
 class brkga : public genetic_algorithm<G,dT,cT> {
 	protected:
+		/// Discrete random generator for values in [0, @ref N_ELITE)
+		drandom_generator<G,dT> elite_rng;
+		
+		/// Discrete random generator 
 		/// Execution time spent in copying elite individuals.
 		double elite_copying_time;
 		/// Amount of elite individuals in the population.
@@ -118,8 +122,6 @@ class brkga : public genetic_algorithm<G,dT,cT> {
 		 * @param n_gen The number of generations (see @ref genetic_algorithm::N_GEN).
 		 * @param chrom_size The size of each individual's chromosome (see @ref chrom_size).
 		 * @param i_prob Inheritance probability (see @ref genetic_algorithm::in_prob).
-		 * @param drng Discrete random number generator (see metaheuristic::drng).
-		 * @param crng Continuous random number generator (see metaheuristic::crng).
 		 */
 		brkga
 		(
@@ -128,9 +130,7 @@ class brkga : public genetic_algorithm<G,dT,cT> {
 			size_t e_size,
 			size_t n_gen,
 			size_t chrom_size,
-			double i_prob,
-			drandom_generator<G,dT> *drng,
-			crandom_generator<G,cT> *crng
+			double i_prob
 		);
 		/// Destructor.
 		virtual ~brkga();
@@ -193,3 +193,4 @@ class brkga : public genetic_algorithm<G,dT,cT> {
 } // -- namespace algorithms
 } // -- namespace metaheuristics
 
+#include <metaheuristics/algorithms/genetic_algorithms/brkga.cpp>

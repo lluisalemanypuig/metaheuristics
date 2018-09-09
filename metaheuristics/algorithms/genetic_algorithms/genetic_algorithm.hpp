@@ -30,6 +30,15 @@ using namespace random;
 using namespace timing;
 
 /**
+ * @brief Typedef for the population set.
+ * 
+ * Basically, a shorthand for the vector that contains elements
+ * of type @ref structures::individual and uses an allocator specially
+ * for that class (see @ref structures::allocator_individual).
+ */
+typedef vector<individual, allocator_individual<individual> > population_set;
+
+/**
  * @brief Abstract class to implement genetic algorithms.
  * 
  * In this context, a "mutant individual" is an individual whose
@@ -47,9 +56,14 @@ template<
 	typename dT = size_t,
 	typename cT = double
 >
-class genetic_algorithm : public metaheuristic<G,dT,cT> {
+class genetic_algorithm : public metaheuristic<G,dT> {
 	private:
 	protected:
+		/// Continuous random generator for values between 0 and 1
+		crandom_generator<G,cT> zero_one_rng;
+		/// Discrete random generator for values in [0, @ref pop_size)
+		drandom_generator<G,dT> population_rng;
+		
 		/// Total execution of the algorithm.
 		double total_time;
 		/**
@@ -76,14 +90,6 @@ class genetic_algorithm : public metaheuristic<G,dT,cT> {
 		/// Probability of inheritance.
 		double in_prob;
 		
-		/**
-		 * @brief Typedef for the population set.
-		 * 
-		 * Basically, a shorthand for the vector that contains elements
-		 * of type @ref structures::individual and uses an allocator specially
-		 * for that class (see @ref structures::allocator_individual).
-		 */
-		typedef vector<individual, allocator_individual<individual> > population_set;
 		/// The population of individuals.
 		population_set population;
 		
@@ -185,6 +191,9 @@ class genetic_algorithm : public metaheuristic<G,dT,cT> {
 		 */
 		void reset_genetic_algorithm();
 		
+		/// Initialise the random generators to the appropriate ranges.
+		void initialise_generators();
+		
 	public:
 		/// Default constructor.
 		genetic_algorithm(); 
@@ -200,8 +209,6 @@ class genetic_algorithm : public metaheuristic<G,dT,cT> {
 		 * (see @ref chrom_size).
 		 * @param inheritance_probability Inherith with such probability
 		 * the first parent's gene (see @ref in_prob).
-		 * @param drng Discrete random number generator (see metaheuristic::drng).
-		 * @param crng Continuous random number generator (see metaheuristic::crng).
 		 */
 		genetic_algorithm
 		(
@@ -209,9 +216,7 @@ class genetic_algorithm : public metaheuristic<G,dT,cT> {
 			size_t mutant_population_size,
 			size_t num_generations,
 			size_t chrom_size,
-			double inheritance_probability,
-			drandom_generator<G,dT> *drng,
-			crandom_generator<G,cT> *crng
+			double inheritance_probability
 		);
 		/// Destructor.
 		virtual ~genetic_algorithm();
@@ -242,7 +247,7 @@ class genetic_algorithm : public metaheuristic<G,dT,cT> {
 		 * @param[out] p The solution obtained using the genetic algorithm.
 		 * @param[out] c The cost of solution obtained using the genetic algorithm.
 		 * @pre @e p contains an empty instance of the problem<G,dT>.
-		 * @e c is the cost of @e p (the cost of an empty solution). 
+		 * @e c is the cost of @e p (the cost of an empty solution).
 		 */
 		virtual bool execute_algorithm(problem<G,dT> *p, double& c) = 0;
 		
@@ -250,6 +255,11 @@ class genetic_algorithm : public metaheuristic<G,dT,cT> {
 		virtual void print_performance() const = 0;
 };
 
+/// Shorthand for the genetic_algorithm class template
+template<class G, typename dT, typename cT>
+using GA = genetic_algorithm<G,dT,cT>;
+
 } // -- namespace algorithms
 } // -- namespace metaheuristics
 
+#include <metaheuristics/algorithms/genetic_algorithms/genetic_algorithm.cpp>

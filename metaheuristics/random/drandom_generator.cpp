@@ -34,7 +34,15 @@ dT drandom_generator<G,dT>::get_binomial() {
 	dT r = B(random_generator<G,dT>::gen);
 	return r;
 }
-	
+
+
+template<class G, typename dT>
+void drandom_generator<G,dT>::make_n_uniform(dT *u, size_t N) {
+	for (size_t i = 0; i < N; ++i) {
+		u[i] = this->get_uniform();
+	}
+}
+
 } // -- namespace random
 } // -- namespace metaheuristics
 

@@ -92,20 +92,20 @@ bool local_search<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_
 	     << endl;
 	#endif
 	
-	double bbegin, bend, begin, end;
+	time_point bbegin, bend, begin, end;
 	
 	bool improvement = true;
 	
 	bbegin = now();
 	while (ITERATION <= MAX_ITER and improvement) {
-		pair<problem *, double> neighbour;
+		pair<problem<G,dT>*, double> neighbour;
 		neighbour.first = NULL;
 		neighbour.second = current_best_f;
 		
 		begin = now();
 		best->best_neighbour(neighbour, LSP);
 		end = now();
-		neighbourhood_time += elapsed_time(begin, end);
+		neighbourhood_time += elapsed_seconds(begin, end);
 		
 		if (neighbour.first != NULL) {
 			
@@ -146,7 +146,7 @@ bool local_search<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_
 		++ITERATION;
 	}
 	bend = now();
-	total_time = elapsed_time(bbegin, bend);
+	total_time = elapsed_seconds(bbegin, bend);
 	
 	return true;
 }

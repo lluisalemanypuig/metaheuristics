@@ -97,7 +97,7 @@ void genetic_algorithm<G,dT,cT>::evaluate_individual(const problem<G,dT> *p, ind
 template<class G, typename dT, typename cT>
 void genetic_algorithm<G,dT,cT>::generate_mutant(const problem<G,dT> *p, individual& i) {
 	// generate chromosome
-	rng->get_n_rand(&i.get_chromosome()[0], i.get_chromosome().size());
+	zero_one_rng.make_n_uniform(&i.get_chromosome()[0], i.get_chromosome().size());
 	
 	// compute the fitness of an individual
 	evaluate_individual(p, i);
@@ -112,7 +112,7 @@ void genetic_algorithm<G,dT,cT>::crossover(const problem<G,dT> *p, size_t par1_i
 		double g1 = parent1.get_gene(i);
 		double g2 = parent2.get_gene(i);
 		
-		double rand = rng->get_next_rand();
+		cT rand = zero_one_rng.get_uniform();
 		double selected_gene = (rand <= in_prob ? g1 : g2);
 		
 		son.set_gene(i, selected_gene);
@@ -129,10 +129,16 @@ void genetic_algorithm<G,dT,cT>::reset_genetic_algorithm() {
 	mutant_time = 0.0;
 }
 
+template<class G, typename dT, typename cT>
+void genetic_algorithm<G,dT,cT>::initialise_generators() {
+	zero_one_rng.init_uniform(0, 1);
+	population_rng.init_uniform(0, pop_size);
+}
+
 // PUBLIC
 
 template<class G, typename dT, typename cT>
-genetic_algorithm<G,dT,cT>::genetic_algorithm() : metaheuristic<G,dT,cT>() {
+genetic_algorithm<G,dT,cT>::genetic_algorithm() : metaheuristic<G,dT>() {
 	pop_size = 0;
 	N_MUTANT = 0;
 	N_GEN = 0;
@@ -146,11 +152,9 @@ template<class G, typename dT, typename cT>
 genetic_algorithm<G,dT,cT>::genetic_algorithm
 (
 	size_t ps, size_t mps, size_t n_gen,
-	size_t c_size, double in_p,
-	drandom_generator<G,dT> *drng,
-	crandom_generator<G,cT> *crng
+	size_t c_size, double in_p
 )
-: metaheuristic<G,dT,cT>(drng,crng)
+: metaheuristic<G,dT>()
 {
 	pop_size = ps;
 	N_MUTANT = mps;
@@ -158,7 +162,7 @@ genetic_algorithm<G,dT,cT>::genetic_algorithm
 	chrom_size = c_size;
 	in_prob = in_p;
 	
-	reset_algorithm();
+	reset_genetic_algorithm();
 }
 
 template<class G, typename dT, typename cT>

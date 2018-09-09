@@ -32,7 +32,14 @@ template<class G, typename cT>
 cT crandom_generator<G,cT>::get_binomial() {
 	return 0.0;
 }
-	
+
+template<class G, typename cT>
+void crandom_generator<G,cT>::make_n_uniform(cT *u, size_t N) {
+	for (size_t i = 0; i < N; ++i) {
+		u[i] = this->get_uniform();
+	}
+}
+
 } // -- namespace random
 } // -- namespace metaheuristics
 

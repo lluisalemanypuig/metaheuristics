@@ -12,38 +12,17 @@ using namespace random;
 /// Interface for the two functions common to all algorithms.
 template<
 	class G = default_random_engine,
-	typename dT = size_t,
-	typename cT = double
+	typename dT = size_t
 >
 class metaheuristic {
 	protected:
-		/// Discrete random number generator.
-		drandom_generator<G,dT> *drng;
-		/// Continuous random number generator.
-		crandom_generator<G,cT> *crng;
-	
 	public:
 		/// Default constructor.
 		metaheuristic();
-		/// Constructor with random generator.
-		metaheuristic(drandom_generator<G,dT> *drng, crandom_generator<G,cT> *crng);
 		/// Destructor.
 		virtual ~metaheuristic();
 		
 		// MODIFIERS
-		
-		/**
-		 * @brief Sets the discrete random number generator.
-		 * 
-		 * The caller is made responsible for freeing this object.
-		 */
-		void set_drng(drandom_generator<G,dT> *rng);
-		/**
-		 * @brief Sets the discrete random number generator.
-		 * 
-		 * The caller is made responsible for freeing this object.
-		 */
-		void set_crng(crandom_generator<G,cT> *rng);
 		
 		/**
 		 * @brief Sets the algorithm to its original state.
@@ -65,3 +44,4 @@ class metaheuristic {
 } // -- namespace algorithms
 } // -- namespace metaheuristics
 
+#include <metaheuristics/algorithms/metaheuristic.hpp>

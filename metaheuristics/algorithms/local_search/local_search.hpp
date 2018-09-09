@@ -172,4 +172,4 @@ class local_search : public metaheuristic<G,dT> {
 } // -- namespace algorithms
 } // -- namespace metaheuristics
 
-#include <metaheuristics/algorithms/local_search/local_search_alg.cpp>
+#include <metaheuristics/algorithms/local_search/local_search.cpp>

@@ -6,8 +6,8 @@
 using namespace std;
 
 // metaheuristics includes
-#include <metaheuristics/algorithms/genetic_algorithms/chromosome.hpp>
 #include <metaheuristics/structures/infeasible_exception.hpp>
+#include <metaheuristics/structures/chromosome.hpp>
 #include <metaheuristics/random/random_generator.hpp>
 
 namespace metaheuristics {
@@ -192,3 +192,4 @@ class problem {
 } // -- namespace structures
 } // -- namespace metaheuristics
 
+#include <metaheuristics/structures/problem.cpp>

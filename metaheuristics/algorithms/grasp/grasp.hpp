@@ -16,6 +16,7 @@ namespace metaheuristics {
 namespace algorithms {
 
 using namespace structures;
+using namespace random;
 using namespace timing;
 
 /**
@@ -48,11 +49,13 @@ using namespace timing;
  */
 template<
 	class G = default_random_engine,
-	typename dT = size_t,
-	typename cT = double
+	typename dT = size_t
 >
-class grasp : public metaheuristic<G,dT,cT> {
+class grasp : public metaheuristic<G,dT> {
 	private:
+		/// Discrete random number generator
+		drandom_generator<G,dT> drng;
+		
 		/// Total execution time of the algorithm.
 		double total_time;
 		/// Total execution time spent in constructing the initial
@@ -77,9 +80,7 @@ class grasp : public metaheuristic<G,dT,cT> {
 		grasp
 		(
 			size_t m_GRASP, size_t m_LOCAL, double a,
-			const local_search_policy& lsp,
-			drandom_generator *drng,
-			crandom_generator *crng
+			const local_search_policy& lsp
 		);
 		/// Destructor.
 		~grasp();
@@ -206,3 +207,4 @@ class grasp : public metaheuristic<G,dT,cT> {
 } // -- namespace algorithms
 } // -- namespace metaheuristics
 
+#include <metaheuristics/algorithms/grasp/grasp.cpp>

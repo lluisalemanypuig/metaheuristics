@@ -7,22 +7,21 @@ namespace algorithms {
 
 // PUBLIC
 
-template<class G, typename dT, typename cT>
-grasp<G,dT>::grasp() : metaheuristic<G,dT,cT>() {
+template<class G, typename dT>
+grasp<G,dT>::grasp() : metaheuristic<G,dT>() {
 	MAX_ITER_GRASP = MAX_ITER_LOCAL = -1;	// infinite amount of iterations
 	alpha = 1.0;	// completely randomized construction
 	
 	reset_algorithm();
 }
 
-template<class G, typename dT, typename cT>
+template<class G, typename dT>
 grasp<G,dT>::grasp
 (
 	size_t mg, size_t ml, double a,
-	const local_search_policy& lsp,
-	drandom_generator<G,dT> *drng, crandom_generator<G,cT> *crng
+	const local_search_policy& lsp
 )
-: metaheuristic<G,dT,cT>(drng, crng)
+: metaheuristic<G,dT>()
 {
 	MAX_ITER_GRASP = mg;
 	MAX_ITER_LOCAL = ml;
@@ -32,27 +31,27 @@ grasp<G,dT>::grasp
 	reset_algorithm();
 }
 
-template<class G, typename dT, typename cT>
+template<class G, typename dT>
 grasp<G,dT>::~grasp() { }
 
 // SETTERS
 
-template<class G, typename dT, typename cT>
+template<class G, typename dT>
 void grasp<G,dT>::set_local_search_policy(const local_search_policy& lsp) {
 	LSP = lsp;
 }
 
-template<class G, typename dT, typename cT>
+template<class G, typename dT>
 void grasp<G,dT>::set_max_iterations_grasp(size_t max) {
 	MAX_ITER_GRASP = max;
 }
 
-template<class G, typename dT, typename cT>
+template<class G, typename dT>
 void grasp<G,dT>::set_max_iterations_local(size_t max) {
 	MAX_ITER_LOCAL = max;
 }
 
-template<class G, typename dT, typename cT>
+template<class G, typename dT>
 void grasp<G,dT>::reset_algorithm() {
 	total_time = 0.0;
 	construct_time = 0.0;
@@ -61,49 +60,44 @@ void grasp<G,dT>::reset_algorithm() {
 
 // GETTERS
 
-template<class G, typename dT, typename cT>
+template<class G, typename dT>
 double grasp<G,dT>::get_total_time() const {
 	return total_time;
 }
 
-template<class G, typename dT, typename cT>
+template<class G, typename dT>
 double grasp<G,dT>::get_construct_time() const {
 	return construct_time;
 }
 
-template<class G, typename dT, typename cT>
+template<class G, typename dT>
 double grasp<G,dT>::get_local_search_time() const {
 	return local_search_time;
 }
 
-template<class G, typename dT, typename cT>
+template<class G, typename dT>
 local_search_policy grasp<G,dT>::get_local_search_policy() const {
 	return LSP;
 }
 
-template<class G, typename dT, typename cT>
+template<class G, typename dT>
 size_t grasp<G,dT>::get_max_iterations_grasp() const {
 	return MAX_ITER_GRASP;
 }
 
-template<class G, typename dT, typename cT>
+template<class G, typename dT>
 size_t grasp<G,dT>::get_max_iterations_local() const {
 	return MAX_ITER_LOCAL;
 }
 
-template<class G, typename dT, typename cT>
+template<class G, typename dT>
 bool grasp<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_best_f) {
-	if (drng == nullptr) {
-		cerr << "GRASP : Error" << endl;
-		cerr << "bool grasp<G,dT>::execute_algorithm - RNG is not set" << endl;
-		return false;
-	}
-	
+	// set algorithm to its initial state
 	reset_algorithm();
 	
-	double bbegin, bend, begin, end;
+	time_point bbegin, bend, begin, end;
 	
-	local_search ls(MAX_ITER_LOCAL, LSP);
+	local_search<G,dT> ls(MAX_ITER_LOCAL, LSP);
 	current_best_f = -numeric_limits<double>::max();
 	
 	#ifdef GRASP_DEBUG
@@ -120,13 +114,13 @@ bool grasp<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_best_f)
 	
 	bbegin = now();
 	for (size_t it = 1; it <= MAX_ITER_GRASP; ++it) {
-		problem *r = best->empty();
+		problem<G,dT> *r = best->empty();
 		
 		try {
 			begin = now();
-			double rcc = r->random_construct(drng, alpha);
+			double rcc = r->random_construct(&drng, alpha);
 			end = now();
-			construct_time += elapsed_time(begin, end);
+			construct_time += elapsed_seconds(begin, end);
 			
 			#ifdef GRASP_DEBUG
 			sane = r->sanity_check();
@@ -156,7 +150,7 @@ bool grasp<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_best_f)
 			begin = now();
 			ls.execute_algorithm(r, lsc);
 			end = now();
-			local_search_time += elapsed_time(begin, end);
+			local_search_time += elapsed_seconds(begin, end);
 			
 			#ifdef GRASP_DEBUG
 			sane = r->sanity_check();
@@ -194,7 +188,7 @@ bool grasp<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_best_f)
 			//cerr << e.what() << endl;
 			
 			end = now();
-			construct_time += elapsed_time(begin, end);
+			construct_time += elapsed_seconds(begin, end);
 			
 			#ifdef GRASP_VERBOSE
 			cout << setw(8)  << "R.C."
@@ -214,12 +208,12 @@ bool grasp<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_best_f)
 		delete r;
 	}
 	bend = now();
-	total_time = elapsed_time(bbegin, bend);
+	total_time = elapsed_seconds(bbegin, bend);
 	
 	return true;
 }
 
-template<class G, typename dT, typename cT>
+template<class G, typename dT>
 void grasp<G,dT>::print_performance() const {
 	cout << "GRASP metaheuristic performance (for a total of " << MAX_ITER_GRASP << " iterations):" << endl;
 	cout << "    Total execution time:      " << total_time << " s" << endl;

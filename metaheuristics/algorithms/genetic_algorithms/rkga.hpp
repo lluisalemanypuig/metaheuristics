@@ -78,8 +78,6 @@ class rkga : public genetic_algorithm<G,dT,cT> {
 		 * @param n_gen The number of generations (see @ref genetic_algorithm::N_GEN).
 		 * @param chrom_size The size of each individual's chromosome (see @ref chrom_size).
 		 * @param i_prob Inheritance probability (see @ref genetic_algorithm::in_prob).
-		 * @param drng Discrete random number generator (see metaheuristic::drng).
-		 * @param crng Continuous random number generator (see metaheuristic::crng).
 		 */
 		rkga
 		(
@@ -87,9 +85,7 @@ class rkga : public genetic_algorithm<G,dT,cT> {
 			size_t m_size,
 			size_t n_gen,
 			size_t chrom_size,
-			double i_prob,
-			drandom_generator<G,dT> *drng,
-			crandom_generator<G,cT> *crng
+			double i_prob
 		);
 		/// Destructor.
 		virtual ~rkga();
@@ -132,3 +128,4 @@ class rkga : public genetic_algorithm<G,dT,cT> {
 } // -- namespace algorithms
 } // -- namespace metaheuristics
 
+#include <metaheuristics/algorithms/genetic_algorithms/rkga.cpp>
