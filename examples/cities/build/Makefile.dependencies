@@ -1,0 +1,6 @@
+
+POINT_DPS			= $(SRC_DIR)/point.hpp
+CENTRE_TYPE_DPS		= $(SRC_DIR)/centre_type.hpp
+CITY_DPS			= $(SRC_DIR)/city.hpp $(POINT_DPS)
+INTERFACE_DPS		= $(SRC_DIR)/interface.hpp $(CITY_DPS) $(CENTRE_TYPE_DPS)
+SOLVER_DPS			= $(SRC_DIR)/solver.hpp $(INTERFACE_DPS)

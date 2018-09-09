@@ -1,0 +1,86 @@
+
+#############
+# DEBUG FLAGS
+
+DEB_FLAGS = -O0 $(GEN_FLAGS)
+
+###############
+# DEBUG OBJECTS
+
+DEBUG_OBJECTS =									\
+	$(DEB_BIN_DIR)/main.o						\
+	$(DEB_BIN_DIR)/point.o						\
+	$(DEB_BIN_DIR)/city.o						\
+	$(DEB_BIN_DIR)/centre_type.o				\
+	$(DEB_BIN_DIR)/interface.o					\
+	$(DEB_BIN_DIR)/interface_constraints.o		\
+	$(DEB_BIN_DIR)/interface_inout.o			\
+	$(DEB_BIN_DIR)/interface_memory.o			\
+	$(DEB_BIN_DIR)/solver.o						\
+	$(DEB_BIN_DIR)/solver_decode.o				\
+	$(DEB_BIN_DIR)/solver_greedy_construct.o	\
+	$(DEB_BIN_DIR)/solver_greedy_costs.o		\
+	$(DEB_BIN_DIR)/solver_neighbourhood.o		\
+	$(DEB_BIN_DIR)/solver_random_construct.o
+
+###########
+# DIRECTORY
+
+debugdirectory: $(DEB_BIN_DIR)
+$(DEB_BIN_DIR):
+	mkdir -p $(DEB_BIN_DIR)
+
+########################
+# MAKE CITIES EXECUTABLE
+
+$(DEB_BIN_DIR)/cities: $(DEBUG_OBJECTS)
+	g++ $(DEB_FLAGS) -o cities $(DEBUG_OBJECTS) $(LIBS)
+
+$(DEB_BIN_DIR)/main.o: $(SRC_DIR)/main.cpp $(MAIN_DPS)
+	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)
+
+$(DEB_BIN_DIR)/point.o: $(SRC_DIR)/point.cpp $(POINT_DPS)
+	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)
+
+$(DEB_BIN_DIR)/city.o: $(SRC_DIR)/city.cpp $(CITY_DPS)
+	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)
+
+$(DEB_BIN_DIR)/centre_type.o: $(SRC_DIR)/centre_type.cpp $(CENTRE_TYPE_DPS)
+	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)
+
+# ---------
+# INTERFACE
+
+$(DEB_BIN_DIR)/interface.o: $(SRC_DIR)/interface.cpp $(INTERFACE_DPS)
+	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)
+$(DEB_BIN_DIR)/interface_constraints.o: $(IMPL_DIR)/interface_constraints.cpp $(INTERFACE_DPS)
+	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)
+$(DEB_BIN_DIR)/interface_inout.o: $(IMPL_DIR)/interface_inout.cpp $(INTERFACE_DPS)
+	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)
+$(DEB_BIN_DIR)/interface_memory.o: $(IMPL_DIR)/interface_memory.cpp $(INTERFACE_DPS)
+	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)
+
+# ------
+# SOLVER
+
+$(DEB_BIN_DIR)/solver.o: $(SRC_DIR)/solver.cpp $(SOLVER_DPS)
+	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)
+$(DEB_BIN_DIR)/solver_decode.o: $(IMPL_DIR)/solver_decode.cpp $(SOLVER_DPS)
+	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)
+$(DEB_BIN_DIR)/solver_greedy_construct.o: $(IMPL_DIR)/solver_greedy_construct.cpp $(SOLVER_DPS)
+	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)
+$(DEB_BIN_DIR)/solver_greedy_costs.o: $(IMPL_DIR)/solver_greedy_costs.cpp $(SOLVER_DPS)
+	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)
+$(DEB_BIN_DIR)/solver_neighbourhood.o: $(IMPL_DIR)/solver_neighbourhood.cpp $(SOLVER_DPS)
+	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)
+$(DEB_BIN_DIR)/solver_random_construct.o: $(IMPL_DIR)/solver_random_construct.cpp $(SOLVER_DPS)
+	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)
+
+############
+
+debugclean:
+	rm -f $(DEBUG_OBJECTS)
+
+debugdistclean:
+	make -f $(RULES_DIR)/Makefile debugclean
+	rm -f $(DEB_BIN_DIR)/cities

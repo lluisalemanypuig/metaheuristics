@@ -7,12 +7,12 @@
 #include <set>
 using namespace std;
 
-/// Custom includes
-#include "algorithms/infeasible_exception.hpp"
-#include "interface.hpp"
-#include "misc/utils.hpp"
+/// metaheuristics includes
+#include <metaheuristics/structures.hpp>
+#include <metaheuristics/misc.hpp>
 
-using namespace utils;
+/// Custom includes
+#include "interface.hpp"
 
 class solver : public interface {
 	private:
@@ -93,7 +93,7 @@ class solver : public interface {
 		
 		// Constructs an empty solution.
 		// Calls constructor with no parameters.
-		problem *empty() const;
+		problem<> *empty() const;
 		
 		// Constructs a solution from scratch. It may use a greedy/random/... algorithm
 		// Returns the evaluation of the solution.
@@ -101,7 +101,7 @@ class solver : public interface {
 		
 		// Constructs a randomized solution using a restricted candidate
 		// list (RCL) sorted using the parameter alpha.
-		double random_construct(random_number_generator *rng, double alpha) throw(infeasible_exception);
+		double random_construct(drandom_generator<> *rng, double alpha) throw(infeasible_exception);
 		
 		// Constructs a solution from a given chromosome.
 		// Returns the evaluation of the solution.
@@ -111,15 +111,15 @@ class solver : public interface {
 		// - the best neighbour if BI is true (best improvement)
 		// - the first best neighbour if BI is false (first improvement)
 		// Best means a neighbour that maximizes the evaluate() function.
-		void best_neighbour(pair<problem *, double>& best_neighbour, const local_search_policy& lsp = Best_Improvement);
+		void best_neighbour(pair<problem<>*, double>& best_neighbour, const local_search_policy& lsp = Best_Improvement);
 		
 		/// Memory handling
 		
 		// Creates a copy of the instance of this problem.
-		problem *clone() const;
+		problem<> *clone() const;
 		
 		// Creates a copy of the instance of the problem passed as parameter.
-		void copy(const problem *p);
+		void copy(const problem<> *p);
 		
 		// Clears the memory used by the instance of this problem.
 		// Everything is reset so that the method construct would create

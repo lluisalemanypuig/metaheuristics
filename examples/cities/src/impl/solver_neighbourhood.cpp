@@ -1,4 +1,4 @@
-#include "solver/solver.hpp"
+#include "solver.hpp"
 
 /// NON-CLASS PRIVATE
 

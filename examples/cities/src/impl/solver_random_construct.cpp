@@ -1,4 +1,4 @@
-#include "solver/solver.hpp"
+#include "solver.hpp"
 
 /// NON-CLASS PRIVATE
 
@@ -10,7 +10,7 @@ typedef vector<eval_candidate>::const_iterator vcit;
 
 /// PUBLIC
 
-double solver::random_construct(random_number_generator *RNG, double alpha) throw(infeasible_exception) {
+double solver::random_construct(drandom_generator<> *RNG, double alpha) throw(infeasible_exception) {
 	set<size_t> used_locations;
 	
 	/// LOCATION ASSIGNATION
@@ -60,7 +60,8 @@ double solver::random_construct(random_number_generator *RNG, double alpha) thro
 		}
 		
 		// take a candidate at random
-		size_t RCL_idx = RNG->get_next_rand_int(0, RCL.size() - 1);
+		RNG->init_uniform(0, RCL.size() - 1);
+		size_t RCL_idx = RNG->get_uniform();
 		const eval_candidate& C = RCL[RCL_idx];
 		
 		const candidate& can = C.second;
@@ -122,7 +123,7 @@ double solver::random_construct(random_number_generator *RNG, double alpha) thro
 			string message = "";
 			message += "double solver::random_construct()\n";
 			message += "    Cannot build solution\n";
-			message += "    -> Centre not found for location: " + size_t_to_string(loc_idx) + "\n";
+			message += "    -> Centre not found for location: " + std::to_string(loc_idx) + "\n";
 			throw infeasible_exception(message);
 		}
 	}

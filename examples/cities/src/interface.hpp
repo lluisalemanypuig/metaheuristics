@@ -8,16 +8,17 @@
 #include <set>
 using namespace std;
 
+/// metaheuristics includes
+#include <metaheuristics/structures.hpp>
+
 /// Custom includes
-#include "algorithms/infeasible_exception.hpp"
-#include "algorithms/problem.hpp"
 #include "centre_type.hpp"
 #include "city.hpp"
 
 using namespace metaheuristics;
 using namespace structures;
 
-class interface : public problem {
+class interface : public problem<> {
 	public:
 		enum role {
 			none = 0,

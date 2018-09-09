@@ -1,4 +1,4 @@
-#include "solver/interface.hpp"
+#include "interface.hpp"
 
 /// PROTECTED
 

@@ -1,4 +1,4 @@
-#include "solver/solver.hpp"
+#include "solver.hpp"
 
 /// PUBLIC
 
@@ -115,7 +115,7 @@ double solver::greedy_construct() throw(infeasible_exception) {
 			string message = "";
 			message += "double solver::greedy_construct()\n";
 			message += "    Cannot build solution\n";
-			message += "    -> Centre not found for location: " + size_t_to_string(loc_idx) + "\n";
+			message += "    -> Centre not found for location: " + std::to_string(loc_idx) + "\n";
 			throw infeasible_exception(message);
 		}
 	}

@@ -11,13 +11,13 @@ solver::~solver() {
 	
 }
 
-problem *solver::empty() const {
+problem<> *solver::empty() const {
 	solver *s = new solver();
 	s->copy_empty(this);
 	return s;
 }
 
-problem *solver::clone() const {
+problem<> *solver::clone() const {
 	solver *s = new solver();
 	s->copy_interface(this);
 	return s;

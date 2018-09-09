@@ -1,4 +1,4 @@
-#include "solver/solver.hpp"
+#include "solver.hpp"
 
 /// NON-CLASS PRIVATE
 
@@ -113,7 +113,7 @@ double solver::decode(const chromosome& c) throw(infeasible_exception) {
 			string message = "";
 			message += "double solver::decode()\n";
 			message += "    Cannot build solution\n";
-			message += "    -> Centre not found for location: " + size_t_to_string(loc_idx) + "\n";
+			message += "    -> Centre not found for location: " + std::to_string(loc_idx) + "\n";
 			throw infeasible_exception(message);
 		}
 	}
