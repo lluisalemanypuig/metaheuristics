@@ -14,10 +14,10 @@ RND_DPS = 	$(RND_DIR)/random_generator.hpp $(RND_DIR)/random_generator.cpp 	\
 # -- ALGORITHMS --
 
 # STRUCTURES
-INF_EXC_DPS		= $(ALGS_DIR)/infeasible_exception.hpp
-CHROMOSOME_DPS	= $(GEN_ALGS_DIR)/chromosome.hpp
-INDIVIDUAL_DPS	= $(GEN_ALGS_DIR)/individual.hpp $(CHROMOSOME_DPS)
-PROBLEM_DPS		= $(ALGS_DIR)/problem.hpp $(INF_EXC_DPS) $(RND_DPS)				\
+INF_EXC_DPS		= $(STRUCT_DIR)/infeasible_exception.hpp
+CHROMOSOME_DPS	= $(STRUCT_DIR)/chromosome.hpp
+INDIVIDUAL_DPS	= $(STRUCT_DIR)/individual.hpp $(CHROMOSOME_DPS)
+PROBLEM_DPS		= $(STRUCT_DIR)/problem.hpp $(INF_EXC_DPS) $(RND_DPS)			\
 				  $(CHROMOSOME_DPS)
 
 # HEURISTICS

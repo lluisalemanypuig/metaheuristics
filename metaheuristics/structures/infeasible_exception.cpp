@@ -1,4 +1,4 @@
-#include <metaheuristics/algorithms/infeasible_exception.hpp>
+#include <metaheuristics/structures/infeasible_exception.hpp>
 
 namespace metaheuristics {
 namespace structures {

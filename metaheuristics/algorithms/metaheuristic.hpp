@@ -2,7 +2,7 @@
 
 // metaheuristic includes
 #include <metaheuristics/random/random_generator.hpp>
-#include <metaheuristics/algorithms/problem.hpp>
+#include <metaheuristics/structures/problem.hpp>
 
 namespace metaheuristics {
 namespace algorithms {

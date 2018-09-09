@@ -7,7 +7,7 @@ using namespace std;
 
 // Custom includes
 #include <metaheuristics/algorithms/metaheuristic.hpp>
-#include <metaheuristics/algorithms/problem.hpp>
+#include <metaheuristics/structures/problem.hpp>
 #include <metaheuristics/misc/time.hpp>
 
 namespace metaheuristics {

@@ -9,8 +9,8 @@ using namespace std;
 // Custom includes
 #include <metaheuristics/algorithms/metaheuristic.hpp>
 #include <metaheuristics/algorithms/local_search/local_search.hpp>
-#include <metaheuristics/algorithms/problem.hpp>
 #include <metaheuristics/random/random_generator.hpp>
+#include <metaheuristics/structures/problem.hpp>
 
 namespace metaheuristics {
 namespace algorithms {

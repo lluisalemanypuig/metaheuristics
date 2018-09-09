@@ -1,4 +1,4 @@
-#include <metaheuristics/algorithms/problem.hpp>
+#include <metaheuristics/structures/problem.hpp>
 
 namespace metaheuristics {
 namespace structures {

@@ -1,4 +1,4 @@
-#include <metaheuristics/algorithms/genetic_algorithms/individual.hpp>
+#include <metaheuristics/structures/individual.hpp>
 
 namespace metaheuristics {
 namespace structures {

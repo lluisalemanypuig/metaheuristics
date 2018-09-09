@@ -5,7 +5,7 @@
 using namespace std;
 
 // Custom includes
-#include <metaheuristics/algorithms/genetic_algorithms/chromosome.hpp>
+#include <metaheuristics/structures/chromosome.hpp>
 
 namespace metaheuristics {
 namespace structures {

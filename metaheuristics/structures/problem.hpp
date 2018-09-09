@@ -7,7 +7,7 @@ using namespace std;
 
 // metaheuristics includes
 #include <metaheuristics/algorithms/genetic_algorithms/chromosome.hpp>
-#include <metaheuristics/algorithms/infeasible_exception.hpp>
+#include <metaheuristics/structures/infeasible_exception.hpp>
 #include <metaheuristics/random/random_generator.hpp>
 
 namespace metaheuristics {
