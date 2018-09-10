@@ -196,8 +196,11 @@ class genetic_algorithm : public metaheuristic<G,dT> {
 		/**
 		 * @brief Resets the genetic algorithm to a partial initial state.
 		 * 
-		 * It sets the variables @ref total_time,
-		 * @ref initial_time, @ref crossover_time, @ref mutant_time.
+		 * Sets the variables @ref total_time, @ref initial_time,
+		 * @ref crossover_time, @ref mutant_time to 0.
+		 * 
+		 * Seeds the random number generators @ref zero_one_rng and
+		 * @ref population_rng.
 		 */
 		void reset_genetic_algorithm();
 		
@@ -230,13 +233,6 @@ class genetic_algorithm : public metaheuristic<G,dT> {
 		);
 		/// Destructor.
 		virtual ~genetic_algorithm();
-		
-		/**
-		 * @brief Resets the algorithm to its initial state.
-		 * 
-		 * This implementation should call @ref reset_genetic_algorithm().
-		 */
-		virtual void reset_algorithm();
 		
 		/// Returns a constant reference to the individual with largest fitness.
 		virtual const individual& get_best_individual() const;

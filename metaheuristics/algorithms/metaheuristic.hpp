@@ -13,7 +13,10 @@ using namespace random;
 /**
  * @brief Interface for the two functions common to all algorithms.
  * 
- * These methods are:
+ * Common variables are:
+ * - @ref seed_rng
+ * 
+ * The methods to implement for are:
  * - @ref reset_algorithm
  * - @ref execute_algorithm
  */
@@ -23,13 +26,27 @@ template<
 >
 class metaheuristic {
 	protected:
+		/// Variable telling whether the number generators should be seeded or not.
+		bool seed_rng;
+		
 	public:
-		/// Default constructor.
+		/**
+		 * @brief Default constructor.
+		 * 
+		 * Variable @ref seed_rng is initialised to @e false.
+		 */
 		metaheuristic();
 		/// Destructor.
 		virtual ~metaheuristic();
 		
 		// MODIFIERS
+		
+		/**
+		 * @brief Seed the random number generators.
+		 * 
+		 * Sets variable @ref seed_rng to true.
+		 */
+		void seed();
 		
 		/**
 		 * @brief Sets the algorithm to its original state.

@@ -85,16 +85,16 @@ class rkga : public genetic_algorithm<G,dT,cT> {
 		 * @param chrom_size The size of each individual's chromosome (see @ref chrom_size).
 		 * @param i_prob Inheritance probability (see @ref genetic_algorithm::in_prob).
 		 */
-		rkga
-		(
-			size_t p_size,
-			size_t m_size,
-			size_t n_gen,
-			size_t chrom_size,
-			double i_prob
-		);
+		rkga(size_t p_size, size_t m_size, size_t n_gen, size_t chrom_size, double i_prob);
 		/// Destructor.
 		virtual ~rkga();
+		
+		/**
+		 * @brief Sets the internal variables to its initial state.
+		 * 
+		 * Calls @ref genetic_algorithm::reset_genetic_algorithm.
+		 */
+		void reset_algorithm();
 		
 		/**
 		 * @brief Executes the RKGA algorithm.
@@ -104,7 +104,8 @@ class rkga : public genetic_algorithm<G,dT,cT> {
 		 * - For as many generations as @ref genetic_algorithm::N_GEN :
 		 * 		- Make the next generation @e Ng
 		 * 		- Generate mutants in the range [0, @ref genetic_algorithm::N_MUTANT) in @e Ng
-		 * 		- Generate the crossover individuals in the range [@ref genetic_algorithm::N_MUTANT, @ref genetic_algorithm::pop_size)
+		 * 		- Generate the crossover individuals in the range
+		 * 		  [@ref genetic_algorithm::N_MUTANT, @ref genetic_algorithm::pop_size)
 		 * 		  in @e Ng
 		 * - Find the individual with the largest fit and decdode the chromosome.
 		 *   Store the result in @e p. Store the cost of the solution in @e c.

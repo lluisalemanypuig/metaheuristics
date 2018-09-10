@@ -84,8 +84,6 @@ bool brkga<G,dT,cT>::are_set_sizes_correct() const {
 template<class G, typename dT, typename cT>
 brkga<G,dT,cT>::brkga() : genetic_algorithm<G,dT,cT>() {
 	N_ELITE = 0;
-	
-	reset_algorithm();
 }
 
 template<class G, typename dT, typename cT>
@@ -97,8 +95,6 @@ brkga<G,dT,cT>::brkga
 : genetic_algorithm<G,dT,cT>(ps, mps, n_gen, c_size, in_p)
 {
 	N_ELITE = ess;
-	
-	reset_algorithm();
 }
 
 template<class G, typename dT, typename cT>
@@ -106,9 +102,9 @@ brkga<G,dT,cT>::~brkga() { }
 
 template<class G, typename dT, typename cT>
 void brkga<G,dT,cT>::reset_algorithm() {
-	elite_copying_time = 0.0;
-	
 	GA<G,dT,cT>::reset_genetic_algorithm();
+	
+	elite_copying_time = 0.0;
 }
 
 template<class G, typename dT, typename cT>
@@ -130,8 +126,11 @@ bool brkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best
 	// initialise random number generators
 	GA<G,dT,cT>::initialise_generators();
 	elite_rng.init_uniform(0, N_ELITE - 1);
+	if (META<G,dT>::seed_rng) {
+		elite_rng.seed_random_engine();
+	}
 	// set algorithm to its initial state
-	GA<G,dT,cT>::reset_algorithm();
+	reset_algorithm();
 	
 	// verbose variables
 	double prev_best_fit;

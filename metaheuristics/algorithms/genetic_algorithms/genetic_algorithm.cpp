@@ -135,6 +135,11 @@ template<class G, typename dT, typename cT>
 void genetic_algorithm<G,dT,cT>::initialise_generators() {
 	zero_one_rng.init_uniform(0, 1);
 	population_rng.init_uniform(0, pop_size - 1);
+	
+	if (META<G,dT>::seed_rng) {
+		zero_one_rng.seed_random_engine();
+		population_rng.seed_random_engine();
+	}
 }
 
 // PUBLIC
@@ -169,11 +174,6 @@ genetic_algorithm<G,dT,cT>::genetic_algorithm
 
 template<class G, typename dT, typename cT>
 genetic_algorithm<G,dT,cT>::~genetic_algorithm() { }
-
-template<class G, typename dT, typename cT>
-void genetic_algorithm<G,dT,cT>::reset_algorithm() {
-	reset_genetic_algorithm();
-}
 
 template<class G, typename dT, typename cT>
 const individual& genetic_algorithm<G,dT,cT>::get_best_individual() const {

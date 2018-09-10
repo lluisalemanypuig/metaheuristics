@@ -119,7 +119,7 @@ class grasp : public metaheuristic<G,dT> {
 		 * @brief Resets the algorithm to its initial state.
 		 * 
 		 * Sets to 0 the internal variables @ref total_time, @ref construct_time,
-		 * @ref local_search_time.
+		 * @ref local_search_time. Seeds the random number generator @ref drng.
 		 * 
 		 * The other variables (@ref MAX_ITER_GRASP,
 		 * @ref MAX_ITER_LOCAL, @ref alpha, @ref LSP) are not modified.

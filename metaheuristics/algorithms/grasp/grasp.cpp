@@ -52,6 +52,10 @@ void grasp<G,dT>::reset_algorithm() {
 	total_time = 0.0;
 	construct_time = 0.0;
 	local_search_time = 0.0;
+	
+	if (META<G,dT>::seed_rng) {
+		drng.seed_random_engine();
+	}
 }
 
 // GETTERS

@@ -28,7 +28,10 @@ bool rkga<G,dT,cT>::are_set_sizes_correct() const {
 // PUBLIC
 
 template<class G, typename dT, typename cT>
-rkga<G,dT,cT>::rkga() : genetic_algorithm<G,dT,cT>() { }
+rkga<G,dT,cT>::rkga() : genetic_algorithm<G,dT,cT>()
+{
+	
+}
 
 template<class G, typename dT, typename cT>
 rkga<G,dT,cT>::rkga
@@ -38,10 +41,18 @@ rkga<G,dT,cT>::rkga
 )
 : genetic_algorithm<G,dT,cT>(ps, mps, n_gen, c_size, in_p)
 {
+	
 }
 
 template<class G, typename dT, typename cT>
 rkga<G,dT,cT>::~rkga() { }
+
+// MODIFIERS
+
+template<class G, typename dT, typename cT>
+void rkga<G,dT,cT>::reset_algorithm() {
+	GA<G,dT,cT>::reset_genetic_algorithm();
+}
 
 template<class G, typename dT, typename cT>
 bool rkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best_f) {
@@ -55,7 +66,7 @@ bool rkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best_
 	// initialise random number generators
 	GA<G,dT,cT>::initialise_generators();
 	// set algorithm to its initial state
-	GA<G,dT,cT>::reset_algorithm();
+	reset_algorithm();
 	
 	// verbose variables
 	double best_fit;
