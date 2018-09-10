@@ -26,6 +26,14 @@ void individual::clear() {
 	c.clear();
 }
 
+// OPERATRS
+
+individual& individual::operator= (const individual& i) {
+	fitness = i.fitness;
+	c = i.c;
+	return *this;
+}
+
 // SETTERS
 
 void individual::set_fitness(double f) {

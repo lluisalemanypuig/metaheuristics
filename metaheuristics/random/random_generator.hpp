@@ -37,7 +37,7 @@ class random_generator {
 		virtual void seed_random_engine();
 		
 		/**
-		 * @brief Initialise the uniform distribution
+		 * @brief Initialise the uniform distribution with the range [ @e a, @e b]
 		 * @param a Lower bound of the interval of the distribution
 		 * @param b Upper bound of the interval of the distribution
 		 */

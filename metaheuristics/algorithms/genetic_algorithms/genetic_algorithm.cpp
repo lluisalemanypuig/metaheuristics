@@ -20,17 +20,19 @@ void genetic_algorithm<G,dT,cT>::print_current_population() const {
 
 template<class G, typename dT, typename cT>
 void genetic_algorithm<G,dT,cT>::initialize_population(const problem<G,dT> *p) {
+	population.clear();
+	population.resize(pop_size, chrom_size);
+	
 	for (size_t i = 0; i < pop_size; ++i) {
-		
-		#if GENETIC_DEBUG
-		cout << "    pre: " << i << ": " << population[i] << endl;
+		#if defined (GENETICS_DEBUG)
+			cout << "    pre: " << i << ": " << population[i] << endl;
 		#endif
 		
 		generate_mutant(p, population[i]);
 		
-		#if GENETIC_DEBUG
-		cout << "    post: " << i << ": " << population[i] << endl;
-		cout << endl;
+		#if defined (GENETICS_DEBUG)
+			cout << "    post: " << i << ": " << population[i] << endl;
+			cout << endl;
 		#endif
 	}
 }
@@ -40,8 +42,8 @@ void genetic_algorithm<G,dT,cT>::generate_mutants(const problem<G,dT> *p, size_t
 	for (m = A; m < B; ++m) {
 		generate_mutant(p, next_gen[m]);
 		
-		#if GENETIC_DEBUG
-		cout << "        " << m << ": " << next_gen[m] << endl;
+		#if defined (GENETICS_DEBUG)
+			cout << "        " << m << ": " << next_gen[m] << endl;
 		#endif
 	}
 }
@@ -54,8 +56,10 @@ void genetic_algorithm<G,dT,cT>::generate_crossovers(const problem<G,dT> *p, pop
 		get_two_parents(par1_idx, par2_idx);
 		crossover(p, par1_idx, par2_idx, next_gen[m]);
 		
-		#if GENETIC_DEBUG
-		cout << "        " << m << ": (" << par1_idx << " x " << par2_idx << ") " << next_gen[m] << endl;
+		#if defined (GENETICS_DEBUG)
+			cout << "        "
+				 << m << ": (" << par1_idx << " x " << par2_idx << ")"
+				 << "    " << next_gen[m] << endl;
 		#endif
 	}
 }
@@ -64,24 +68,22 @@ void genetic_algorithm<G,dT,cT>::generate_crossovers(const problem<G,dT> *p, pop
 
 template<class G, typename dT, typename cT>
 void genetic_algorithm<G,dT,cT>::evaluate_individual(const problem<G,dT> *p, individual& i) const {
-	// decode chromosome into a solution
 	problem<G,dT> *copy = p->clone();
 	
 	try {
 		// decode the chromosome into a solution of the problem<G,dT>
 		double F = copy->decode(i.get_chromosome());
 		
-		#ifdef GENETIC_DEBUG
-		bool sane = copy->sanity_check();
-		if (not sane) {
-			cerr << "void genetic_algorithm<G,dT,cT>::evaluate_individual:" << endl;
-			cerr << "    Decoded solution from chromosome is not sane" << endl;
-		}
+		#if defined (GENETICS_DEBUG)
+			if (not copy->sanity_check()) {
+				cerr << "void genetic_algorithm<G,dT,cT>::evaluate_individual:" << endl;
+				cerr << "    Decoded solution from chromosome is not sane" << endl;
+			}
 		#endif
-
+		
 		// store the quality of the solution in the individual
 		i.set_fitness(F);
-
+		
 		// free memory
 		delete copy;
 	}
@@ -132,7 +134,7 @@ void genetic_algorithm<G,dT,cT>::reset_genetic_algorithm() {
 template<class G, typename dT, typename cT>
 void genetic_algorithm<G,dT,cT>::initialise_generators() {
 	zero_one_rng.init_uniform(0, 1);
-	population_rng.init_uniform(0, pop_size);
+	population_rng.init_uniform(0, pop_size - 1);
 }
 
 // PUBLIC

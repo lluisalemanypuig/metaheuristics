@@ -72,26 +72,28 @@ size_t local_search<G,dT>::get_max_iterations() const {
 
 template<class G, typename dT>
 bool local_search<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_best_f) {
+	// set the algorithm to its initial state
 	reset_algorithm();
 	
-	#ifdef LOCAL_SEARCH_VERBOSE
-	cout << setw(8)  << " "
-		 << setw(15) << "Local Search"
-		 << setw(18) << "Elaps. Time (s)"
-	     << setw(18) << "Obj. Function"
-	     << setw(12) << "Iter./" << MAX_ITER
-	     << setw(25) << "# Neighbours explored"
-	     << endl;
-	
-	cout << setw(8)  << " "
-		 << setw(15) << " "
-		 << setw(18) << 0.0
-	     << setw(18) << current_best_f
-	     << setw(12) << 0
-	     << setw(25) << 0
-	     << endl;
+	#if defined (LOCAL_SEARCH_VERBOSE)
+		cout << setw(8)  << " "
+			 << setw(15) << "Local Search"
+			 << setw(18) << "Elaps. Time (s)"
+			 << setw(18) << "Obj. Function"
+			 << setw(12) << "Iter./" << MAX_ITER
+			 << setw(25) << "# Neighbours explored"
+			 << endl;
+		
+		cout << setw(8)  << " "
+			 << setw(15) << " "
+			 << setw(18) << 0.0
+			 << setw(18) << current_best_f
+			 << setw(12) << 0
+			 << setw(25) << 0
+			 << endl;
 	#endif
 	
+	// 
 	time_point bbegin, bend, begin, end;
 	
 	bool improvement = true;
@@ -109,26 +111,25 @@ bool local_search<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_
 		
 		if (neighbour.first != NULL) {
 			
-			#ifdef LOCAL_SEARCH_DEBUG
-			bool sane = best->sanity_check();
-			if (not sane) {
-				cerr << "local_search<G,dT>::execute_algorithm - Sanity check failed on" << endl;
-				cerr << "    solution returned by 'best_neighbour'." << endl;
-				best->print("", cerr);
-			}
+			#if defined (LOCAL_SEARCH_debug)
+				if (not best->sanity_check()) {
+					cerr << "local_search<G,dT>::execute_algorithm - Sanity check failed on" << endl;
+					cerr << "    solution returned by 'best_neighbour'." << endl;
+					best->print("", cerr);
+				}
 			#endif
 			
 			if (neighbour.second > current_best_f) {
 				current_best_f = neighbour.second;
 				
-				#ifdef LOCAL_SEARCH_VERBOSE
-				cout << setw(8)  << " "
-					 << setw(15) << " "
-					 << setw(18) << elapsed_time(bbegin, now())
-					 << setw(18) << current_best_f
-					 << setw(12) << ITERATION
-					 << setw(25) << best->get_n_neighbours_explored()
-					 << endl;
+				#if defined (LOCAL_SEARCH_VERBOSE)
+					cout << setw(8)  << " "
+						 << setw(15) << " "
+						 << setw(18) << elapsed_seconds(bbegin, now())
+						 << setw(18) << current_best_f
+						 << setw(12) << ITERATION
+						 << setw(25) << best->get_n_neighbours_explored()
+						 << endl;
 				#endif
 				
 				best->copy(neighbour.first);

@@ -11,8 +11,6 @@ template<class G, typename dT>
 grasp<G,dT>::grasp() : metaheuristic<G,dT>() {
 	MAX_ITER_GRASP = MAX_ITER_LOCAL = -1;	// infinite amount of iterations
 	alpha = 1.0;	// completely randomized construction
-	
-	reset_algorithm();
 }
 
 template<class G, typename dT>
@@ -27,8 +25,6 @@ grasp<G,dT>::grasp
 	MAX_ITER_LOCAL = ml;
 	alpha = a;
 	LSP = lsp;
-	
-	reset_algorithm();
 }
 
 template<class G, typename dT>
@@ -95,21 +91,18 @@ bool grasp<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_best_f)
 	// set algorithm to its initial state
 	reset_algorithm();
 	
+	// timing variables
 	time_point bbegin, bend, begin, end;
 	
 	local_search<G,dT> ls(MAX_ITER_LOCAL, LSP);
 	current_best_f = -numeric_limits<double>::max();
 	
-	#ifdef GRASP_DEBUG
-	bool sane;
-	#endif
-	
-	#ifdef GRASP_VERBOSE
-	cout << setw(8)  << "GRASP"
-		 << setw(15) << " "
-		 << setw(18) << "Elaps. Time (s)"
-	     << setw(18) << "Obj. Function"
-	     << setw(12) << "Iter./" << MAX_ITER_GRASP << endl;
+	#if defined (GRASP_VERBOSE)
+		cout << setw(8)  << "GRASP"
+			 << setw(15) << " "
+			 << setw(18) << "Elaps. Time (s)"
+			 << setw(18) << "Obj. Function"
+			 << setw(12) << "Iter./" << MAX_ITER_GRASP << endl;
 	#endif
 	
 	bbegin = now();
@@ -122,28 +115,26 @@ bool grasp<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_best_f)
 			end = now();
 			construct_time += elapsed_seconds(begin, end);
 			
-			#ifdef GRASP_DEBUG
-			sane = r->sanity_check();
-			if (not sane) {
-				cerr << "grasp<G,dT>::execute_algorithm - Sanity check failed on" << endl;
-				cerr << "    solution returned by 'random_construct'." << endl;
-				r->print("", cerr);
-			}
+			#if defined (GRASP_DEBUG)
+				if (not r->sanity_check()) {
+					cerr << "grasp<G,dT>::execute_algorithm - Sanity check failed on" << endl;
+					cerr << "    solution returned by 'random_construct'." << endl;
+					r->print("", cerr);
+				}
 			#endif
 			
-			#ifdef GRASP_VERBOSE
-			if (rcc > current_best_f) {
-				cout << setw(8) << "**R.C.";
-			}
-			else {
-				cout << setw(8) << "R.C.";
-			}
+			#if defined (GRASP_VERBOSE)
+				if (rcc > current_best_f) {
+					cout << setw(8) << "**R.C.";
+				}
+				else {
+					cout << setw(8) << "R.C.";
+				}
 			
-			cout << setw(15) << " "
-				 << setw(18) << elapsed_time(bbegin, now())
-				 << setw(18) << rcc
-				 << setw(12) << it << endl;
-			
+				cout << setw(15) << " "
+					 << setw(18) << elapsed_seconds(bbegin, now())
+					 << setw(18) << rcc
+					 << setw(12) << it << endl;
 			#endif
 			
 			double lsc = rcc;
@@ -152,30 +143,29 @@ bool grasp<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_best_f)
 			end = now();
 			local_search_time += elapsed_seconds(begin, end);
 			
-			#ifdef GRASP_DEBUG
-			sane = r->sanity_check();
-			if (not sane) {
-				cerr << "grasp<G,dT>::execute_algorithm - Sanity check failed on" << endl;
-				cerr << "    solution returned by local search algorithm." << endl;
-				r->print("", cerr);
-			}
+			#if defined (GRASP_DEBUG)
+				if (not r->sanity_check()) {
+					cerr << "grasp<G,dT>::execute_algorithm - Sanity check failed on" << endl;
+					cerr << "    solution returned by local search algorithm." << endl;
+					r->print("", cerr);
+				}
 			#endif
 			
-			#ifdef GRASP_VERBOSE
-			if (lsc > rcc and lsc != numeric_limits<double>::max()) {
-				cout << setw(8) << " ";
-			
-				if (lsc > current_best_f) {
-					cout << setw(15) << "**L.S.";
+			#if defined (GRASP_VERBOSE)
+				if (lsc > rcc and lsc != numeric_limits<double>::max()) {
+					cout << setw(8) << " ";
+				
+					if (lsc > current_best_f) {
+						cout << setw(15) << "**L.S.";
+					}
+					else {
+						cout << setw(15) << "L.S.";
+					}
+				
+					cout << setw(18) << elapsed_seconds(bbegin, now())
+						 << setw(18) << lsc
+						 << setw(12) << it << endl;
 				}
-				else {
-					cout << setw(15) << "L.S.";
-				}
-			
-				cout << setw(18) << elapsed_time(bbegin, now())
-					 << setw(18) << lsc
-					 << setw(12) << it << endl;
-			}
 			#endif
 			
 			if (lsc > current_best_f) {
@@ -190,18 +180,18 @@ bool grasp<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_best_f)
 			end = now();
 			construct_time += elapsed_seconds(begin, end);
 			
-			#ifdef GRASP_VERBOSE
-			cout << setw(8)  << "R.C."
-				 << setw(15) << " "
-				 << setw(18) << elapsed_time(bbegin, now())
-				 << setw(18) << -1
-				 << setw(12) << it << endl;
-			
-			cout << setw(8)  << " "
-				 << setw(15) << "L.S."
-				 << setw(18) << elapsed_time(bbegin, now())
-				 << setw(18) << -1
-				 << setw(12) << it << endl;
+			#if defined (GRASP_VERBOSE)
+				cout << setw(8)  << "R.C."
+					 << setw(15) << " "
+					 << setw(18) << elapsed_seconds(bbegin, now())
+					 << setw(18) << -1
+					 << setw(12) << it << endl;
+				
+				cout << setw(8)  << " "
+					 << setw(15) << "L.S."
+					 << setw(18) << elapsed_seconds(bbegin, now())
+					 << setw(18) << -1
+					 << setw(12) << it << endl;
 			#endif
 		}
 		

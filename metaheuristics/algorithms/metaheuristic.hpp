@@ -6,10 +6,17 @@
 
 namespace metaheuristics {
 namespace algorithms {
+
 using namespace structures;
 using namespace random;
 
-/// Interface for the two functions common to all algorithms.
+/**
+ * @brief Interface for the two functions common to all algorithms.
+ * 
+ * These methods are:
+ * - @ref reset_algorithm
+ * - @ref execute_algorithm
+ */
 template<
 	class G = default_random_engine,
 	typename dT = size_t
@@ -41,7 +48,11 @@ class metaheuristic {
 		virtual bool execute_algorithm(problem<G,dT> *p, double& c) = 0;
 };
 
+/// Shorthand for the genetic_algorithm class template
+template<class G, typename dT>
+using META = metaheuristic<G,dT>;
+
 } // -- namespace algorithms
 } // -- namespace metaheuristics
 
-#include <metaheuristics/algorithms/metaheuristic.hpp>
+#include <metaheuristics/algorithms/metaheuristic.cpp>

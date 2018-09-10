@@ -15,7 +15,8 @@ chromosome::~chromosome() {
 // MEMORY HANDLING
 
 void chromosome::init() {
-	assert(n_genes > 0);
+	assert(0 < n_genes);
+	
 	genes = (double *)malloc(n_genes*sizeof(double));
 }
 
@@ -30,8 +31,6 @@ void chromosome::clear() {
 // OPERATORS
 
 chromosome& chromosome::operator= (const chromosome& c) {
-	assert(c.n_genes > 0);
-	
 	if (n_genes != c.n_genes) {
 		clear();
 		n_genes = c.n_genes;

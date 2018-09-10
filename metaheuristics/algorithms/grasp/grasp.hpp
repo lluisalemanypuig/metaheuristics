@@ -41,6 +41,16 @@ using namespace timing;
  * to run the sanity check on every solution constructed randomly,
  * and on every solution found by the local search procedure.
  * 
+ * This algorithm needs the implementation of the following methods:
+ * - @ref problem::empty
+ * - @ref problem::random_construct
+ * - @ref problem::copy
+ * 
+ * In case the flag GRASP_DEBUG is defined then these other
+ * methods are also required:
+ * - @ref problem::sanity_check
+ * - @ref problem::print
+ * 
  * The local search procedure also has its own compilation flags.
  * See @ref local_search for details.
  * @param G The type of the engine of the random generator (see metaheuristics::drng).
@@ -159,8 +169,8 @@ class grasp : public metaheuristic<G,dT> {
 		 * GRASP stands for Greedy Randomised Adaptative-Search Procedure.
 		 * 
 		 * Given an instance of a problem @e p, with cost @e c,
-		 * this algorithm works as follows: 
-		 * - Define BEST an empty solution
+		 * this algorithm works as follows:
+		 * - Define BEST an empty solution, using object @e p
 		 * - For as many iterations as @ref MAX_ITER_GRASP
 		 * - Apply while there is improvement and for a maximum number
 		 * 		of iterations:
@@ -174,7 +184,7 @@ class grasp : public metaheuristic<G,dT> {
 		 * - Return BEST
 		 * 
 		 * The number of iterations can be set in the constructor
-		 * (see @ref grasp(size_t,size_t,double,const local_search_policy&,drandom_generator*,crandom_generator*))
+		 * (see @ref grasp(size_t,size_t,double,const local_search_policy&))
 		 * or in the methods @ref set_max_iterations_grasp(size_t),
 		 * @ref set_max_iterations_local(size_t).
 		 * 

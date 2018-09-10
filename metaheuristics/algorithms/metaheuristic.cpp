@@ -4,11 +4,11 @@ namespace metaheuristics {
 namespace algorithms {
 
 template<class G, typename dT>
-metaheuristic<G,dT,cT>::metaheuristic() {
+metaheuristic<G,dT>::metaheuristic() {
 }
 
 template<class G, typename dT>
-metaheuristic<G,dT,cT>::~metaheuristic() { }
+metaheuristic<G,dT>::~metaheuristic() { }
 
 // MODIFIERS
 

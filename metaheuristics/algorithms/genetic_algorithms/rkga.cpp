@@ -9,11 +9,11 @@ namespace algorithms {
 
 template<class G, typename dT, typename cT>
 void rkga<G,dT,cT>::get_two_parents(size_t& p1, size_t& p2) {
-	p1 = GA<G,dT,cT>::population_rng->get_uniform();
+	p1 = GA<G,dT,cT>::population_rng.get_uniform();
 	
-	p2 = GA<G,dT,cT>::population_rng->get_uniform();
+	p2 = GA<G,dT,cT>::population_rng.get_uniform();
 	while (p2 == p1) {
-		p2 = GA<G,dT,cT>::population_rng->get_uniform();
+		p2 = GA<G,dT,cT>::population_rng.get_uniform();
 	}
 }
 
@@ -54,51 +54,52 @@ bool rkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best_
 	
 	// initialise random number generators
 	GA<G,dT,cT>::initialise_generators();
-	
+	// set algorithm to its initial state
 	GA<G,dT,cT>::reset_algorithm();
 	
+	// verbose variables
+	double best_fit;
+	double prev_best_fit;
+	
+	// timing variables
 	time_point bbegin, bend, send, begin, end;
 	
-	#ifdef GENETIC_DEBUG
-	cout << "RKGA - Generating initial population (" << pop_size << ")" << endl;
+	#if defined (GENETICS_DEBUG)
+		cout << "RKGA - Generating initial population (" << GA<G,dT,cT>::pop_size << ")" << endl;
 	#endif
 	
 	begin = now();
-	size_t __pop_size = GA<G,dT,cT>::pop_size;
-	size_t __chrom_size = GA<G,dT,cT>::chrom_size;
-	GA<G,dT,cT>::population.clear();
-	GA<G,dT,cT>::population.resize(__pop_size, __chrom_size);
 	GA<G,dT,cT>::initialize_population(best);
 	end = now();
 	GA<G,dT,cT>::initial_time += elapsed_seconds(begin, end);
 	
-	#ifdef GENETIC_DEBUG
-	print_current_population();
+	#if defined (GENETICS_DEBUG)
+		GA<G,dT,cT>::print_current_population();
 	#endif
 	
-	#ifdef GENETIC_VERBOSE
-	cout << setw(4)  << " "
-		 << setw(18) << "Elaps. Time (s)"
-	     << setw(18) << "Obj. Function"
-	     << setw(12) << "Gen./" << N_GEN << endl;
-	
-	double best_fit = get_best_individual().get_fitness();
-	double prev_best_fit = best_fit;
-	
-	cout << setw(4)  << "**"
-		 << setw(18) << 0.0
-		 << setw(18) << best_fit
-		 << setw(12) << -1 << endl;
+	#if defined (GENETICS_VERBOSE)
+		cout << setw(4)  << " "
+			 << setw(18) << "Elaps. Time (s)"
+			 << setw(18) << "Obj. Function"
+			 << setw(12) << "Gen./" << GA<G,dT,cT>::N_GEN << endl;
+		
+		best_fit = GA<G,dT,cT>::get_best_individual().get_fitness();
+		prev_best_fit = best_fit;
+		
+		cout << setw(4)  << "**"
+			 << setw(18) << GA<G,dT,cT>::initial_time
+			 << setw(18) << best_fit
+			 << setw(12) << -1 << endl;
 	#endif
 	
 	population_set next_gen(GA<G,dT,cT>::pop_size, GA<G,dT,cT>::chrom_size);
 	
 	bbegin = now();
 	for (size_t g = 1; g <= GA<G,dT,cT>::N_GEN; ++g) {
-		#ifdef GENETIC_DEBUG
-		cout << "RKGA - Generating " << G << "-th generation" << endl;
-		print_current_population();
-		cout << "    * Generating mutants..." << endl;
+		#if defined (GENETICS_DEBUG)
+			cout << "RKGA - Generating " << g << "-th generation" << endl;
+			GA<G,dT,cT>::print_current_population();
+			cout << "    * Generating mutants..." << endl;
 		#endif
 		
 		size_t m = 0;
@@ -107,9 +108,9 @@ bool rkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best_
 		end = now();
 		GA<G,dT,cT>::mutant_time += elapsed_seconds(begin, end);
 		
-		#ifdef GENETIC_DEBUG
-		cout << endl;
-		cout << "    * Generating crossover..." << endl;
+		#if defined (GENETICS_DEBUG)
+			cout << endl;
+			cout << "    * Generating crossover..." << endl;
 		#endif
 		
 		begin = now();
@@ -117,40 +118,40 @@ bool rkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best_
 		end = now();
 		GA<G,dT,cT>::crossover_time += elapsed_seconds(begin, end);
 		
-		#ifdef GENETIC_DEBUG
-		cout << endl;
-		cout << "    * Swapping generations..." << endl;
+		#if defined (GENETICS_DEBUG)
+			cout << endl;
+			cout << "    * Swapping generations..." << endl;
 		#endif
 		
 		GA<G,dT,cT>::population = next_gen;
 		send = now();
 		
-		#ifdef GENETIC_DEBUG
-		cout << endl;
+		#if defined (GENETICS_DEBUG)
+			cout << endl;
 		#endif
 		
-		#ifdef GENETIC_VERBOSE
-		double best_fit = get_best_individual().get_fitness();
-		double etime = elapsed_seconds(bbegin, send);
-		
-		if (best_fit > prev_best_fit) {
-			prev_best_fit = best_fit;
-			cout << setw(4)  << "**";
-		}
-		else {
-			cout << setw(4)  << "  ";
-		}
-		
-		cout << setw(18) << etime
-			 << setw(18) << best_fit
-			 << setw(12) << G << endl;
+		#if defined (GENETICS_VERBOSE)
+			best_fit = GA<G,dT,cT>::get_best_individual().get_fitness();
+			double etime = elapsed_seconds(bbegin, send);
+			
+			if (best_fit > prev_best_fit) {
+				prev_best_fit = best_fit;
+				cout << setw(4)  << "**";
+			}
+			else {
+				cout << setw(4)  << "  ";
+			}
+			
+			cout << setw(18) << etime
+				 << setw(18) << best_fit
+				 << setw(12) << g << endl;
 		#endif
 	}
 	bend = now();
 	GA<G,dT,cT>::total_time += elapsed_seconds(bbegin, bend);
 	
-	#ifdef GENETIC_DEBUG
-	cout << "Generated all generations in " << total_time << " s" << endl;
+	#if defined (GENETICS_VERBOSE)
+		cout << "Generated all generations in " << GA<G,dT,cT>::total_time << " s" << endl;
 	#endif
 	
 	const individual& fittest_individual = GA<G,dT,cT>::get_best_individual();

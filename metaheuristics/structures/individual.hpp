@@ -19,13 +19,13 @@ template<class T>
 class allocator_individual {
 	public:
 		// typedefs
-		typedef T						value_type;
-		typedef value_type* 			pointer;
+		typedef T					value_type;
+		typedef value_type* 		pointer;
 		typedef const value_type* 	const_pointer;
-		typedef value_type& 			reference;
+		typedef value_type& 		reference;
 		typedef const value_type&	const_reference;
 		typedef size_t 				size_type;
-		typedef ptrdiff_t	 			difference_type;
+		typedef ptrdiff_t	 		difference_type;
 		
 		template<typename U>
 		struct rebind {
@@ -64,8 +64,7 @@ class allocator_individual {
 		
 		// size
 		inline size_type max_size() const { 
-			//return std::numeric_limits<size_type>::max()/sizeof(T);
-			return 0;
+			return std::numeric_limits<size_type>::max()/sizeof(T);
 		}
 		
 		// construction
@@ -133,6 +132,8 @@ class individual {
 			os << "fitness= " << i.fitness << ", chromosome= " << i.c;
 			return os;
 		}
+		/// Operator =.
+		individual& operator= (const individual& i);
 		
 		// SETTERS
 		
