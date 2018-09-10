@@ -84,3 +84,4 @@ releaseclean:
 releasedistclean:
 	make -f $(RULES_DIR)/Makefile releaseclean
 	rm -f $(REL_BIN_DIR)/cities
+	rmdir $(REL_BIN_DIR)

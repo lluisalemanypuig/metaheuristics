@@ -87,3 +87,4 @@ debugclean:
 debugdistclean:
 	make -f $(RULES_DIR)/Makefile debugclean
 	rm -f $(DEB_BIN_DIR)/cities
+	rmdir $(DEB_BIN_DIR)
