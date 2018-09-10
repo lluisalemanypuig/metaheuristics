@@ -2,7 +2,10 @@
 #############
 # DEBUG FLAGS
 
-DEB_FLAGS = -O0 $(GEN_FLAGS)
+DEB_FLAGS = -O0 $(GEN_FLAGS)					\
+			-DLOCAL_SEARCH_DEBUG				\
+			-DGRASP_DEBUG						\
+			-DGENETICS_DEBUG
 
 ###############
 # DEBUG OBJECTS
@@ -34,7 +37,7 @@ $(DEB_BIN_DIR):
 # MAKE CITIES EXECUTABLE
 
 $(DEB_BIN_DIR)/cities: $(DEBUG_OBJECTS)
-	g++ $(DEB_FLAGS) -o cities $(DEBUG_OBJECTS) $(LIBS)
+	g++ $(DEB_FLAGS) -o $(DEB_BIN_DIR)/cities $(DEBUG_OBJECTS) $(LIBS)
 
 $(DEB_BIN_DIR)/main.o: $(SRC_DIR)/main.cpp $(MAIN_DPS)
 	g++ $(DEB_FLAGS) -c $< -o $@ $(INCLUDE)

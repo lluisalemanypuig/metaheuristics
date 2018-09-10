@@ -31,15 +31,11 @@ void print_usage() {
 	cout << "                         the solution exploring the neighbourhood" << endl;
 	cout << "        - grasp:         aplies the GRASP metaheuristic, using the parameter alpha" << endl;
 	cout << "                         for the randomised choice of candidates" << endl;
+	cout << "        - rkga:          aplies the RKGA metaheuristic" << endl;
 	cout << "        - brkga:         aplies the BRKGA metaheuristic" << endl;
 	cout << endl;
 	
 	cout << "Optional parametres:" << endl;
-	cout << "* For the random number generators:" << endl;
-	cout << "    -> Blum Blum Shub:" << endl;
-	cout << "        [--BBS-seed] s:        the seed. Default: 191" << endl;
-	cout << "        [--BBS-p] p:           a prime number. Default: 87566873" << endl;
-	cout << "        [--BBS-q] q:           a prime number. Default: 5631179" << endl;
 	cout << "* For the algorithms:" << endl;
 	cout << "    -> Local search algorithm:" << endl;
 	cout << "        [--iter-local] i:      maximum number of iterations for the local search algorithm. Default: 10" << endl;
@@ -55,6 +51,11 @@ void print_usage() {
 	cout << "            Possible values:" << endl;
 	cout << "            - First:           First improvement" << endl;
 	cout << "            - Best:            Best improvement" << endl;
+	cout << "    -> RKGA:" << endl;
+	cout << "        [--num-gen] i:         maximum number of generations. Default: 10" << endl;
+	cout << "        [--pop-size] s:        size of the total population. Default: 0" << endl;
+	cout << "        [--mut-size] s:        size of the mutant population. Default: 0" << endl;
+	cout << "        [--inher-prob] p:      probability of inheritance. Default: 0.5" << endl;
 	cout << "    -> BRKGA:" << endl;
 	cout << "        [--num-gen] i:         maximum number of generations. Default: 10" << endl;
 	cout << "        [--pop-size] s:        size of the total population. Default: 0" << endl;
@@ -142,6 +143,44 @@ void parse_grasp_params(int argc, char *argv[], grasp_params& params) {
 	}
 }
 
+class rkga_params {
+	private:
+	public:
+		size_t NUM_GENERATIONS;
+		size_t POPULATION_SIZE;
+		size_t MUTANT_POPULATION_SIZE;
+		double INHER_PROB;
+		
+		rkga_params() {
+			NUM_GENERATIONS = 10;
+			POPULATION_SIZE = 0;
+			MUTANT_POPULATION_SIZE = 0;
+			INHER_PROB = 0.5;
+		}
+		~rkga_params() { }
+};
+
+void parse_rkga_params(int argc, char *argv[], rkga_params& params) {
+	for (int i = 1; i < argc; ++i) {
+		if (strcmp(argv[i], "--num-gen") == 0) {
+			params.NUM_GENERATIONS = atoi(argv[i + 1]);
+			++i;
+		}
+		else if (strcmp(argv[i], "--pop-size") == 0) {
+			params.POPULATION_SIZE = atoi(argv[i + 1]);
+			++i;
+		}
+		else if (strcmp(argv[i], "--mut-size") == 0) {
+			params.MUTANT_POPULATION_SIZE = atoi(argv[i + 1]);
+			++i;
+		}
+		else if (strcmp(argv[i], "--inher-prob") == 0) {
+			params.INHER_PROB = atof(argv[i + 1]);
+			++i;
+		}
+	}
+}
+
 class brkga_params {
 	private:
 	public:
@@ -207,6 +246,7 @@ int main(int argc, char *argv[]) {
 	for (int i = 1; i < argc; ++i) {
 		if (strcmp(argv[i], "-h") == 0 or strcmp(argv[i], "--help") == 0) {
 			print_usage();
+			return 0;
 		}
 		if (strcmp(argv[i], "-d") == 0 or strcmp(argv[i], "--debug") == 0) {
 			debug = true;
@@ -236,13 +276,14 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 	
-	if (algorithm != "local-search" and algorithm != "grasp" and algorithm != "brkga") {
+	if (algorithm != "local-search" and algorithm != "grasp" and algorithm != "rkga" and algorithm != "brkga") {
 		cerr << "Error: Wrong value for algorithm parameter" << endl;
 		return 1;
 	}
 	
 	local_search_params ls_params;
 	grasp_params gs_params;
+	rkga_params r_params;
 	brkga_params br_params;
 	
 	if (algorithm == "local-search") {
@@ -250,6 +291,9 @@ int main(int argc, char *argv[]) {
 	}
 	else if (algorithm == "grasp") {
 		parse_grasp_params(argc, argv, gs_params);
+	}
+	else if (algorithm == "rkga") {
+		parse_rkga_params(argc, argv, r_params);
 	}
 	else if (algorithm == "brkga") {
 		parse_brkga_params(argc, argv, br_params);
@@ -327,6 +371,33 @@ int main(int argc, char *argv[]) {
 		cout << "    Final solution's cost: " << -eval << endl;
 		if (use_optimal_value) {
 			cout << "        Gap = GRASP - ILP = " << -eval << " - " << optimal_value << " = " << -eval - optimal_value << endl;
+		}
+	}
+	else if (algorithm == "rkga") {
+		cout << "RKGA:" << endl;
+		
+		rkga<> r
+		(
+			r_params.POPULATION_SIZE,
+			r_params.MUTANT_POPULATION_SIZE,
+			r_params.NUM_GENERATIONS,
+			s->get_n_cities(),
+			r_params.INHER_PROB
+		);
+		
+		cout << "Execute algorithm" << endl;
+		
+		double eval;
+		r.execute_algorithm(s, eval);
+		
+		//cout << "    BRKGA solution:" << endl;
+		//s->print("    ");
+		
+		bool sane = s->sanity_check();
+		cout << endl << "    Is final solution sane? " << (sane ? "Yes" : "No") << endl;
+		cout << "    Final solution's cost: " << -eval << endl;
+		if (use_optimal_value) {
+			cout << "        Gap = RKGA - ILP = " << -eval << " - " << optimal_value << " = " << -eval - optimal_value << endl;
 		}
 	}
 	else if (algorithm == "brkga") {
