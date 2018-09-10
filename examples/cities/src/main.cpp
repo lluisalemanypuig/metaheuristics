@@ -22,7 +22,7 @@ void print_usage() {
 	cout << "SUPER COOL HEURISTIC FRAMEWORK (in C++, by Lluis Alemany Puig)" << endl;
 	cout << "Usage:" << endl;
 	cout << "    [-h, --help]:        shows this help" << endl;
-	cout << "    [-d, --debug]:       print debugging info, like the solution obtained" << endl;
+	cout << "    [-s, --seed]:        seed the random number generators" << endl;
 	cout << "    [-i, --input] f:     the input file with the description of the instance" << endl;
 	cout << "    [--optimal] o:       value of the optimal solution (extracted from the ILP solution" << endl;
 	cout << "    [-a, --algorithm] a: the algorithm to be executed. Possible values:" << endl;
@@ -238,8 +238,7 @@ int main(int argc, char *argv[]) {
 	
 	bool use_optimal_value = false;
 	double optimal_value = 0.0;
-	
-	bool debug = false;
+	bool seed = false;
 	string input_filename, algorithm;
 	input_filename = algorithm = "none";
 	
@@ -248,8 +247,8 @@ int main(int argc, char *argv[]) {
 			print_usage();
 			return 0;
 		}
-		if (strcmp(argv[i], "-d") == 0 or strcmp(argv[i], "--debug") == 0) {
-			debug = true;
+		else if (strcmp(argv[i], "-s") == 0 or strcmp(argv[i], "--seed") == 0) {
+			seed = true;
 		}
 		else if (strcmp(argv[i], "-i") == 0 or strcmp(argv[i], "--input") == 0) {
 			input_filename = string(argv[i + 1]);
@@ -328,6 +327,10 @@ int main(int argc, char *argv[]) {
 			sane = s->sanity_check();
 			cout << "    Is initial solution sane? " << (sane ? "Yes" : "No") << endl;
 			
+			if (seed) {
+				ls.seed();
+			}
+			
 			ls.execute_algorithm(s, eval);
 			
 			//cout << "    Local search solution:" << endl;
@@ -341,7 +344,8 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		catch (const infeasible_exception& e) {
-			cerr << "main: Infeasible solution when greedily constructing an initial solution for the local search procedure." << endl;
+			cerr << "main: Infeasible solution when greedily constructing "
+				 << "an initial solution with the local search procedure." << endl;
 			cerr << "Message:" << endl;
 			cerr << e.what() << endl;
 		}
@@ -356,6 +360,10 @@ int main(int argc, char *argv[]) {
 			gs_params.ALPHA,
 			gs_params.POLICY
 		);
+		
+		if (seed) {
+			gs.seed();
+		}
 		
 		double eval;
 		gs.execute_algorithm(s, eval);
@@ -385,7 +393,9 @@ int main(int argc, char *argv[]) {
 			r_params.INHER_PROB
 		);
 		
-		cout << "Execute algorithm" << endl;
+		if (seed) {
+			r.seed();
+		}
 		
 		double eval;
 		r.execute_algorithm(s, eval);
@@ -413,7 +423,9 @@ int main(int argc, char *argv[]) {
 			br_params.INHER_PROB
 		);
 		
-		cout << "Execute algorithm" << endl;
+		if (seed) {
+			br.seed();
+		}
 		
 		double eval;
 		br.execute_algorithm(s, eval);
