@@ -19,10 +19,11 @@ using namespace random;
  * The methods to implement for are:
  * - @ref reset_algorithm
  * - @ref execute_algorithm
+ * 
+ * @param G The type of engine used by the random number generators.
  */
 template<
-	class G = default_random_engine,
-	typename dT = size_t
+	class G = default_random_engine
 >
 class metaheuristic {
 	protected:
@@ -62,12 +63,12 @@ class metaheuristic {
 		 * @returns Returns true if it terminates succesfully. Returns
 		 * false if otherwise.
 		 */
-		virtual bool execute_algorithm(problem<G,dT> *p, double& c) = 0;
+		virtual bool execute_algorithm(problem<G> *p, double& c) = 0;
 };
 
 /// Shorthand for the genetic_algorithm class template
-template<class G, typename dT>
-using META = metaheuristic<G,dT>;
+template<class G>
+using META = metaheuristic<G>;
 
 } // -- namespace algorithms
 } // -- namespace metaheuristics

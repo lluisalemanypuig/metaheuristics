@@ -5,8 +5,8 @@ namespace algorithms {
 
 // Information display functions
 
-template<class G, typename dT, typename cT>
-void brkga<G,dT,cT>::print_elite_set() const {
+template<class G>
+void brkga<G>::print_elite_set() const {
 	for (size_t it = 0; it < N_ELITE; ++it) {
 		cout << "        elite idx= " << elite_set[it].second << endl;
 	}
@@ -15,30 +15,30 @@ void brkga<G,dT,cT>::print_elite_set() const {
 
 // Population-generation functions
 
-template<class G, typename dT, typename cT>
-void brkga<G,dT,cT>::get_two_parents(size_t& p1, size_t& p2) {
+template<class G>
+void brkga<G>::get_two_parents(size_t& p1, size_t& p2) {
 	size_t idx1 = elite_rng.get_uniform();
 	p1 = elite_set[idx1].second;
 	
-	p2 = GA<G,dT,cT>::population_rng.get_uniform();
+	p2 = GA<G>::population_rng.get_uniform();
 	while (p2 == p1 or is_elite_individual(p2)) {
-		p2 = GA<G,dT,cT>::population_rng.get_uniform();
+		p2 = GA<G>::population_rng.get_uniform();
 	}
 }
 
-template<class G, typename dT, typename cT>
-void brkga<G,dT,cT>::copy_elite_individuals(const problem<G,dT> *p, population_set& next_gen, size_t& m) {
-	assert(m < (GA<G,dT,cT>::pop_size) );
+template<class G>
+void brkga<G>::copy_elite_individuals(const problem<G> *p, population_set& next_gen, size_t& m) {
+	assert(m < (GA<G>::pop_size) );
 	
 	for (size_t it = 0; it < N_ELITE; ++it) {
-		next_gen[m + it] = GA<G,dT,cT>::population[ elite_set[it].second ];
+		next_gen[m + it] = GA<G>::population[ elite_set[it].second ];
 	}
 	m += N_ELITE;
 }
 
-template<class G, typename dT, typename cT>
-bool brkga<G,dT,cT>::is_elite_individual(size_t idx) const {
-	assert(idx < (GA<G,dT,cT>::pop_size) );
+template<class G>
+bool brkga<G>::is_elite_individual(size_t idx) const {
+	assert(idx < (GA<G>::pop_size) );
 	
 	size_t it = 0;
 	while (it < N_ELITE) {
@@ -51,14 +51,14 @@ bool brkga<G,dT,cT>::is_elite_individual(size_t idx) const {
 	return false;
 }
 
-template<class G, typename dT, typename cT>
-void brkga<G,dT,cT>::track_elite_individuals() {
+template<class G>
+void brkga<G>::track_elite_individuals() {
 	// sort individuals by their fitness
 	priority_queue<pair<double, size_t> > fitness_individual;
-	for (size_t i = 0; i < GA<G,dT,cT>::pop_size; ++i) {
+	for (size_t i = 0; i < GA<G>::pop_size; ++i) {
 		fitness_individual.push(
 			pair<double, size_t>(
-				GA<G,dT,cT>::population[i].get_fitness(),
+				GA<G>::population[i].get_fitness(),
 				i
 			)
 		);
@@ -73,60 +73,60 @@ void brkga<G,dT,cT>::track_elite_individuals() {
 
 // Sanity check
 
-template<class G, typename dT, typename cT>
-bool brkga<G,dT,cT>::are_set_sizes_correct() const {
+template<class G>
+bool brkga<G>::are_set_sizes_correct() const {
 	// there must be at least one crossover individual
-	return N_ELITE + GA<G,dT,cT>::N_MUTANT < GA<G,dT,cT>::pop_size;
+	return N_ELITE + GA<G>::N_MUTANT < GA<G>::pop_size;
 }
 
 // PUBLIC
 
-template<class G, typename dT, typename cT>
-brkga<G,dT,cT>::brkga() : genetic_algorithm<G,dT,cT>() {
+template<class G>
+brkga<G>::brkga() : genetic_algorithm<G>() {
 	N_ELITE = 0;
 }
 
-template<class G, typename dT, typename cT>
-brkga<G,dT,cT>::brkga
+template<class G>
+brkga<G>::brkga
 (
 	size_t ps, size_t mps, size_t ess, size_t n_gen,
 	size_t c_size, double in_p
 )
-: genetic_algorithm<G,dT,cT>(ps, mps, n_gen, c_size, in_p)
+: genetic_algorithm<G>(ps, mps, n_gen, c_size, in_p)
 {
 	N_ELITE = ess;
 }
 
-template<class G, typename dT, typename cT>
-brkga<G,dT,cT>::~brkga() { }
+template<class G>
+brkga<G>::~brkga() { }
 
-template<class G, typename dT, typename cT>
-void brkga<G,dT,cT>::reset_algorithm() {
-	GA<G,dT,cT>::reset_genetic_algorithm();
+template<class G>
+void brkga<G>::reset_algorithm() {
+	GA<G>::reset_genetic_algorithm();
 	
 	elite_copying_time = 0.0;
 }
 
-template<class G, typename dT, typename cT>
-const individual& brkga<G,dT,cT>::get_best_individual() const {
-	return GA<G,dT,cT>::population[ elite_set[0].second ];
+template<class G>
+const individual& brkga<G>::get_best_individual() const {
+	return GA<G>::population[ elite_set[0].second ];
 }
 
-template<class G, typename dT, typename cT>
-bool brkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best_f) {
+template<class G>
+bool brkga<G>::execute_algorithm(problem<G> *best, double& current_best_f) {
 	if (not are_set_sizes_correct()) {
-		cerr << "brkga<G,dT,cT>::execute_algorithm:" << endl;
+		cerr << "brkga<G>::execute_algorithm:" << endl;
 		cerr << "    Sizes chosen will lead to errors:" << endl;
 		cerr << "        NUMBER OF MUTANTS + NUMBER OF ELITE >= POPULATION SIZE" << endl;
-		cerr << "        " << GA<G,dT,cT>::N_MUTANT + N_ELITE << " >= "
-			 << GA<G,dT,cT>::pop_size << endl;
+		cerr << "        " << GA<G>::N_MUTANT + N_ELITE << " >= "
+			 << GA<G>::pop_size << endl;
 		return false;
 	}
 	
 	// initialise random number generators
-	GA<G,dT,cT>::initialise_generators();
+	GA<G>::initialise_generators();
 	elite_rng.init_uniform(0, N_ELITE - 1);
-	if (META<G,dT>::seed_rng) {
+	if (META<G>::seed_rng) {
 		elite_rng.seed_random_engine();
 	}
 	// set algorithm to its initial state
@@ -140,13 +140,13 @@ bool brkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best
 	time_point bbegin, bend, send, begin, end;
 	
 	#if defined (GENETICS_DEBUG)
-		cout << "BRKGA - Generating initial population (" << GA<G,dT,cT>::pop_size << ")" << endl;
+		cout << "BRKGA - Generating initial population (" << GA<G>::pop_size << ")" << endl;
 	#endif
 	
 	begin = now();
-	GA<G,dT,cT>::initialize_population(best);
+	GA<G>::initialize_population(best);
 	end = now();
-	GA<G,dT,cT>::initial_time += elapsed_seconds(begin, end);
+	GA<G>::initial_time += elapsed_seconds(begin, end);
 	
 	#if defined (GENETICS_DEBUG)
 		cout << "BRKGA - Initializing elite set (" << N_ELITE << ")" << endl;
@@ -156,7 +156,7 @@ bool brkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best
 	track_elite_individuals();
 	
 	#if defined (GENETICS_DEBUG)
-		GA<G,dT,cT>::print_current_population();
+		GA<G>::print_current_population();
 		print_elite_set();
 	#endif
 	
@@ -164,25 +164,25 @@ bool brkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best
 		cout << setw(8)  << " "
 			 << setw(18) << "Elaps. Time (s)"
 			 << setw(18) << "Obj. Function"
-			 << setw(12) << "Gen./" << GA<G,dT,cT>::N_GEN << endl;
+			 << setw(12) << "Gen./" << GA<G>::N_GEN << endl;
 		
-		best_fit = GA<G,dT,cT>::get_best_individual().get_fitness();
+		best_fit = GA<G>::get_best_individual().get_fitness();
 		prev_best_fit = best_fit;
 		
 		cout << setw(8)  << "**"
-			 << setw(18) << GA<G,dT,cT>::initial_time
+			 << setw(18) << GA<G>::initial_time
 			 << setw(18) << best_fit
 			 << setw(12) << 0 << endl;
 	#endif
 	
-	population_set next_gen(GA<G,dT,cT>::pop_size, GA<G,dT,cT>::chrom_size);
+	population_set next_gen(GA<G>::pop_size, GA<G>::chrom_size);
 	
 	bbegin = now();
-	for (size_t g = 1; g <= GA<G,dT,cT>::N_GEN; ++g) {
+	for (size_t g = 1; g <= GA<G>::N_GEN; ++g) {
 		
 		#if defined (GENETICS_DEBUG)
 			cout << "BRKGA - Generating " << g << "-th generation" << endl;
-			GA<G,dT,cT>::print_current_population();
+			GA<G>::print_current_population();
 			print_elite_set();
 			cout << "    * Copying elite individuals..." << endl;
 		#endif
@@ -200,9 +200,9 @@ bool brkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best
 		#endif
 		
 		begin = now();
-		GA<G,dT,cT>::generate_mutants(best, m, N_ELITE + GA<G,dT,cT>::N_MUTANT, next_gen, m);
+		GA<G>::generate_mutants(best, m, N_ELITE + GA<G>::N_MUTANT, next_gen, m);
 		end = now();
-		GA<G,dT,cT>::mutant_time += elapsed_seconds(begin, end);
+		GA<G>::mutant_time += elapsed_seconds(begin, end);
 		
 		#if defined (GENETICS_DEBUG)
 			cout << endl;
@@ -210,16 +210,16 @@ bool brkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best
 		#endif
 		
 		begin = now();
-		GA<G,dT,cT>::generate_crossovers(best, next_gen, m);
+		GA<G>::generate_crossovers(best, next_gen, m);
 		end = now();
-		GA<G,dT,cT>::crossover_time += elapsed_seconds(begin, end);
+		GA<G>::crossover_time += elapsed_seconds(begin, end);
 		
 		#if defined (GENETICS_DEBUG)
 			cout << endl;
 			cout << "    * Swapping generations..." << endl;
 		#endif
 		
-		GA<G,dT,cT>::population = next_gen;
+		GA<G>::population = next_gen;
 		track_elite_individuals();
 		
 		send = now();
@@ -229,8 +229,8 @@ bool brkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best
 		#endif
 		
 		#if defined (GENETICS_VERBOSE)
-			best_fit = GA<G,dT,cT>::get_best_individual().get_fitness();
-			double etime = elapsed_seconds(bbegin, send) + GA<G,dT,cT>::initial_time;
+			best_fit = GA<G>::get_best_individual().get_fitness();
+			double etime = elapsed_seconds(bbegin, send) + GA<G>::initial_time;
 			
 			if (best_fit > prev_best_fit) {
 				prev_best_fit = best_fit;
@@ -246,29 +246,29 @@ bool brkga<G,dT,cT>::execute_algorithm(problem<G,dT> *best, double& current_best
 		#endif
 	}
 	bend = now();
-	GA<G,dT,cT>::total_time += elapsed_seconds(bbegin, bend);
+	GA<G>::total_time += elapsed_seconds(bbegin, bend);
 	
 	#if defined (GENETICS_VERBOSE)
-		cout << "Generated all generations in " << GA<G,dT,cT>::total_time << " s" << endl;
+		cout << "Generated all generations in " << GA<G>::total_time << " s" << endl;
 	#endif
 	
-	const individual& fittest_individual = GA<G,dT,cT>::get_best_individual();
+	const individual& fittest_individual = GA<G>::get_best_individual();
 	current_best_f = best->decode(fittest_individual.get_chromosome());
 	
 	return true;
 }
 
-template<class G, typename dT, typename cT>
-void brkga<G,dT,cT>::print_performance() const {
+template<class G>
+void brkga<G>::print_performance() const {
 	cout << "BRKGA algorithm performance:" << endl;
-	cout << "    Total generation time:             " << GA<G,dT,cT>::total_time << " s" << endl;
-	cout << "    Average generation average:        " << GA<G,dT,cT>::total_time/GA<G,dT,cT>::N_GEN << " s" << endl;
+	cout << "    Total generation time:             " << GA<G>::total_time << " s" << endl;
+	cout << "    Average generation average:        " << GA<G>::total_time/GA<G>::N_GEN << " s" << endl;
 	cout << "    Total copying elite time:          " << elite_copying_time << " s" << endl;
-	cout << "    Average copying elite time:        " << elite_copying_time/GA<G,dT,cT>::N_GEN << " s" << endl;
-	cout << "    Total mutant generation time:      " << GA<G,dT,cT>::mutant_time << " s" << endl;
-	cout << "    Average mutant generation time:    " << GA<G,dT,cT>::mutant_time/GA<G,dT,cT>::N_GEN << " s" << endl;
-	cout << "    Total crossover generation time:   " << GA<G,dT,cT>::crossover_time << " s" << endl;
-	cout << "    Average crossover generation time: " << GA<G,dT,cT>::crossover_time/GA<G,dT,cT>::N_GEN << " s" << endl;
+	cout << "    Average copying elite time:        " << elite_copying_time/GA<G>::N_GEN << " s" << endl;
+	cout << "    Total mutant generation time:      " << GA<G>::mutant_time << " s" << endl;
+	cout << "    Average mutant generation time:    " << GA<G>::mutant_time/GA<G>::N_GEN << " s" << endl;
+	cout << "    Total crossover generation time:   " << GA<G>::crossover_time << " s" << endl;
+	cout << "    Average crossover generation time: " << GA<G>::crossover_time/GA<G>::N_GEN << " s" << endl;
 	cout << endl;
 }
 

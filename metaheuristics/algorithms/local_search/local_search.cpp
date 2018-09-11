@@ -7,37 +7,37 @@ namespace algorithms {
 
 // PUBLIC
 
-template<class G, typename dT>
-local_search<G,dT>::local_search() : metaheuristic<G,dT>() {
+template<class G>
+local_search<G>::local_search() : metaheuristic<G>() {
 	MAX_ITER = -1; // infinite amount of iterations
 	
 	reset_algorithm();
 }
 
-template<class G, typename dT>
-local_search<G,dT>::local_search(size_t max, const local_search_policy& lsp) : metaheuristic<G,dT>() {
+template<class G>
+local_search<G>::local_search(size_t max, const local_search_policy& lsp) : metaheuristic<G>() {
 	MAX_ITER = max;
 	LSP = lsp;
 	reset_algorithm();
 }
 
-template<class G, typename dT>
-local_search<G,dT>::~local_search() { }
+template<class G>
+local_search<G>::~local_search() { }
 
 // SETTERS
 
-template<class G, typename dT>
-void local_search<G,dT>::set_local_search_policy(const local_search_policy& lsp) {
+template<class G>
+void local_search<G>::set_local_search_policy(const local_search_policy& lsp) {
 	LSP = lsp;
 }
 
-template<class G, typename dT>
-void local_search<G,dT>::set_max_iterations(size_t max) {
+template<class G>
+void local_search<G>::set_max_iterations(size_t max) {
 	MAX_ITER = max;
 }
 
-template<class G, typename dT>
-void local_search<G,dT>::reset_algorithm() {
+template<class G>
+void local_search<G>::reset_algorithm() {
 	total_time = 0.0;
 	neighbourhood_time = 0.0;
 	ITERATION = 1;
@@ -45,33 +45,33 @@ void local_search<G,dT>::reset_algorithm() {
 
 // GETTERS
 
-template<class G, typename dT>
-double local_search<G,dT>::get_total_time() const {
+template<class G>
+double local_search<G>::get_total_time() const {
 	return total_time;
 }
 
-template<class G, typename dT>
-double local_search<G,dT>::get_neighbourhood_time() const {
+template<class G>
+double local_search<G>::get_neighbourhood_time() const {
 	return neighbourhood_time;
 }
 
-template<class G, typename dT>
-size_t local_search<G,dT>::get_n_iterations() const {
+template<class G>
+size_t local_search<G>::get_n_iterations() const {
 	return ITERATION;
 }
 
-template<class G, typename dT>
-local_search_policy local_search<G,dT>::get_local_search_policy() const {
+template<class G>
+local_search_policy local_search<G>::get_local_search_policy() const {
 	return LSP;
 }
 
-template<class G, typename dT>
-size_t local_search<G,dT>::get_max_iterations() const {
+template<class G>
+size_t local_search<G>::get_max_iterations() const {
 	return MAX_ITER;
 }
 
-template<class G, typename dT>
-bool local_search<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_best_f) {
+template<class G>
+bool local_search<G>::execute_algorithm(problem<G> *best, double& current_best_f) {
 	// set the algorithm to its initial state
 	reset_algorithm();
 	
@@ -100,7 +100,7 @@ bool local_search<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_
 	
 	bbegin = now();
 	while (ITERATION <= MAX_ITER and improvement) {
-		pair<problem<G,dT>*, double> neighbour;
+		pair<problem<G>*, double> neighbour;
 		neighbour.first = NULL;
 		neighbour.second = current_best_f;
 		
@@ -113,7 +113,7 @@ bool local_search<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_
 			
 			#if defined (LOCAL_SEARCH_debug)
 				if (not best->sanity_check()) {
-					cerr << "local_search<G,dT>::execute_algorithm - Sanity check failed on" << endl;
+					cerr << "local_search<G>::execute_algorithm - Sanity check failed on" << endl;
 					cerr << "    solution returned by 'best_neighbour'." << endl;
 					best->print("", cerr);
 				}
@@ -152,8 +152,8 @@ bool local_search<G,dT>::execute_algorithm(problem<G,dT> *best, double& current_
 	return true;
 }
 
-template<class G, typename dT>
-void local_search<G,dT>::print_performance() const {
+template<class G>
+void local_search<G>::print_performance() const {
 	cout << "Local Search algorithm performance:" << endl;
 	cout << "    Number of iterations:                   " << ITERATION << endl;
 	cout << "    Total execution time:                   " << total_time << " s" << endl;
