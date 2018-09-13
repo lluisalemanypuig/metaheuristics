@@ -1,12 +1,12 @@
 # Locations, Cities and Centres
 
 This example is part of the course MIRI-AMMM that the authors attended during
-the second semester of the academic year 2016-2017 at the UPC.o
+the second semester of the academic year 2016-2017 at the UPC
 
 The code has been adapted to compile with the new changes to the metaheuristics
 library, which can be found [here](https://github.com/lluisalemanypuig/metaheuristics).
 
-There are several input files that can be used to test this example [here](https://github.com/lluisalemanypuig/metaheuristics/tree/master/examples/citites/inputs).
+There are several input files that can be used to test this example [here](https://github.com/lluisalemanypuig/metaheuristics/tree/master/examples/cities/inputs).
 
 ## Compilation
 
