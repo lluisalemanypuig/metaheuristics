@@ -31,6 +31,29 @@ using namespace timing;
  * 
  * BRKGA stands for Biased Random-Key Genetic Algorithm.
  * 
+ * Given an instance of a problem @e p, with cost @e c,
+ * the algorithm implemented in @ref execute_algorithm(problem<G>*, double&)
+ * roughly follows the following pseudocode:
+ * - Initialise the population with @ref genetic_algorithm::pop_size mutants
+ * - Track the @ref N_ELITE best individuals (see @ref elite_set)
+ * - For as many generations as @ref genetic_algorithm::N_GEN :
+ * 		- Make the next generation Ng.
+ * 		- Copy the best @ref N_ELITE individuals into @e Ng (in the range [0, @ref N_ELITE)).
+ * 		- Generate mutants in the range
+ * 			[ @ref N_ELITE, @ref N_ELITE + @ref genetic_algorithm::N_MUTANT)).
+ * 		- Generate the crossover individuals in the range
+ * 			[ @ref N_ELITE + @ref genetic_algorithm::N_MUTANT, @ref genetic_algorithm::pop_size).
+ * - Find the individual with the largest fit and decdode the chromosome.
+ *   Store the result in @e p. Store the cost of the solution in @e c.
+ * 
+ * A more complete description of this algorithm can be found in this paper:
+ \verbatim
+ Biased random-key genetic algorithms for combinatorial optimization
+ Gonçalves, José Fernando and Resende, Mauricio G. C.
+ 1995, Journal of Heuristics, Volume 17, Number 5
+ ISSN: 1381-1231
+ \endverbatim
+ * 
  * In this algorithm the @ref genetic_algorithm::population is split into
  * three groups:
  * - The individuals within the range [0, @ref N_ELITE), are
@@ -160,21 +183,13 @@ class brkga : public genetic_algorithm<G> {
 		/**
 		 * @brief Executes the BRKGA algorithm.
 		 * 
-		 * The BRKGA executes the following steps:
-		 * - Initialise the population with @ref genetic_algorithm::pop_size mutants
-		 * - Track the @ref N_ELITE best individuals (see @ref elite_set)
-		 * - For as many generations as @ref genetic_algorithm::N_GEN :
-		 * 		- Make the next generation Ng.
-		 * 		- Copy the best @ref N_ELITE individuals into @e Ng (in the range [0, @ref N_ELITE)).
-		 * 		- Generate mutants in the range
-		 * 			[ @ref N_ELITE, @ref N_ELITE + @ref genetic_algorithm::N_MUTANT)).
-		 * 		- Generate the crossover individuals in the range
-		 * 			[ @ref N_ELITE + @ref genetic_algorithm::N_MUTANT, @ref genetic_algorithm::pop_size).
-		 * - Find the individual with the largest fit and decdode the chromosome.
-		 *   Store the result in @e p. Store the cost of the solution in @e c.
-		 * 
-		 * @pre @p e is an empty instance of the problem<G>, and @e c its cost.
-		 * @post @e p is a solution to the problem<G> with cost @e c.
+		 * @param[in] p The instance of the problem.
+		 * @param[in] c The cost of the instance @e p at the beginning of
+		 * the execution.
+		 * @param[out] p Whence the algorithm has finished @e p contains
+		 * an improved solution to the problem.
+		 * @param[out] c The cost of the solution stored at @e p at the
+		 * end of the execution of the algorithm.
 		 */
 		bool execute_algorithm(problem<G> *p, double& c);
 		

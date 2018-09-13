@@ -42,8 +42,12 @@ typedef vector<individual, allocator_individual<individual> > population_set;
 /**
  * @brief Abstract class to implement genetic algorithms.
  * 
+ * Abstract interface for two well-known Genetic Algorithms:
+ * - RKGA
+ * - BRKGA
+ * 
  * In this context, a "mutant individual" is an individual whose
- * chromosome has been randomly generated.
+ * chromosomes (or alleles) has been randomly generated.
  * 
  * Compile the library with the flag
 	\verbatim

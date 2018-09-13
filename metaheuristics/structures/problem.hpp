@@ -8,26 +8,13 @@ using namespace std;
 // metaheuristics includes
 #include <metaheuristics/structures/infeasible_exception.hpp>
 #include <metaheuristics/structures/chromosome.hpp>
+#include <metaheuristics/structures/policies.hpp>
 #include <metaheuristics/random/random_generator.hpp>
 
 namespace metaheuristics {
 namespace structures {
 
 using namespace random;
-
-/**
- * @brief Local Search Policy.
- * 
- * Policies when finding better solutions in the neighbourhood of
- * a problem:
- * - First Improvement: stop searching when a better solution than
- * the current has been found.
- * - Best Improvement: search all the neighbourhood and keep the best.
- */
-enum local_search_policy {
-	First_Improvement = false,
-	Best_Improvement = true
-};
 
 /**
  * @brief Definition of the problem to be solved.
@@ -40,7 +27,7 @@ enum local_search_policy {
  * for debugging, like sanity checks, printing, ...
  * 
  * @param G The type of engine used in the random generator in function
- * @ref random_construct(drandom_generator<G,dT>*, double).
+ * @ref random_construct(drandom_generator<G,size_t>*, double).
  */
 template<
 	class G = default_random_engine

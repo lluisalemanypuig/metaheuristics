@@ -8,6 +8,7 @@ using namespace std;
 
 // Custom includes
 #include <metaheuristics/algorithms/metaheuristic.hpp>
+#include <metaheuristics/structures/policies.hpp>
 #include <metaheuristics/structures/problem.hpp>
 #include <metaheuristics/misc/time.hpp>
 
@@ -24,8 +25,21 @@ using namespace timing;
  * (see @ref metaheuristics::structures::local_search_policy) apply
  * the local search algorithm on an instance of a problem.
  * 
- * See @ref execute_algorithm for details on how this
- * algorithm works.
+ * Given an instance of a problem @e p, with cost @e c,
+ * this algorithm works as follows: 
+ * - Define BEST = @e p
+ * - Apply while there is improvement and for a maximum number
+ * 		of iterations:
+ * 		- Find the best solution among those in its neighbourhood,
+ * 		according to the search policy.
+ * 		- Define BEST to be that solution
+ * - Return BEST
+ * 
+ * The number of iterations can be set in the constructor
+ * (see @ref local_search(size_t, const local_search_policy&))
+ * or in the method @ref set_max_iterations(size_t).
+ * 
+ * Call @ref execute_algorithm function to execute this algorithm.
  * 
  * Compile the library with the flag
 	\verbatim
@@ -139,26 +153,13 @@ class local_search : public metaheuristic<G> {
 		/**
 		 * @brief Execute the local search algorithm.
 		 * 
-		 * Given an instance of a problem @e p, with cost @e c,
-		 * this algorithm works as follows: 
-		 * - Define BEST = @e p
-		 * - Apply while there is improvement and for a maximum number
-		 * 		of iterations:
-		 * 		- Find the best solution among those in its neighbourhood,
-		 * 		according to the search policy.
-		 * 		- Define BEST to be that solution
-		 * - Return BEST
-		 * 
-		 * The number of iterations can be set in the constructor
-		 * (see @ref local_search(size_t, const local_search_policy&))
-		 * or in the method @ref set_max_iterations(size_t).
-		 * 
 		 * @param[in] p The instance of the problem.
-		 * @param[in] c The cost of the instance p at the beginning of
+		 * @param[in] c The cost of the instance @e p at the beginning of
 		 * the execution.
-		 * @param[out] p Whence the algorithm has finished p contains
+		 * @param[out] p Whence the algorithm has finished @e p contains
 		 * an improved solution to the problem.
-		 * @pre The method @ref reset_algorithm does not need to be called.
+		 * @param[out] c The cost of the solution stored at @e p at the
+		 * end of the execution of the algorithm.
 		 */
 		bool execute_algorithm(problem<G> *p, double& c);
 		

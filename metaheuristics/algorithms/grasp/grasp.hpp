@@ -11,6 +11,7 @@ using namespace std;
 #include <metaheuristics/algorithms/metaheuristic.hpp>
 #include <metaheuristics/algorithms/local_search/local_search.hpp>
 #include <metaheuristics/random/random_generator.hpp>
+#include <metaheuristics/structures/policies.hpp>
 #include <metaheuristics/structures/problem.hpp>
 
 namespace metaheuristics {
@@ -25,8 +26,36 @@ using namespace timing;
  * 
  * Implementation of the Greedy Randomised Adaptative-Search Procedure.
  * 
- * See @ref execute_algorithm for details on how this
- * algorithm works.
+ * Given an instance of a problem @e p, with cost @e c,
+ * the algorithm implemented in @ref execute_algorithm(problem<G>*, double&)
+ * roughly follows the following pseudocode:
+ * - Define BEST an empty solution, using object @e p
+ * - For as many iterations as @ref MAX_ITER_GRASP
+ * - Apply while there is improvement and for a maximum number
+ * 		of iterations:
+ * 		- Construct a random solution with a Restricted
+ * 		candidate list built using parameter @ref alpha.
+ * 		Define R as the result.
+ * 		- Apply the local search procedure on R for at most
+ * 		@ref MAX_ITER_LOCAL with policy @ref LSP. Define L as
+ * 		the result.
+ * 		- Keep the best solution between BEST and L.
+ * - Return BEST
+ * 
+ * The number of iterations can be set in the constructor
+ * (see @ref grasp(size_t,size_t,double,const local_search_policy&))
+ * or in the methods @ref set_max_iterations_grasp(size_t),
+ * @ref set_max_iterations_local(size_t).
+ * 
+ * A more complete description of this algorithm can be found in this paper:
+ \verbatim
+ Greedy Randomized Adaptive Search Procedures
+ Feo, Thomas A. and Resende, Mauricio G. C.
+ 1995, Journal of Global Optimization, Volume 6, Number 2
+ ISSN: 1573-2916
+ \endverbatim
+ * 
+ * Call @ref execute_algorithm function to execute this algorithm.
  * 
  * Compile the library with the flag
 	\verbatim
@@ -164,34 +193,13 @@ class grasp : public metaheuristic<G> {
 		/**
 		 * @brief Execute the GRASP algorithm.
 		 * 
-		 * GRASP stands for Greedy Randomised Adaptative-Search Procedure.
-		 * 
-		 * Given an instance of a problem @e p, with cost @e c,
-		 * this algorithm works as follows:
-		 * - Define BEST an empty solution, using object @e p
-		 * - For as many iterations as @ref MAX_ITER_GRASP
-		 * - Apply while there is improvement and for a maximum number
-		 * 		of iterations:
-		 * 		- Construct a random solution with a Restricted
-		 * 		candidate list built using parameter @ref alpha.
-		 * 		Define R as the result.
-		 * 		- Apply the local search procedure on R for at most
-		 * 		@ref MAX_ITER_LOCAL with policy @ref LSP. Define L as
-		 * 		the result.
-		 * 		- Keep the best solution between BEST and L.
-		 * - Return BEST
-		 * 
-		 * The number of iterations can be set in the constructor
-		 * (see @ref grasp(size_t,size_t,double,const local_search_policy&))
-		 * or in the methods @ref set_max_iterations_grasp(size_t),
-		 * @ref set_max_iterations_local(size_t).
-		 * 
 		 * @param[in] p The instance of the problem.
-		 * @param[in] c The cost of the instance p at the beginning of
+		 * @param[in] c The cost of the instance @e p at the beginning of
 		 * the execution.
-		 * @param[out] p Whence the algorithm has finished p contains
+		 * @param[out] p Whence the algorithm has finished @e p contains
 		 * an improved solution to the problem.
-		 * @pre The method @ref reset_algorithm does not need to be called.
+		 * @param[out] c The cost of the solution stored at @e p at the
+		 * end of the execution of the algorithm.
 		 */
 		bool execute_algorithm(problem<G> *p, double& c);
 		
