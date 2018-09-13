@@ -19,7 +19,7 @@ using namespace algorithms;
 using namespace random;
 
 void print_usage() {
-	cout << "SUPER COOL HEURISTIC FRAMEWORK (in C++, by Lluis Alemany Puig)" << endl;
+	cout << "Locations, Cities, and Centres" << endl;
 	cout << "Usage:" << endl;
 	cout << "    [-h, --help]:        shows this help" << endl;
 	cout << "    [-s, --seed]:        seed the random number generators" << endl;
