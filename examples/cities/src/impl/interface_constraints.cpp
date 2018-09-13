@@ -69,6 +69,10 @@ bool interface::working_distance_exceeded(size_t loc_idx, size_t centre_idx) con
 			else if (cit_by_sec[city_idx] == loc_idx) {
 				df = 3.0;
 			}
+			else {
+				cerr << "Error (interface::working_distance_exceeded): city " << city_idx << " not served by a location" << endl;
+				df = -1.0;
+			}
 			
 			double dist = city_pos.distance(loc_pos);
 			if (dist > df*wd) {
@@ -130,6 +134,10 @@ bool interface::joined_constraints_satisfied(size_t loc_idx, size_t centre_idx) 
 			else if (cit_by_sec[city_idx] == loc_idx) {
 				loc_cap += 0.10*cities[city_idx].get_population();
 				df = 3.0;
+			}
+			else {
+				cerr << "Error (interface::joined_constraints_satisfied): city " << city_idx << " not served by a location" << endl;
+				df = -1.0;
 			}
 			
 			double dist = city_pos.distance(loc_pos);

@@ -26,11 +26,9 @@ double interface::dist_city_loc(size_t city_idx, size_t loc_idx) const {
 
 /// PUBLIC
 
-interface::interface() : problem() {
-}
+interface::interface() : problem() { }
 
-interface::~interface() {
-}
+interface::~interface() { }
 
 double interface::evaluate() const {
 	double c = 0.0;
@@ -49,10 +47,8 @@ bool interface::sanity_check(const string& tab, ostream& err) const {
 		size_t centre_idx = location_centre_type[loc_idx];
 		if (centre_idx != -1) {
 			
-			bool current_location_right = true;
 			if (capacity_exceeded(loc_idx, centre_idx)) {
 				is_sane = false;
-				current_location_right = false;
 				err << tab
 				    << "(1) Sanity check: capacity constraint unsatisfied"
 				    << " in location " << loc_idx << ". Centre installed: "
@@ -61,7 +57,6 @@ bool interface::sanity_check(const string& tab, ostream& err) const {
 			
 			if (working_distance_exceeded(loc_idx, centre_idx)) {
 				is_sane = false;
-				current_location_right = false;
 				err << tab
 				    << "(2) Sanity check: working distance constraint unsatisfied"
 				    << " in location " << loc_idx << ". Centre installed: "

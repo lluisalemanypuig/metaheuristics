@@ -66,7 +66,7 @@ void print_usage() {
 }
 
 local_search_policy parse_policy(int argc, char *argv[], int i) {
-	local_search_policy lsp;
+	local_search_policy lsp = First_Improvement;
 	if (strcmp(argv[i], "First") == 0) {
 		lsp = First_Improvement;
 	}

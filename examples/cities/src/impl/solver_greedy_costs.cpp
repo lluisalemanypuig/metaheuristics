@@ -63,6 +63,10 @@ double solver::greedy_cost_dist(size_t city_idx, size_t loc_idx, role r) const {
 	else if (r == secondary) {
 		alo = at_least_one_centre(city_idx, loc_idx, 0.1, 3.0, cca);
 	}
+	else {
+		cerr << "Error (solver::greedy_cost_dist): invalid role value: " << r << endl;
+		alo = false;
+	}
 	
 	char C = 0;
 	if (cap_location[loc_idx] == 0) {
@@ -111,6 +115,10 @@ double solver::greedy_cost_pop(size_t city_idx, size_t loc_idx, role r) const {
 	}
 	else if (r == secondary) {
 		alo = at_least_one_centre(city_idx, loc_idx, 0.1, 3.0, cca);
+	}
+	else {
+		cerr << "Error (solver::greedy_cost_pop): invalid role value: " << r << endl;
+		alo = false;
 	}
 	
 	char C = 0;
@@ -166,6 +174,10 @@ double solver::greedy_cost_dist_pop(size_t city_idx, size_t loc_idx, role r) con
 	}
 	else if (r == secondary) {
 		alo = at_least_one_centre(city_idx, loc_idx, 0.1, 3.0, cca);
+	}
+	else {
+		cerr << "Error (solver::greedy_cost_dist_pop): invalid role value: " << r << endl;
+		alo = false;
 	}
 	
 	char C = 0;

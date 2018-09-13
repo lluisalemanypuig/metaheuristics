@@ -96,6 +96,10 @@ const
 							pf = 0.1;
 							df = 3.0;
 						}
+						else {
+							cerr << "Error (solver::can_remove_centre): city " << city_idx << " not served by a location" << endl;
+							df = pf = -1.0;
+						}
 						
 						// ... check whether it satisfies all constraints or not ...
 						if ((location_capacity + pf*city_pop) <= centre_cap and dist_city_loc <= df*wd) {
@@ -103,7 +107,7 @@ const
 							// gap = |cap_location + pf*city_pop - centre_capacity|
 							double this_gap = centre_cap - (location_capacity + pf*city_pop);
 							
-							if (max_gap < this_gap or max_gap == this_gap and dist_city_loc < min_dist) {
+							if ((max_gap < this_gap) or ((max_gap == this_gap) and (dist_city_loc < min_dist))) {
 								max_gap = this_gap;
 								min_dist = dist_city_loc;
 								min_loc = l_it;
@@ -227,7 +231,6 @@ void solver::best_neighbour(pair<problem *, double>& bn, const local_search_poli
 			// can we remove the centre? ...
 			vector<size_t> new_locations(n_cities);
 			bool can_remove = can_remove_centre(loc_idx, cities_served, new_locations);
-			bool found_better_neighbour = false;
 			
 			if (can_remove) {
 				// ... if so, check that the new solution is indeed better
@@ -236,7 +239,6 @@ void solver::best_neighbour(pair<problem *, double>& bn, const local_search_poli
 				
 				double centre_cost = centres[location_centre_type[loc_idx]].get_installation_cost();
 				if (original_cost - centre_cost < best_cost) {
-					found_better_neighbour = true;
 					
 					if (lsp == First_Improvement) {
 						finish = true;
