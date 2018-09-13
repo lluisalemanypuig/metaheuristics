@@ -1,0 +1,78 @@
+\section{Conclusions}
+
+In this project were tested many different techniques for combinatorial optimisation problems:
+from the computation of the optimal solution using an Integer Linear Programming solver to its
+approximation using several different heuristics. These methods are clearly different when it
+comes to their definition and implementation: the former has been easy to formulate and to test
+whereas the latter had more difficulty in their design, implementation and testing since we were
+not formally provided with an extendable framework for that purpose. That is why the framework
+described in section \ref{sec:metaheuristics:code:framework} was implemented. Admittedly, the
+python code could have been easily modified. However, python is not a sensible choice for a
+project like this and the execution times shown in figure \ref{fig:trace:brkga:t-5--t-6} is a
+tangible proof.
+
+\hfill
+
+Now, these two kind of techniques for combinatorial optimisation problems are also different in
+the amount of time they need to find an optimal solution - or a nearly optimal solution for the
+heuristics case. The ILP solver should take a lot of time to find the optimal solution in a
+general case whereas the heuristics, if well designed and implemented, should take a small
+amount of time (when compared to the ILP solver's) to find, not an optimal solution, but a
+nearly optimal. That is, if we can not find the optimal because the instance is too large,
+heuristic methods can help us find a not-as-good solution but, at least, find a solution good
+enough for our purposes.
+
+\hfill
+
+However, in this project we haven't been able to do so. Despite our efforts to design good
+heuristics that could fit in three different procedures (Local Search, see section
+\ref{sec:metaheuristics:greedy-algorithms}, GRASP, see section
+\ref{sec:metaheuristics:randomised-construction} and BRKGA, see section
+\ref{sec:metaheuristics:chromosome-decoder}) we could not manage to obtain any instance that
+could fit in this description. Instead, all instances could be solved by the ILP solver in a
+relatively small amount of time and the heuristics produced results far from being the optimal,
+and in a really huge amount of time as a general case.
+
+\hfill
+
+Nevertheless, what we managed to do is to show the quality of each procedure. The one that
+performed the worst for our case is the Local Search procedure. Making this procedure worthwhile
+relies too much on the initial solution being poor enough so as to be properly improved by
+making little changes, that is, the neighbourhood exploration. Therefore, Local Search applied
+to our greedy constructor has shown not to be of good use due to the small exploration of the
+neighbourhood, shown in table \ref{table:local-search:traces} and in figure
+\ref{fig:local-search:traces}. However, it was useful in the case of the GRASP procedure where
+randomly constructed solutions could be greatly improved using this technique. Solutions did
+reach values near the optimum. However, we observed that the behaviour of this procedure was
+rather erratic: ``easy instances'' were solved nearly to the optimal value very soon in the
+procedure and then they were stuck in that best solution for the rest of the execution. This
+makes us think that, no matter how long we leave that procedure running, we will never reach the
+optimal solution. Instances that were more ``difficult'' made this procedure useful due to the
+continuous improvements that solutions suffered through time. This means that it is quite likely
+to obtain the optimal solution if one is patient enough for bigger instances.
+
+\hfill
+
+The BRKGA procedure seems to be the best in behaviour, but not in results. We find a lot more
+improvements in this kind of metaheuristic than in the others, but it has higher execution
+times and worse results. On the one hand, as mentioned several times through this report,
+several improvements found during the execution of the first, say, 30 minutes makes us think
+that there could be more if we waited more time, hence obtaining a solution closer and closer
+to the optimal. On the other hand, the results obtained are far worse than those obtained with
+the GRASP procedure: the difference between the best solution by the BRKGA and the ILP solver
+is greater than between the best found by the GRASP procedure and the ILP solver.
+
+\hfill
+
+Arguably, just by looking at the results presented, the GRASP procedure seems to be the first
+choice to use when trying to solve any instance of this problem (since we tried ``easy'' and
+``difficult'' instances). However, further improvements need to be made: this procedure is
+fairly parallel (its efficiency can be easily improved) and it only needs a better neighbourhood
+exploration, since a randomised greedy construction can easily lead to extremely bad solutions.
+However, the results are still more promising when looking at the BRKGA procedure due to its
+theoretical background: a really big amount of diversity in the solution space and continuous
+improvements through time. Therefore, as a conclusion, despite the results being worse, the
+BRKGA is the best procedure that could be used to solve instances of this problem, after having
+improved its efficiency enough.
+
+

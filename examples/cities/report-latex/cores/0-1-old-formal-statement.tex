@@ -1,0 +1,44 @@
+\section{Formal Statement}
+
+An Internet retail company wants to build several logistic centres in order to operate
+in a new country. Its goal is to spend the minimum amount of money while making sure that
+customers receive their products quickly enough.
+
+\hfill
+
+The company has a set of $\nloc$ locations $\loc = \{\eloc_1, \cdots, \eloc_\nloc\}$ where
+logistic centres can be installed in, and a set of $\ncity$ cities $\city = \{\ecity_1,
+\cdots, \ecity_\ncity\}$ that need to be served. For each location we know its coordinates
+$u_\iloc = (u_{\iloc, x}, u_{\iloc, y}) \in \mathbb{R}^2$ ($1 \le \iloc \le \nloc$), and for
+every city we know its coordinates $v_\icity = (v_{\icity, x}, v_{\icity, y}) \in
+\mathbb{R}^2$ and its population $p_\icity \in \mathbb{N}$ ($1 \le \icity \le \ncity$). We
+have available a set of $\ncentre$ logistic centre types $\centre = \{\ecentre_1, \cdots,
+\ecentre_\ncentre\}$. Each type represents a logistic centre with working distance
+$\omega_\icentre \in \mathbb{R}$, capacity $s_\icentre \in \mathbb{N}$ and installation cost
+$i_\icentre \in \mathbb{R}$ ($1 \le \icentre \le \ncentre$).
+
+\hfill
+
+Not all logistic centres need to be installed, and not all locations have to have one centre
+installed. However, if a centre is to be installed then it can only be so in at most one
+location and in a way that there is at least a distance of $D$ to the rest of installed
+centres. A centre may serve many cities - at least one if it is installed and none if it is
+not - either as a primary or as a secondary centre, but it can never serve the same city as
+both primary and secondary. Besides, centres must be within a certain range from the cities
+they are serving. More precisely, a centre $\ecentre_\icentre \in \centre$ can only serve
+city $\ecity_\icity \in \city$ as primary centre if the distance between the two is at most
+$\omega_\icentre$ and as secondary centre if the city is at most at distance $3\omega_\icentre$.
+Moreover, the sum of the population of those cities served by centre $\ecentre_\icentre$ as
+primary centre plus 10\% of the sum of the population of those cities served by the same
+centre as secondary centre can not exceed the capacity of the centre $\ecentre_\icentre$:
+$s_\icentre$ ($1 \le \icity \le \ncity$, $1 \le \icentre \le \ncentre$). Finally, all cities
+have to be served by exactly one primary and one secondary centre.
+
+\hfill
+
+The goal of the problem is to decide where to install logistic centres, determine of
+which type each centre will be and what primary and secondary centres each city should
+be connected to in order to minimise the total installation cost.
+
+
+

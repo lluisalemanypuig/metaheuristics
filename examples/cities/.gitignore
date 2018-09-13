@@ -1,0 +1,8 @@
+report-latex/*.synctex.gz
+report-latex/*.aux
+report-latex/*.bbl
+report-latex/*.bcf
+report-latex/*.blg
+report-latex/*.log
+report-latex/*.run.xml
+report-latex/*.toc

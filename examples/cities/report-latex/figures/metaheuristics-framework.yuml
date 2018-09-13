@@ -1,0 +1,7 @@
+https://yuml.me/diagram/scruffy/class/draw
+
+[<<metaheuristic>>]^ [Local Search],
+[<<metaheuristic>>]^ [GRASP],
+[<<metaheuristic>>]^ [<<genetic_algorithms>>],
+[<<genetic_algorithms>>]^ [RKGA],
+[<<genetic_algorithms>>]^ [BRKGA]

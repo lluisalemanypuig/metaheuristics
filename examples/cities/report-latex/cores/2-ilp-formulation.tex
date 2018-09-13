@@ -1,0 +1,397 @@
+\newcounter{decisionVariables}
+
+\section{Integer Linear Programming formulation}
+\label{sec:ILP-form}
+
+In this section is described all the information regarding the ILP formulation of the problem: the
+variables, objective function, the constraints to model the problem, and the implementation in OPL.
+
+\subsection{Input data}
+\label{sec:ILP-form:inp-data}
+
+The input data that makes up an instance of the problem, extracted from the statement, is referenced in
+the OPL code using the following names:
+
+\begin{itemize}
+    \item[--] The ranges $1, \cdots, \nloc$, $1, \cdots, \ncity$ and $1, \cdots, \ncentre$, where
+    $\nloc$, $\ncity$ and $\ncentre$ are the number of locations, cities and centre types respectively:
+    
+    \begin{lstlisting}
+    range L = 1..nLocations;
+    range C = 1..nCities;
+    range T = 1..nCentres;
+    \end{lstlisting}
+
+    \item[--] Location coordinates $u_\iloc$
+    
+    \begin{lstlisting}
+    float loc_x[l in L];
+    float loc_y[l in L];
+    \end{lstlisting}
+    
+    \item[--] City coordinates $v_\icity$:
+    
+    \begin{lstlisting}
+    float city_x[c in C];
+    float city_y[c in C];
+    \end{lstlisting}
+    
+    \item[--] City population $p_\icity$:
+    
+    \begin{lstlisting}
+    int city_pop[c in C];
+    \end{lstlisting}
+    
+    \item[--] Centre's working distance $\omega_\icentre$:
+    
+    \begin{lstlisting}
+    float work_dist[t in T];
+    \end{lstlisting}
+    
+    \item[--] Centre's capacity $s_\icentre$:
+    
+    \begin{lstlisting}
+    int centre_cap[t in T];
+    \end{lstlisting}
+    
+    \item[--] Centre's installation cost $i_\icentre$:
+    
+    \begin{lstlisting}
+    float instal_cost[t in T];
+    \end{lstlisting}
+    
+    \item[--] Distances between locations, and between locations and cities.
+    
+    \begin{lstlisting}
+    float dist_ll[l1 in L][l2 in L];
+    float dist_lc[l in L][c in C];
+    \end{lstlisting}
+    
+\end{itemize}
+
+The values of each of these variables are read from the input with the only exception of the last two.
+These are calculated in a preprocessing block and are meant to make the code more readable. Here is the
+preprocessing block:
+
+\begin{lstlisting}
+execute {
+	for (var l1 = 1; l1 <= nLocations; ++l1) {
+		for (var l2 = 1; l2 <= nLocations; ++l2) {
+			dist_ll[l1][l2] = Math.sqrt(
+			    Math.pow(loc_x[l1] - loc_x[l2], 2) +
+			    Math.pow(loc_y[l1] - loc_y[l2], 2)
+            );
+		}
+		
+		for (var c = 1; c <= nCities; ++c) {
+			dist_lc[l1][c] = Math.sqrt(
+			    Math.pow(loc_x[l1] - city_x[c], 2) +
+			    Math.pow(loc_y[l1] - city_y[c], 2)
+            );
+		}
+	}
+}
+\end{lstlisting}
+
+\subsection{Decision variables}
+\label{sec:ILP-form:dec-var}
+
+For the ILP formulation of this problem the following decision variables have been defined. The name
+each of these decision variables is given and the OPL code is also specified.
+
+\begin{enumerate}
+    \item $I_{\iloc, \icentre}$: ``centre of type $\ecentre_\icentre$ is installed in location
+    $\eloc_\iloc$" -
+    ($\mathbb{B}$, $\forall \iloc, \icentre: 1 \le \iloc \le \nloc, 1 \le \icentre \le \ncentre$)
+    \label{dec-var:centre-installed}
+    \stepcounter{decisionVariables}
+        
+    \begin{lstlisting}
+    dvar boolean location_centre[l in L][t in T];
+    \end{lstlisting}
+    
+    \item $LP_{\iloc, \icity}$: ``location $\eloc_\iloc$ serves city $\ecity_\icity$ with a primary
+    role" - ($\mathbb{B}$, $\forall \iloc, \icity: 1 \le \iloc \le \nloc,\:
+    1 \le \icity \le \ncity$)
+    \label{dec-var:location-primary-centre}
+    \stepcounter{decisionVariables}
+    
+    \begin{lstlisting}
+    dvar boolean location_pcity[l in L][c in C];
+    \end{lstlisting}
+
+    \item $LS_{\iloc, \icity}$: ``location $\eloc_\iloc$ serves city $\ecity_\icity$ with a secondary
+    role" - ($\mathbb{B}$, $\forall \iloc, \icity: 1 \le \iloc \le \nloc,\:
+    1 \le \icity \le \ncity$)
+    \label{dec-var:location-secondary-centre}
+    \stepcounter{decisionVariables}
+    
+    \begin{lstlisting}
+    dvar boolean location_scity[l in L][c in C];
+    \end{lstlisting}
+    
+\end{enumerate}
+
+\subsection{Objective function}
+\label{sec:ILP-form:obj-func}
+
+The value to minimise is the cost of centre installation. Therefore, we will be using the
+following objective function:
+
+\begin{equation}
+\text{minimise }
+\sum_{\icentre = 1}^{\ncentre}
+    \left(
+        i_\icentre \cdot 
+        \sum_{\iloc = 1}^{\nloc} I_{\iloc, \icentre}
+    \right)
+\label{ILP:objective-function}
+\end{equation}
+
+that involves the installed centre types $I_{\iloc, \icentre}$ and the corresponding installation
+cost $i_\icentre$.
+
+\hfill
+
+The implementation in OPL is the following:
+
+\begin{lstlisting}
+minimize sum (t in T) instal_cost[t]*( sum (l in L) location_centre[l][t] );
+\end{lstlisting}
+
+\subsection{Constraints}
+\label{sec:ILP-form:constraints}
+
+The problem is solved using the following constraints.
+
+\begin{enumerate}
+\setcounter{enumi}{\value{equation}}
+
+    \item A location can have at most one centre installed.
+    \begin{equation}
+    \sum_{\icentre = 1}^{\ncentre} I_{\iloc, \icentre} \le 1
+    \qquad \forall \iloc: 1 \le \iloc \le \nloc
+    \label{cstr:one-loc-one-centre-1}
+    \end{equation}
+    
+\begin{lstlisting}
+forall (l in L) {
+	sum (t in T) location_centre[l][t] <= 1;
+}
+\end{lstlisting}
+    
+    \item If a location is serving one or more cities then it must have a centre installed.
+    \begin{equation}
+    C \cdot \sum_{\icentre = 1}^{\ncentre} I_{\iloc, \icentre}
+    \ge
+    \sum_{\icity = 1}^{\ncity} (LP_{\iloc, \icity} + LS_{\iloc, \icity})
+    \qquad \forall \iloc: 1 \le \iloc \le \nloc
+    \label{cstr:serving-location-with-centre}
+    \end{equation}
+    
+\begin{lstlisting}
+forall (l in L) {
+	nCities*( (sum (t in T) location_centre[l][t]) )
+	>= 
+	(sum (c in C) (location_pcity[l][c] + location_scity[l][c]));
+}
+\end{lstlisting}
+	
+	This constraint is basically modelling the following implication:
+	\[
+	\sum_{\icity = 1}^{\ncity} LP_{\iloc, \icity} + LS_{\iloc, \icity} \ge 1
+	\Longrightarrow
+	I_{\iloc, \icentre} = 1
+	\]
+	
+	\item Each city has to be served exactly by two locations: one with a primary role and
+	another with a secondary role.
+    
+    \begin{equation}
+    \sum_{\iloc = 1}^{\nloc} LP_{\iloc, \icity} = 1, \quad
+	\sum_{\iloc = 1}^{\nloc} LS_{\iloc, \icity} = 1
+	\qquad \forall \icity: 1 \le \icity \le \ncity
+	\label{cstr:cities-served-by-location}
+    \end{equation}
+    
+\begin{lstlisting}
+forall (c in C) {
+	sum (l in L) location_pcity[l][c] == 1;
+	sum (l in L) location_scity[l][c] == 1;
+}
+\end{lstlisting}
+    
+    \item A location can not serve a city as both primary and secondary centre.
+    
+    \begin{equation}
+    LP_{\iloc, \icity} + LS_{\iloc, \icity} \le 1
+    \qquad \forall \iloc, \icity:
+    1 \le \iloc \le \nloc,\;
+    1 \le \icity \le \ncity
+    \label{cstr:centre-not-too-busy}
+    \end{equation}
+    
+\begin{lstlisting}
+forall (l in L, c in C) {
+	location_pcity[l][c] + location_scity[l][c] <= 1;
+}
+\end{lstlisting}
+    
+    This is modelling the following implications:
+    \[
+    LP_{\iloc, \icity} = 1 \iff LS_{\iloc, \icity} = 0, \qquad
+    LP_{\iloc, \icity} = 0 \iff LS_{\iloc, \icity} = 1
+    \]
+    
+    \item The sum of the population of those cities a location serves with a primary centre
+    plus 10\% of the sum of the population of those cities it serves with a secondary centre
+    can not exceed its capacity.
+    
+    \begin{equation}
+    \sum_{\icity = 1}^{\ncity} LP_{\iloc, \icity} \cdot p_{\icity} +
+    0.10 \cdot \sum_{\icity = 1}^{\ncity} LS_{\iloc, \icity} \cdot p_{\icity}
+    \le
+    \sum_{\icentre = 1}^{\ncentre} I_{\iloc, \icentre} \cdot s_{\icentre}
+    \qquad \forall \iloc: 1 \le \iloc \le \nloc
+    \label{cstr:centre-not-overbooked}
+    \end{equation}
+    
+\begin{lstlisting}
+forall (l in L) {
+	sum (c in C) location_pcity[l][c]*city_pop[c]
+	+
+	0.10*( sum (c in C) location_scity[l][c]*city_pop[c] )
+	<=
+	sum (t in T) location_centre[l][t]*centre_cap[t];
+}
+\end{lstlisting}
+    
+    Assume $P_{\iloc}$ and $S_{\iloc}$ to be
+    the sets of cities a location $\iloc \in \loc$ serves with a primary and a secondary
+    role respectively. Formally, using the previously defined boolean variables:
+    
+    \[
+    P_{\iloc} = \{\icity \in \city \;|\; LP_{\iloc, \icity} = 1 \},
+    S_{\iloc} = \{\icity \in \city \;|\; LS_{\iloc, \icity} = 1 \}
+    \]
+    
+    Constraint \ref{cstr:centre-not-overbooked} is modelling the following implication:
+    
+    \[
+    I_{\iloc, \icentre} = 1 \Longrightarrow
+    \sum_{\icity \in P_\iloc} p_c + 0.10 \cdot \sum_{\icity \in S_\iloc} p_c
+    \le
+    \omega_{\icentre}
+    \]
+    
+    $\forall \iloc, \icentre: 1 \le \iloc \le \nloc,\; 1 \le \icentre \le \ncentre$.
+    
+    \item Centres cannot be installed in locations that are at a distance smaller than D.
+    
+    \begin{equation}
+    \sum_{\icentre = 1}^{\ncentre} I_{\iloc_1, \icentre} + I_{\iloc_2, \icentre} \le 1
+    \qquad
+    \forall \iloc_1, \iloc_2:
+    1 \le \iloc_1 < \iloc_2 \le \nloc,\; : \;
+    d_{\iloc_1, \iloc_2} < D
+    \end{equation}
+    
+    where $d_{\iloc_1, \iloc_2}^2 =
+    (u_{\iloc_1, x} - u_{\iloc_2, x})^2 + (u_{\iloc_1, y} - u_{\iloc_2, y})^2$ is the
+    squared distance between the locations $\iloc_1$ and $\iloc_2$.
+    
+\begin{lstlisting}
+forall (l1 in L, l2 in L : l1 < l2) {
+	if (dist_ll[l1][l2] < D) {
+		sum (t in T) (location_centre[l1][t] + location_centre[l2][t]) <= 1;
+	}
+}
+\end{lstlisting}
+    
+    This is modelling the following implication:
+    
+    \[
+    d_{\iloc_1, \iloc_2} < D \Longrightarrow
+    (I_{\iloc_1, \icentre} = 0 \wedge I_{\iloc_2, \icentre} = 1) \vee
+    (I_{\iloc_1, \icentre} = 1 \wedge I_{\iloc_2, \icentre} = 0)
+    \]
+    
+    $\forall \iloc_1, \iloc_2, \icentre:
+    1 \le \iloc_1 < \iloc_2 \le \nloc, \; 1 \le \icentre \le \ncentre$.
+    
+    \item The distance between the location and the cities it serves with a primary role can not be
+    greater than the working distance of that centre.
+    
+    \begin{equation}
+    LP_{\iloc, \icity} \cdot d_{\iloc, \icity} \le
+    \sum_{\icentre = 1}^{\ncentre} I_{\iloc, \icentre} \cdot \omega_{\icentre}
+    \qquad
+    \forall \iloc, \icity:
+    1 \le \iloc \le \nloc,\;
+    1 \le \icity \le \ncity
+    \label{cstr:working-distance-primary}
+    \end{equation}
+    
+    where $d_{\iloc, \icity}^2 =
+    (u_{\iloc, x} - v_{\icity, x})^2 + (u_{\iloc, y} - v_{\icity, y})^2$ is the squared distance
+    between location $\iloc$ and city $\icity$.
+    
+\begin{lstlisting}
+forall (l in L, c in C) {
+	location_pcity[l][c]*dist_lc[l][c]
+	<=
+	sum (t in T) location_centre[l][t]*work_dist[t];
+}
+\end{lstlisting}
+	
+	\hfill
+    
+    This constraint is modelling the following implication:
+    \[
+    I_{\iloc, \icentre} = 1 \wedge LP_{\iloc, \icity} = 1
+    \Longrightarrow d_{\iloc, \icity} \le \omega_\icentre
+    \]
+	
+	$\forall \iloc, \icity, \icentre: 1 \le \iloc \le \nloc,\; 1 \le \icity \le \ncity,\;
+	1 \le \icentre \le \ncentre$.
+	
+	\item The distance between the centre and the cities it serves with a secondary role can not be
+	greater than three times the working distance of that centre.
+		
+\begin{equation}
+    LS_{\iloc, \icity} \cdot d_{\iloc, \icity} \le
+    \sum_{\icentre = 1}^{\ncentre} I_{\iloc, \icentre} \cdot 3\omega_{\icentre}
+    \qquad
+    \forall \iloc, \icity:
+    1 \le \iloc \le \nloc,\;
+    1 \le \icity \le \ncity
+    \label{cstr:working-distance-secondary}
+    \end{equation}
+    
+    where $d_{\iloc, \icity}^2 =
+    (u_{\iloc, x} - v_{\icity, x})^2 + (u_{\iloc, y} - v_{\icity, y})^2$ is the distance between
+    the location $\iloc$ and the city $\icity$.
+    
+\begin{lstlisting}
+forall (l in L, c in C) {
+	location_scity[l][c]*dist_lc[l][c]
+	<=
+	sum (t in T) location_centre[l][t]*3*work_dist[t];
+}
+\end{lstlisting}
+	
+	\hfill
+    
+    This constraint is modelling the following implication:
+    \[
+    I_{\iloc, \icentre} = 1 \wedge LS_{\iloc, \icity} = 1
+    \Longrightarrow d_{\iloc, \icity} \le 3\omega_\icentre
+    \]
+	
+	$\forall \iloc, \icity, \icentre: 1 \le \iloc \le \nloc,\; 1 \le \icity \le \ncity,\;
+	1 \le \icentre \le \ncentre$.
+	    
+\end{enumerate}
+
+
+

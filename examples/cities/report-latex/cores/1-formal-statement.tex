@@ -1,0 +1,54 @@
+\section{Formal Statement}
+\label{sec:formal-statement}
+
+An Internet retail company wants to build several logistic centres in order to operate
+in a new country. Its goal is to spend the minimum amount of money while making sure that
+customers receive their products quickly enough.
+
+\hfill
+
+The company has a set of $\nloc$ locations $\loc = \{\eloc_1, \cdots, \eloc_\nloc\}$ where
+logistic centres can be installed in, and a set of $\ncity$ cities $\city = \{\ecity_1,
+\cdots, \ecity_\ncity\}$ that need to be served. For each location we know its coordinates
+$u_\iloc = (u_{\iloc, x}, u_{\iloc, y}) \in \mathbb{R}^2$ ($\forall \iloc : 1 \le \iloc \le
+\nloc$), and for every city we know its coordinates $v_\icity = (v_{\icity, x}, v_{\icity, y})
+\in \mathbb{R}^2$ and its population $p_\icity \in \mathbb{N}$ ($\forall \icity : 1 \le \icity
+\le \ncity$). We have available a set of $\ncentre$ logistic centre types $\centre =
+\{\ecentre_1, \cdots, \ecentre_\ncentre\}$. Each type is characterised by a working distance
+$\omega_\icentre \in \mathbb{R}$, capacity $s_\icentre \in \mathbb{N}$ and installation cost
+$i_\icentre \in \mathbb{R}$ ($\forall \icentre : 1 \le \icentre \le \ncentre$).
+
+\hfill
+
+The goal is to know the type of the centres to be installed in the different locations in
+order to serve all the different cities as quickly and as cheaply as possible. Not all logistic
+centres types need to be used, and not all locations have to have one centre installed. If a
+location requires a centre to be installed in it then it can be at most one centre of one type
+but many centres of the same type can be installed in more than one location (that is,
+different locations may have a centre of the same type installed in them). However, centres can
+only be installed in those locations that are at least at a distance of $D$ to the rest of
+locations that have a centre installed in them.
+
+\hfill
+
+The installed centre of type $\ecentre_\icentre$ in a location $\eloc_\iloc$ may be acting as a
+primary or as a secondary centre when serving the different cities $\ecity_\icity$, and not
+necessarily as primary or as secondary all the time: it may serve as a primary centre to some
+of the cities and as a secondary centre to the rest. All cities need to be served exactly by
+a primary centre and a secondary centre. From now on, when a location $\eloc_\iloc$ has a
+centre of type $\ecentre_\icentre$ installed in it that serves some cities as a primary centre
+and some other cities as a secondary centre we will say that that location is serving those
+cities with a primary and with a secondary role, respectively. Now, a location may serve many
+cities - at least one if it has a centre installed and none if no centre is installed in it -
+but it can never serve the same city with a primary and a secondary role at the same time.
+Besides, a location $\eloc_\iloc$ with a centre of type $\ecentre_\icentre$ installed in it
+can only serve cities $\ecity_\icity$ with a primary role if the distance between the cities
+and the location is less than the working distance of the centre installed: $d(\eloc_\iloc,
+\ecity_\icity) \le \omega_\icentre$. But, if the location is serving cities with a secondary
+role then the distance between the location and the cities can be at most three times the
+working distance of that centre: $d(\eloc_\iloc, \ecity_\icity) \le 3\omega_\icentre$. One last
+constraint is that the sum of the population of those cities $\ecity_\icity$ served by a
+location $\eloc_\iloc$ (that has a centre of type $\ecentre_\icentre$ installed in it) with a
+primary role plus 10\% of the sum of the population of those cities served by the same
+location with a secondary role can not exceed the capacity of the centre $s_\icentre$.
+

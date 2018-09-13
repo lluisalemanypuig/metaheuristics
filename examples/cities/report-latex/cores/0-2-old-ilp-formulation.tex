@@ -1,0 +1,429 @@
+\newcounter{decisionVariables}
+
+\section{Integer Linear Programming formulation}
+
+In this section is described all the information regarding the ILP formulation of the problem: the
+variables, objective function, the constraints to model the problem, and the implementation in OPL.
+
+\subsection{Decision variables}
+
+For the ILP formulation of this problem the following decision variables have been defined. The name
+each of these decision variables are given in the OPL code are also specified.
+
+\begin{enumerate}
+    \item $I_\icentre$: ``centre $\ecentre_\icentre$ is installed" -
+    ($\mathbb{B}$, $\forall \icentre: 1 \le \icentre \le \ncentre$)
+    \label{dec-var:centre-installed}
+    \stepcounter{decisionVariables}
+        
+    \begin{lstlisting}
+    dvar boolean installed_centre[t in T];
+    \end{lstlisting}
+    
+    \item $I_{\icentre, \iloc}$: ``centre $\ecentre_\icentre$ is installed in location
+    $\eloc_\iloc$" - ($\mathbb{B}$, $\forall \icentre, \iloc: 1 \le \icentre \le \ncentre,\:
+    1 \le \iloc \le \nloc$)
+    \label{dec-var:centre-location}
+    \stepcounter{decisionVariables}
+    
+    \begin{lstlisting}
+    dvar boolean location_centre[t in T][l in L];
+    \end{lstlisting}
+
+    \item $P_{\icentre, \icity}$: ``centre $\ecentre_\icentre$ serves city $\ecity_\icity$ as
+    primary centre" - ($\mathbb{B}$, $\forall \icentre, \icity: 1 \le \icentre \le \ncentre,\:
+    1 \le \icity \le \ncity$)
+    \label{dec-var:primary-centre-city}
+    \stepcounter{decisionVariables}
+    
+    \begin{lstlisting}
+    dvar boolean primary_centre[t in T][c in C];
+    \end{lstlisting}
+
+    \item $S_{\icentre, \icity}$: ``centre $\ecentre_\icentre$ serves city $\ecity_\icity$ as
+    secondary centre" - ($\mathbb{B}$, $\forall \icentre, \icity: 1 \le \icentre \le \ncentre,\:
+    1 \le \icity \le \ncity$)
+    \label{dec-var:secondary-centre-city}
+    \stepcounter{decisionVariables}
+    
+    \begin{lstlisting}
+    dvar boolean secondary_centre[t in T][c in C];
+    \end{lstlisting}
+
+\end{enumerate}
+
+For the sake of brevity, we will refer to:
+
+\begin{itemize}
+    
+    \item $P_\icentre = \{ \ecity_\icity \,|\, P_{\icentre, \icity} = 1, \, 1 \le \icity \le \ncity \}$
+    as the set of cities the centre $\ecentre_\icentre \in \centre$ serves as a primary centre.
+    
+    \item $S_\icentre = \{ \ecity_\icity \,|\, S_{\icentre, \icity} = 1, \, 1 \le \icity \le \ncity \}$
+    as the set of cities the centre $\ecentre_\icentre \in \centre$ serves as a secondary centre.
+    
+    \item $u_{\iloc, x}, u_{\iloc, y}$ as the $x$ and $y$ coordinates of location $\eloc_\iloc \in \loc$.
+
+    \item $v_{\icity, x}, v_{\icity, y}$ as the $x$ and $y$ coordinates of city $\ecity_\icity \in \city$.
+    
+\end{itemize}
+
+\subsection{Input data}
+
+The input data that makes up an instance of the problem, extracted from the statement, is referenced in
+the OPL code using the following names:
+
+\begin{itemize}
+    \item[-] Location coordinates $u_\iloc$
+    
+    \begin{lstlisting}
+    float loc_x[l in L];
+    float loc_y[l in L];
+    \end{lstlisting}
+    
+    \item[-] City coordinates $v_\icity$:
+    
+    \begin{lstlisting}
+    float city_x[c in C];
+    float city_y[c in C];
+    \end{lstlisting}
+    
+    \item[-] City population $p_\icity$:
+    
+    \begin{lstlisting}
+    int city_pop[c in C];
+    \end{lstlisting}
+    
+    \item[-] Centre working distance $\omega_\icentre$:
+    
+    \begin{lstlisting}
+    float work_dist[t in T];
+    \end{lstlisting}
+    
+    \item[-] Centre capacity $s_\icentre$:
+    
+    \begin{lstlisting}
+    int centre_cap[t in T];
+    \end{lstlisting}
+    
+    \item[-] Centre installation cost $i_\icentre$:
+    
+    \begin{lstlisting}
+    float instal_cost[t in T];
+    \end{lstlisting}
+    
+\end{itemize}
+
+\subsection{Objective function}
+
+The value to minimise is the cost of centre installation. Therefore, we will be using the
+following objective function:
+
+\begin{equation}
+\text{minimise  } \sum_{\icentre = 1}^{\ncentre} I_\icentre \cdot i_\icentre
+\label{ILP:objective-function}
+\end{equation}
+
+that involves the installed centres $I_\icentre$ and the corresponding installation cost $i_\icentre$.
+
+\hfill
+
+The implementation in OPL is the following:
+
+\begin{lstlisting}
+minimize sum(t in T) installed_centre[t]*instal_cost[t];
+\end{lstlisting}
+
+\subsection{Constraints}
+
+The problem will be ultimately solved using the following constraints.
+
+\begin{enumerate}
+\setcounter{enumi}{\value{equation}}
+
+    \item A location can have at most one centre installed.
+    \begin{equation}
+    \sum_{\icentre = 1}^{\ncentre} I_{\icentre, \iloc} \le 1
+    \qquad \forall \iloc: 1 \le \iloc \le \nloc
+    \label{cstr:one-loc-one-centre-1}
+    \end{equation}
+    
+    \begin{lstlisting}
+    forall (l in L) {
+    	sum (t in T) location_centre[t][l] <= 1;
+    }
+    \end{lstlisting}
+
+    \item A centre can be installed in at most one location.
+    \begin{equation}
+    \sum_{\iloc = 1}^{\nloc} I_{\icentre, \iloc} \le 1
+    \qquad \forall \icentre: 1 \le \icentre \le \ncentre
+    \label{cstr:one-loc-one-centre-2}
+    \end{equation}
+    
+    \begin{lstlisting}
+    forall (t in T) {
+    	sum (l in L) location_centre[t][l] <= 1;
+    }
+    \end{lstlisting}
+
+    \item A centre is installed if it is placed at a location.
+    \begin{equation}
+    I_\icentre = \sum_{\iloc = 1}^{\nloc} I_{\icentre, \iloc}
+    \qquad \forall \icentre: 1 \le \icentre \le \ncentre
+    \label{cstr:is-centre-installed}
+    \end{equation}
+    
+    \begin{lstlisting}
+    forall (t in T) {
+    	sum (l in L) location_centre[t][l] == installed_centre[t];
+    }
+    \end{lstlisting}
+
+    \item All installed centres must serve at least one city, either as primary or as secondary
+    centre:
+    \begin{equation}
+    \sum_{\icity = 1}^{\ncity} (P_{\icentre, \icity} + S_{\icentre, \icity}) \ge I_{\icentre}
+    \qquad \forall \icentre: 1 \le \icentre \le \ncentre
+    \label{cstr:inst-centres-must-serve}
+    \end{equation}
+    
+    \begin{lstlisting}
+    forall (t in T) {
+    	sum (c in C)
+    	(
+    	    primary_centre[t][c]
+    	    +
+    	    secondary_centre[t][c]
+    	)
+    	>= installed_centre[t];
+    }
+    \end{lstlisting}
+
+    \item A centre that is not installed can not serve any city, neither as primary centre or
+    secondary.
+    \begin{equation}
+    P_{\icentre, \icity} \le I_\icentre,
+    \quad
+    S_{\icentre, \icity} \le I_\icentre
+    \qquad \forall \icity, \icentre:
+    1 \le \icity \le \ncity,\;
+    1 \le \icentre \le \ncentre
+    \label{cstr:not-installed-not-prim-sec}
+    \end{equation}
+    
+    \begin{lstlisting}
+    forall (t in T, c in C) {
+    	primary_centre[t][c] <= installed_centre[t];
+    	secondary_centre[t][c] <= installed_centre[t];
+    }
+    \end{lstlisting}
+
+    \item Each city has to be served exactly by one primary centre and a secondary centre.
+    \begin{equation}
+    \sum_{\icentre = 1}^{\ncentre} P_{\icentre, \icity} = 1,
+    \quad
+    \sum_{\icentre = 1}^{\ncentre} S_{\icentre, \icity} = 1
+    \qquad \forall c: 1 \le \icity \le \ncity
+    \label{cstr:all-cities-served}
+    \end{equation}
+    
+    \begin{lstlisting}
+    forall (c in C) {
+    	sum (t in T) primary_centre[t][c] == 1;
+    	sum (t in T) secondary_centre[t][c] == 1;
+    }
+    \end{lstlisting}
+
+    \item A centre can not serve a city as both primary and secondary centre to the same city.
+    \begin{equation}
+    P_{\icentre, \icity} + S_{\icentre, \icity} \le 1
+    \qquad \forall \icity, \icentre:
+    1 \le \icity \le \ncity,\;
+    1 \le \icentre \le \ncentre
+    \label{cstr:centre-not-too-busy}
+    \end{equation}
+    
+    \begin{lstlisting}
+    forall (t in T, c in C) {
+    	primary_centre[t][c] + secondary_centre[t][c] <= 1;
+    }
+    \end{lstlisting}
+
+    \item When $\ecentre_\icentre \in \centre$ is an installed centre, the sum of the population of
+    the cities in $P_\icentre$ plus 10\% of the sum of the population of the cities in $S_\icentre$
+    can not exceed its capacity.
+    \begin{equation}
+    \sum_{\icity = 1}^{\ncity} P_{\icentre, \icity} \cdot p_\icity +
+    0.10 \cdot \sum_{\icity = 1}^{\ncity} S_{\icentre, \icity} \cdot p_\icity \le s_\icentre
+    \qquad \forall \icentre: 1 \le \icentre \le \ncentre
+    \label{cstr:centres-capacities}
+    \end{equation}
+    
+    \begin{lstlisting}
+    forall (t in T) {
+        sum (c in C)
+	    (
+	        primary_centre[t][c]*city_pop[c]
+	        +
+	        0.10*secondary_centre[t][c]*city_pop[c]
+        )
+    	<= centre_cap[t];
+    }
+    \end{lstlisting}
+
+    \item The distance between each pair of installed centres has to be greater or equal than $D$. This
+    may be understood as allowing the installation of at most one centre for every pair of locations that
+    are strictly closer than $D$.
+    \begin{equation}
+    \sum_{\icentre = 1}^{\ncentre} ( I_{\icentre, \iloc_1} + I_{\icentre, \iloc_2} )
+    \le
+    \frac{d_{\iloc_1, \iloc_2}}{D} + 1
+    \qquad
+    \forall \iloc_1, \iloc_2: 1 \le \iloc_1 < \iloc_2 \le \nloc
+    \label{cstr:centres-not-too-close}
+    \end{equation}
+    To avoid precision issues we will use the following equivalent expression:
+    \[
+    D^2 \cdot \sum_{\icentre = 1}^{\ncentre} ( I_{\icentre, \iloc_1} + I_{\icentre, \iloc_2} )
+    \le
+    d_{\iloc_1, \iloc_2}^2 + D^2
+    \]
+    
+    where $d_{\iloc_1, \iloc_2}^2 =
+    (u_{\iloc_1, x} - u_{\iloc_2, x})^2 + (u_{\iloc_1, y} - u_{\iloc_2, y})^2$.
+    
+    \begin{lstlisting}
+    forall (l1 in L, l2 in  L : l1 < l2) {
+    	(D^2)*(sum (t in T) (location_centre[t][l1] + location_centre[t][l2]))
+    	<=
+    	((loc_x[l1] - loc_x[l2])^2 + (loc_y[l1] - loc_y[l2])^2) + D^2;
+    }
+    \end{lstlisting}
+
+    \item If $\ecentre_\icentre \in \centre$ is an installed centre, the distance between the centre
+    and the cities in $S_\icentre$ has to be smaller than the working distance of that centre. Likewise,
+    this may be understood as not allowing a primary centre $\iloc$ serving a city $\icity$ from a given
+    location $\iloc$ if the distance between the location and the city is too large.
+    \begin{equation}
+    P_{\icentre, \iloc} < \frac{\omega_{\icentre}}{d_{\iloc, \icity}}
+    \qquad
+    \forall \iloc, \icity, \icentre:
+    1 \le \iloc \le \nloc,\;
+    1 \le \icity \le \ncity,\;
+    1 \le \icentre \le \ncentre
+    \label{cstr:distance-centre-city-primary}
+    \end{equation}
+    
+    To avoid precision issues we will be using the following equivalent expression:
+    \[
+    d_{\iloc, \icity}^2 \cdot P_{\icentre, \iloc} < \omega_{\icentre}^2
+    \]
+    where
+    $d_{\iloc, \icity}^2 = (u_{\iloc, x} - v_{\icity, x})^2 + (u_{\iloc, y} - v_{\icity, y})^2$.
+
+    \begin{lstlisting}
+    forall (c in C, l in L) {
+    	forall (t in T) {
+    	    primary_centre[t][c]
+    	    *
+    		((city_x[c] - loc_x[l])^2 + (city_y[c] - loc_y[l])^2)
+    		<= (work_dist[t])^2;
+    	}
+    }
+    \end{lstlisting}
+
+    \item If $\ecentre_\icentre \in \centre$ is an installed centre, the distance between the centre
+    and the cities in $P_\icentre$ has to be smaller than three times the working distance of that
+    centre. Likewise, this may be understood as not allowing a secondary centre $\iloc$ serving a
+    city $\icity$ from a given location $\iloc$ if the distance between the location and the city
+    is too large.
+    \begin{equation}
+    S_{\icentre, \iloc} < \frac{3\omega_{\icentre}}{d_{\iloc, \icity}}
+    \qquad
+    \forall \iloc, \icity, \icentre:
+    1 \le \iloc \le \nloc,\;
+    1 \le \icity \le \ncity,\;
+    1 \le \icentre \le \ncentre
+    \label{cstr:distance-centre-city-secondary}
+    \end{equation}
+    
+    To avoid precision issues we will be using the following equivalent expression:
+    \[
+    d_{\iloc, \icity}^2 \cdot S_{\icentre, \iloc} < 9\omega_{\icentre}^2
+    \]
+    where
+    $d_{\iloc, \icity}^2 = (u_{\iloc, x} - v_{\icity, x})^2 + (u_{\iloc, y} - v_{\icity, y})^2$.
+    
+    \begin{lstlisting}
+    forall (c in C, l in L) {
+    	forall (t in T) {
+    	    secondary_centre[t][c]
+    	    *
+    		((city_x[c] - loc_x[l])^2 + (city_y[c] - loc_y[l])^2)
+    		<= (3*work_dist[t])^2;
+    	}
+    }
+    \end{lstlisting}
+
+\end{enumerate}
+
+Some constraints are used to relate decision variables with other decision variables:
+
+\begin{itemize}
+    
+    \item[-] Constraints \ref{cstr:one-loc-one-centre-1} and \ref{cstr:one-loc-one-centre-2} ensure the
+    one-to-one relationship between centres and locations: a centre can only be installed in at most one
+    location and one location can have at most one centre installed.
+    
+    \item[-] Constraint \ref{cstr:is-centre-installed} relates decision variables 
+    \ref{dec-var:centre-installed} and \ref{dec-var:centre-location} so as to be able to define the
+    objective function.
+    
+    \item[-] Constraint \ref{cstr:centres-not-too-close} basically models the following implication:
+    \[
+    d_{\iloc_1, \iloc_2} < D
+    \Longrightarrow
+    \sum_{\icentre = 1}^{\ncentre} ( I_{\icentre, \iloc_1} + I_{\icentre, \iloc_2} ) \le 1
+    \]
+    $\forall \iloc_1, \iloc_2: 1 \le \iloc_1 < \iloc_2 \le \nloc$
+    and it does so for the following reason: when it is true that $d < D$ the quotient of the
+    distances is smaller than 1 ($d / D < 1$). Therefore, bounding the left hand-side of the
+    inequation with $d / D + 1$ allows only two possible integer values: $0$ and $1$ (one or
+    none of the two locations can have a centre installed). Similarly, when $d \ge D$ the
+    quotient will allow for three different possible values $0$, $1$ and $2$ because
+    $d / D \ge 1 \Longrightarrow d / D + 1 \ge 2$ (none, one or the two locations can have a
+    centre installed). All these arguments also apply for the cases when $d^2 < D^2$ and
+    $d^2 \ge D^2$.
+    
+    \item[-] Constraints \ref{cstr:distance-centre-city-primary} and 
+    \ref{cstr:distance-centre-city-secondary} are obtained applying a similar procedure to obtain
+    constraint \ref{cstr:centres-not-too-close}. They are both modelling the following implications:
+    \[
+    \omega_{\icentre} < d_{\iloc, \icity} \Longrightarrow P_{\icentre, \iloc} = 0,
+    \quad
+    3 \cdot \omega_{\icentre} < d_{\iloc, \icity} \Longrightarrow S_{\icentre, \iloc} = 0
+    \]
+    $\forall \iloc, \icity, \icentre: 1 \le \iloc \le \nloc,\; 1 \le \icity \le \ncity,\;
+    1 \le \icentre \le \ncentre$. Using this and very similar arguments to the ones used to obtain
+    constraint \ref{cstr:centres-not-too-close} we can obtain those that relate primary and secondary
+    centres with the cities they serve.
+    
+\end{itemize}
+
+Some other constraints were added just to avoid silly solutions:
+
+\begin{itemize}
+    
+    \item[-] Constraint \ref{cstr:inst-centres-must-serve} avoids installing centres with cost
+    $i_\icentre = 0$ at empty locations and having these centres serving no city.
+    
+    \item[-] Constraint \ref{cstr:not-installed-not-prim-sec} will ensure that a city is served only
+    by installed centres. This way all cities will be served by centres the cost of which will be used
+    in the objective function.
+    
+\end{itemize}
+
+Constraints \ref{cstr:all-cities-served}, \ref{cstr:centre-not-too-busy}, \ref{cstr:centres-capacities}
+are extracted directly from the statement and are self-explanatory.
+
