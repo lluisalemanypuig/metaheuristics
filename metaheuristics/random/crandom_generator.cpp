@@ -4,27 +4,40 @@ namespace metaheuristics {
 namespace random {
 
 template<class G, typename cT>
-crandom_generator<G,cT>::crandom_generator() : random_generator<G,cT>() { }
+crandom_generator<G,cT>::crandom_generator() : random_generator<G,cT>() {
+	U = nullptr;
+}
 
 template<class G, typename cT>
-crandom_generator<G,cT>::~crandom_generator() { }
+crandom_generator<G,cT>::~crandom_generator() {
+	if (U != nullptr) {
+		delete U;
+	}
+}
 
 /* Initialisers of the distributions */
 
 template<class G, typename cT>
 void crandom_generator<G,cT>::init_uniform(cT a, cT b) {
-	U = uniform_real_distribution<cT>(a, b);
+	if (U != nullptr) {
+		delete U;
+		U = nullptr;
+	}
+	U = new uniform_real_distribution<cT>(a, b);
 }
 
 template<class G, typename cT>
 void crandom_generator<G,cT>::init_binomial(cT, double) {
+	// do nothing
 }
 
 /* Get pseudo-random numbers */
 
 template<class G, typename cT>
 cT crandom_generator<G,cT>::get_uniform() {
-	cT r = U(random_generator<G,cT>::gen);
+	assert(U != nullptr);
+
+	cT r = (*U)(random_generator<G,cT>::gen);
 	return r;
 }
 
