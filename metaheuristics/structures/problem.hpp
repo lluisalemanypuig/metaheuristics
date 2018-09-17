@@ -22,7 +22,7 @@ using namespace random;
  * This interface defines several functions to handle a problem's
  * solution.
  * 
- * Consits of basic functions like copying, freeing, evaluating,
+ * Consists of basic functions like copying, freeing, evaluating,
  * and simple construction of solutions. Also, it defines functions
  * for debugging, like sanity checks, printing, ...
  * 

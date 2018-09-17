@@ -115,7 +115,16 @@ class genetic_algorithm : public metaheuristic<G> {
 		void print_current_population() const;
 		
 		// Algorithm-related functions
-		/// Fills the population with mutants and decodes them.
+		/**
+		 * @brief Fills the population with mutants and decodes them.
+		 * 
+		 * Initialises each individual with its random chromosome.
+		 * Then, decodes the chromosome and computes the fitness
+		 * of the solution.
+		 * 
+		 * The result of decoding the chromosome is freed and only
+		 * the fitness is kept.
+		 */
 		void initialize_population(const problem<G> *p);
 		/**
 		 * @brief The individuals within the range [A,B) are replaced with mutants.
@@ -155,9 +164,13 @@ class genetic_algorithm : public metaheuristic<G> {
 		/**
 		 * @brief Evaluates an individual.
 		 * 
-		 * Creates a solution using method problem<G>::decode and @e i's
+		 * Creates a solution using method @ref problem<G>::decode and @e i's
 		 * chromosome. Then sets @e i's fitness using the cost of that
-		 * solution.
+		 * solution. The solution is finally freed.
+		 * 
+		 * In case the method @ref problem<G>::decode returns an
+		 * @ref structures::infeasible_exception the fitness is set to
+		 * minus infinity.
 		 * 
 		 * @param[in] p The problem<G> for which a solution will be generated
 		 * with @e i's chromosome.
@@ -170,7 +183,8 @@ class genetic_algorithm : public metaheuristic<G> {
 		 * @brief Generates a mutant individual.
 		 * 
 		 * Generates its random chromosome, and evaluates the individual
-		 * (see @ref evaluate_individual(const problem<G>*, individual&)const.
+		 * (see @ref evaluate_individual(const problem<G>*, individual&)const )
+		 * 
 		 * @param[in] p The problem<G> for which a solution will be generated
 		 * with @e i's chromosome.
 		 * @param[out] i Inidividual from which the solution is generated.

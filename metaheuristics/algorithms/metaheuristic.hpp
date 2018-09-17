@@ -14,11 +14,11 @@ using namespace random;
  * @brief Interface for the two functions common to all algorithms.
  * 
  * Common variables are:
- * - @ref seed_rng
+ * - @ref seed_rng : whether the random generators should be seeded or not.
  * 
  * The methods to implement for are:
- * - @ref reset_algorithm
- * - @ref execute_algorithm
+ * - @ref reset_algorithm : sets the algorithm to its initial state.
+ * - @ref execute_algorithm.
  * 
  * @param G The type of engine used by the random number generators.
  */

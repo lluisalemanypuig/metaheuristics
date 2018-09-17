@@ -18,7 +18,8 @@ namespace structures {
  * @brief Definition of a chromosome
  * 
  * A chromosome is a number of genes (see @ref n_genes)
- * that are basically numbers between 0 and 1 (see @ref genes).
+ * that are basically floating point numbers between 0 and 1
+ * (see @ref genes).
  */
 class chromosome {
 	private:
