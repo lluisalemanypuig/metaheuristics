@@ -20,7 +20,7 @@ First, one has to download the library. Assum that it is downloaded into
 
     /path/to/lib/metaheurisitcs
 
-### Documentation
+## Documentation
 
 For further details on how the library is implemented, the meaning of every
 parameter, what methods should be implemented of the _problem_ interface for
@@ -30,7 +30,16 @@ command:
     cd /path/to/lib/metaheurisitcs/
     doxygoen doxyconfig/doxyfile
 
-### Compilation
+## Dependencies
+
+### Tools
+
+Since the Makefiles are already provided, a 'make' tool is needed to compile
+the library and the examples.
+
+Finally, a compiler (g++) that supports the flag -std=c++11 is also needed.
+
+## Compilation
 
 In order to compile the library one needs a compiler that supports the C++11 standard, in particular
 the flag -std=c++11, and _make_:
