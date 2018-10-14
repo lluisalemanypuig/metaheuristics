@@ -37,7 +37,7 @@ command:
 Since the Makefiles are already provided, a 'make' tool is needed to compile
 the library and the examples.
 
-Finally, a compiler (g++) that supports the flag -std=c++11 is also needed.
+Finally, a compiler that supports C++11 is mandatory.
 
 ## Compilation
 
