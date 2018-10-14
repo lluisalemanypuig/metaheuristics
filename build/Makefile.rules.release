@@ -25,16 +25,12 @@ $(REL_BIN_DIR):
 
 $(REL_BIN_DIR)/libmetaheuristics.a: $(RELEASE_OBJECTS)
 	ar cqs $(REL_BIN_DIR)/libmetaheuristics.a $(RELEASE_OBJECTS)
-
 $(REL_BIN_DIR)/infeasible_exception.o: $(STRUCT_DIR)/infeasible_exception.cpp $(INF_EXC_DPS)
 	g++ $(REL_FLAGS) -c $< -o $@ -I$(INCLUDE)
-
 $(REL_BIN_DIR)/individual.o: $(STRUCT_DIR)/individual.cpp $(INDIVIDUAL_DPS)
 	g++ $(REL_FLAGS) -c $< -o $@ -I$(INCLUDE)
-
 $(REL_BIN_DIR)/chromosome.o: $(STRUCT_DIR)/chromosome.cpp $(CHROMOSOME_DPS)
 	g++ $(REL_FLAGS) -c $< -o $@ -I$(INCLUDE)
-
 $(REL_BIN_DIR)/time.o: $(MISC_DIR)/time.cpp $(TIME_DPS)
 	g++ $(REL_FLAGS) -c $< -o $@ -I$(INCLUDE)
 

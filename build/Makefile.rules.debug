@@ -25,16 +25,12 @@ $(DEB_BIN_DIR):
 
 $(DEB_BIN_DIR)/libmetaheuristics.a: $(DEBUG_OBJECTS)
 	ar cqs $(DEB_BIN_DIR)/libmetaheuristics.a $(DEBUG_OBJECTS)
-
 $(DEB_BIN_DIR)/infeasible_exception.o: $(STRUCT_DIR)/infeasible_exception.cpp $(INF_EXC_DPS)
 	g++ $(DEB_FLAGS) -c $< -o $@ -I$(INCLUDE)
-
 $(DEB_BIN_DIR)/individual.o: $(STRUCT_DIR)/individual.cpp $(INDIVIDUAL_DPS)
 	g++ $(DEB_FLAGS) -c $< -o $@ -I$(INCLUDE)
-
 $(DEB_BIN_DIR)/chromosome.o: $(STRUCT_DIR)/chromosome.cpp $(CHROMOSOME_DPS)
 	g++ $(DEB_FLAGS) -c $< -o $@ -I$(INCLUDE)
-
 $(DEB_BIN_DIR)/time.o: $(MISC_DIR)/time.cpp $(TIME_DPS)
 	g++ $(DEB_FLAGS) -c $< -o $@ -I$(INCLUDE)
 

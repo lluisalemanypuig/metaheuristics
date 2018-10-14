@@ -36,5 +36,5 @@ include $(RULES_DIR)/Makefile.dependencies
 debug: debugdirectory $(DEB_BIN_DIR)/libmetaheuristics.a
 release: releasedirectory $(REL_BIN_DIR)/libmetaheuristics.a
 
-include $(RULES_DIR)/Makefile.debug
-include $(RULES_DIR)/Makefile.release
+include $(RULES_DIR)/Makefile.rules.debug
+include $(RULES_DIR)/Makefile.rules.release
