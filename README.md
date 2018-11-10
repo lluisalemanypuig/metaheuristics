@@ -16,7 +16,7 @@ methods of this class allows a flexible use of these metaheuristics.
 In this repository one will find [examples](https://github.com/lluisalemanypuig/metaheuristics/tree/master/examples)
 on how to use this library.
 
-First, one has to download the library. Assum that it is downloaded into
+First, one has to download the library. Assume that it is downloaded into
 
     /path/to/lib/metaheurisitcs
 
@@ -42,7 +42,7 @@ Finally, a compiler that supports C++11 is mandatory.
 ## Compilation
 
 In order to compile the library one needs a compiler that supports the C++11 standard, in particular
-the flag -std=c++11, and _make_:
+the flag -std=c++11, and the _make_ tool:
 
     cd /path/to/lib/metaheurisitcs/build
     make -f Makefile release
