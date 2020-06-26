@@ -232,13 +232,13 @@ template<class G>
 void brkga<G>::print_performance() const {
 	std::cout << "BRKGA algorithm performance:" << std::endl;
 	std::cout << "    Total generation time:             " << GA<G>::total_time << " s" << std::endl;
-	std::cout << "    Average generation average:        " << GA<G>::total_time/GA<G>::N_GEN << " s" << std::endl;
+	std::cout << "    Average generation average:        " << GA<G>::total_time/static_cast<double>(GA<G>::N_GEN) << " s" << std::endl;
 	std::cout << "    Total copying elite time:          " << elite_copying_time << " s" << std::endl;
-	std::cout << "    Average copying elite time:        " << elite_copying_time/GA<G>::N_GEN << " s" << std::endl;
+	std::cout << "    Average copying elite time:        " << elite_copying_time/static_cast<double>(GA<G>::N_GEN) << " s" << std::endl;
 	std::cout << "    Total mutant generation time:      " << GA<G>::mutant_time << " s" << std::endl;
-	std::cout << "    Average mutant generation time:    " << GA<G>::mutant_time/GA<G>::N_GEN << " s" << std::endl;
+	std::cout << "    Average mutant generation time:    " << GA<G>::mutant_time/static_cast<double>(GA<G>::N_GEN) << " s" << std::endl;
 	std::cout << "    Total crossover generation time:   " << GA<G>::crossover_time << " s" << std::endl;
-	std::cout << "    Average crossover generation time: " << GA<G>::crossover_time/GA<G>::N_GEN << " s" << std::endl;
+	std::cout << "    Average crossover generation time: " << GA<G>::crossover_time/static_cast<double>(GA<G>::N_GEN) << " s" << std::endl;
 	std::cout << std::endl;
 }
 
