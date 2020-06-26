@@ -2,8 +2,8 @@
 
 /// NON-CLASS PRIVATE
 
-typedef pair<size_t, interface::role> locR;
-typedef pair<size_t, locR> candidate;
+typedef pair<int, interface::role> locR;
+typedef pair<int, locR> candidate;
 typedef pair<double, candidate> eval_candidate;
 typedef set<eval_candidate>::const_iterator scit;
 typedef vector<eval_candidate>::const_iterator vcit;
@@ -11,24 +11,24 @@ typedef vector<eval_candidate>::const_iterator vcit;
 /* PUBLIC */
 
 double solver::random_construct(drandom_generator<> *RNG, double alpha) noexcept(false) {
-	set<size_t> used_locations;
+	set<int> used_locations;
 	
-	/// LOCATION ASSIGNATION
+	// LOCATION ASSIGNATION
 	
 	set<eval_candidate> candidate_list;
 	
-	size_t K = 0;
+	int K = 0;
 	while (K < 2*n_cities) {
 		
 		// build candidate list
 		candidate_list.clear();
 		
-		for (size_t city_idx = 0; city_idx < n_cities; ++city_idx) {
-			for (size_t loc_idx = 0; loc_idx < n_locations; ++loc_idx) {
+		for (int city_idx = 0; city_idx < n_cities; ++city_idx) {
+			for (int loc_idx = 0; loc_idx < n_locations; ++loc_idx) {
 				
 				if (not (cit_by_prim[city_idx] == loc_idx or cit_by_sec[city_idx] == loc_idx)) {
 					if (separated_by_D(loc_idx, used_locations)) {
-						double dist_in_new_candidate = dist_city_loc(city_idx, loc_idx);
+						//double dist_in_new_candidate = dist_city_loc(city_idx, loc_idx);
 						
 						if (cit_by_prim[city_idx] == -1) {
 							candidate new_prim_can(city_idx, locR(loc_idx, primary));
@@ -61,12 +61,12 @@ double solver::random_construct(drandom_generator<> *RNG, double alpha) noexcept
 		
 		// take a candidate at random
 		RNG->init_uniform(0, RCL.size() - 1);
-		size_t RCL_idx = RNG->get_uniform();
+		int RCL_idx = static_cast<int>(RNG->get_uniform());
 		const eval_candidate& C = RCL[RCL_idx];
 		
 		const candidate& can = C.second;
-		size_t city_idx = can.first;
-		size_t loc_idx = can.second.first;
+		int city_idx = can.first;
+		int loc_idx = can.second.first;
 		role r = can.second.second;
 		
 		if (r == primary) {
@@ -90,18 +90,18 @@ double solver::random_construct(drandom_generator<> *RNG, double alpha) noexcept
 	/// CENTRE ASSIGNATION
 	
 	double solution_cost = 0.0;
-	set<size_t>::const_iterator ul_cit;
+	set<int>::const_iterator ul_cit;
 	
 	// for every used location ...
 	for (ul_cit = used_locations.begin(); ul_cit != used_locations.end(); ++ul_cit) {
 		
-		size_t loc_idx = *ul_cit;
+		int loc_idx = *ul_cit;
 		
 		// ... find the centre ...
-		size_t centre_idx;
+		int centre_idx;
 		bool centre_found = false;
 		
-		size_t ct_idx = 0;
+		int ct_idx = 0;
 		while (ct_idx < n_centres and not centre_found) {
 			
 			// ... that is the cheapest ...

@@ -65,8 +65,8 @@ class solver : public interface {
 
 		/* GREEDY CONSTRUCTOR */
 
-		typedef pair<size_t, interface::role> location_role;
-		typedef pair<size_t, location_role> greedy_candidate;
+		typedef pair<int, interface::role> location_role;
+		typedef pair<int, location_role> greedy_candidate;
 
 		// Compares the new candidate to the current one and replaces the
 		// current if the new is better.
@@ -85,13 +85,13 @@ class solver : public interface {
 		// -> (0.1, 3.0) if the role is secondary
 		// In cca is stored the index of the cheapest centre available for
 		// location 'loc_idx'.
-		bool at_least_one_centre(size_t city_idx, size_t loc_idx, double pf, double df, size_t& cca) const;
+		bool at_least_one_centre(int city_idx, int loc_idx, double pf, double df, int& cca) const;
 
 		// Returns the greedy cost of assigning 'loc_idx'
 		// to city 'city_idx' with role 'role' (primary if role = true)
-		double greedy_cost_dist(size_t city_idx, size_t loc_idx, role r) const;
-		double greedy_cost_pop(size_t city_idx, size_t loc_idx, role r) const;
-		double greedy_cost_dist_pop(size_t city_idx, size_t loc_idx, role r) const;
+		double greedy_cost_dist(int city_idx, int loc_idx, role r) const;
+		double greedy_cost_pop(int city_idx, int loc_idx, role r) const;
+		double greedy_cost_dist_pop(int city_idx, int loc_idx, role r) const;
 
 		/* NEIGHBOURHOOD EXPLORATION */
 
@@ -105,8 +105,8 @@ class solver : public interface {
 		//                  -> valid location index if otherwise
 		bool can_remove_centre
 		(
-			size_t loc_idx,
-			const vector<role>& cities_served, vector<size_t>& what_locs
+			int loc_idx,
+			const vector<role>& cities_served, vector<int>& what_locs
 		)
 		const;
 
@@ -114,18 +114,18 @@ class solver : public interface {
 		// structures. The new solution is stored in 'neigh'.
 		void delete_centre
 		(
-			size_t loc_idx, const vector<role>& cities_served,
-			const vector<size_t>& new_locations, problem **neigh
+			int loc_idx, const vector<role>& cities_served,
+			const vector<int>& new_locations, problem **neigh
 		)
 		const;
 
 		// Assuming that location 'loc_idx' has a centre installed, find
 		// a centre that has strictly a lower installation cost that can
 		// replace the one already installed in that location.
-		bool find_better_centre(size_t loc_idx, size_t& centre_idx) const;
+		bool find_better_centre(int loc_idx, int& centre_idx) const;
 
 		// Replaces the centre from location 'l' and updates all data
 		// structures. The new solution is stored in 'neigh'.
-		void replace_centre(size_t loc_idx, size_t centre_idx, problem **neigh) const;
+		void replace_centre(int loc_idx, int centre_idx, problem **neigh) const;
 };
 

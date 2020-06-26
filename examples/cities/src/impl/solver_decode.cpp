@@ -2,7 +2,7 @@
 
 /// NON-CLASS PRIVATE
 
-typedef pair<double, size_t> sorted_chromosome;
+typedef pair<double, int> sorted_chromosome;
 
 /* PUBLIC */
 
@@ -12,22 +12,22 @@ double solver::decode(const chromosome& c) noexcept(false) {
 	vector<sorted_chromosome> vc(n_genes);
 	for (size_t g = 0; g < n_genes; ++g) {
 		vc[g].first = c[g];
-		vc[g].second = g;
+		vc[g].second = static_cast<int>(g);
 	}
 	sort(vc.begin(), vc.end());
 	
-	set<size_t> used_locations;
-	size_t K = 0;
+	set<int> used_locations;
+	int K = 0;
 	while (K < 2*n_cities) {
 		
-		for (size_t vc_idx = 0; vc_idx < n_cities; ++vc_idx) {
+		for (int vc_idx = 0; vc_idx < n_cities; ++vc_idx) {
 			
 			greedy_candidate city_and_loc(n_cities, location_role(n_locations, none));
 			double candidate_min_cost = numeric_limits<double>::max();
 			double dist_min_can = numeric_limits<double>::max();
 			
-			size_t city_idx = vc[vc_idx].second;
-			for (size_t loc_idx = 0; loc_idx < n_locations; ++loc_idx) {
+			int city_idx = vc[vc_idx].second;
+			for (int loc_idx = 0; loc_idx < n_locations; ++loc_idx) {
 				
 				if (not (cit_by_prim[city_idx] == loc_idx or cit_by_sec[city_idx] == loc_idx)) {
 					if (separated_by_D(loc_idx, used_locations)) {
@@ -56,8 +56,8 @@ double solver::decode(const chromosome& c) noexcept(false) {
 				}
 			}
 			
-			size_t chosen_city_idx = city_and_loc.first;
-			size_t chosen_loc_idx = city_and_loc.second.first;
+			int chosen_city_idx = city_and_loc.first;
+			int chosen_loc_idx = city_and_loc.second.first;
 			role r = city_and_loc.second.second;
 			
 			if (chosen_city_idx < n_cities and chosen_loc_idx < n_locations and r != none) {
@@ -80,18 +80,18 @@ double solver::decode(const chromosome& c) noexcept(false) {
 	/// CENTRE ASSIGNATION
 	
 	double solution_cost = 0.0;
-	set<size_t>::const_iterator ul_cit;
+	set<int>::const_iterator ul_cit;
 	
 	// for every used location ...
 	for (ul_cit = used_locations.begin(); ul_cit != used_locations.end(); ++ul_cit) {
 		
-		size_t loc_idx = *ul_cit;
+		int loc_idx = *ul_cit;
 		
 		// ... find the centre ...
-		size_t centre_idx;
+		int centre_idx;
 		bool centre_found = false;
 		
-		size_t ct_idx = 0;
+		int ct_idx = 0;
 		while (ct_idx < n_centres and not centre_found) {
 			
 			// ... that is the cheapest ...

@@ -18,7 +18,7 @@ void __read_line_values(istream& in, vector<double>& values) {
 }
 
 inline
-void __read_line_values(istream& in, vector<size_t>& values) {
+void __read_line_values(istream& in, vector<int>& values) {
 	string field_name;
 	char eq, left_bracket, right_bracket, semicolon;
 	
@@ -40,10 +40,10 @@ void interface::read_from_file(istream& in) {
 	
 	vector<double> locations_x, locations_y;
 	vector<double> city_x, city_y;
-	vector<size_t> city_pop;
+	vector<int> city_pop;
 	
 	vector<double> centres_wd, centres_ic;
-	vector<size_t> centres_cc;
+	vector<int> centres_cc;
 
 /*
 /// 1
@@ -119,18 +119,18 @@ instal_cost	= [1 2 3 4];	// 4.4
 	// -- Finish reading file
 	// move data from raw vectors into this object
 	locations.resize(n_locations);
-	for (size_t i = 0; i < n_locations; ++i) {
+	for (int i = 0; i < n_locations; ++i) {
 		locations[i].set(locations_x[i], locations_y[i]);
 	}
 	
 	cities.resize(n_cities);
-	for (size_t i = 0; i < n_cities; ++i) {
+	for (int i = 0; i < n_cities; ++i) {
 		cities[i].get_position().set(city_x[i], city_y[i]);
 		cities[i].set_population(city_pop[i]);
 	}
 	
 	centres.resize(n_centres);
-	for (size_t i = 0; i < n_centres; ++i) {
+	for (int i = 0; i < n_centres; ++i) {
 		centres[i].set_working_distance(centres_wd[i]);
 		centres[i].set_capacity(centres_cc[i]);
 		centres[i].set_installation_cost(centres_ic[i]);
@@ -145,26 +145,26 @@ instal_cost	= [1 2 3 4];	// 4.4
 	
 	// sort cities by population, store the ordering in sorted_cities
 	sorted_cities.resize(n_cities);
-	vector<pair<size_t, size_t> > cities_pop(n_cities);
-	for (size_t c = 0; c < n_cities; ++c) {
+	vector<pair<int, int> > cities_pop(n_cities);
+	for (int c = 0; c < n_cities; ++c) {
 		cities_pop[c].first = cities[c].get_population();
 		cities_pop[c].second = c;
 	}
 	sort(cities_pop.begin(), cities_pop.end());
-	for (size_t c = 0; c < n_cities; ++c) {
+	for (int c = 0; c < n_cities; ++c) {
 		sorted_cities[c] = cities_pop[c].second;
 	}
 	
 	// sort centre types by installation cost, store the ordering in
 	// sorted_centres
 	sorted_centres.resize(n_centres);
-	vector<pair<double, size_t> > centres_price(n_centres);
-	for (size_t c = 0; c < n_centres; ++c) {
+	vector<pair<double, int> > centres_price(n_centres);
+	for (int c = 0; c < n_centres; ++c) {
 		centres_price[c].first = centres[c].get_installation_cost();
 		centres_price[c].second = c;
 	}
 	sort(centres_price.begin(), centres_price.end());
-	for (size_t c = 0; c < n_centres; ++c) {
+	for (int c = 0; c < n_centres; ++c) {
 		sorted_centres[c] = centres_price[c].second;
 	}
 }
@@ -201,15 +201,15 @@ void interface::print_input_data(ostream& os) {
 	}
 }
 
-size_t interface::get_n_cities() const {
+int interface::get_n_cities() const {
 	return n_cities;
 }
 
-size_t interface::get_n_locations() const {
+int interface::get_n_locations() const {
 	return n_locations;
 }
 
-size_t interface::get_n_centre_types() const {
+int interface::get_n_centre_types() const {
 	return n_centres;
 }
 
@@ -217,9 +217,9 @@ void interface::print(ostream& os, const string& tab) const {
 	os << tab << "Installed centres:" << endl;
 	double totalCost = 0.0;
 	
-	for (size_t l = 0; l < locations.size(); ++l) {
+	for (int l = 0; l < n_locations; ++l) {
 		if (location_centre_type[l] != -1) {
-			size_t centre_idx = location_centre_type[l];
+			int centre_idx = location_centre_type[l];
 			double instal_cost = centres[ centre_idx ].get_installation_cost();
 			
 			os << tab << "    At location " << l << " a centre of type: " << centre_idx << ". "
@@ -230,14 +230,14 @@ void interface::print(ostream& os, const string& tab) const {
 			
 			os << tab << "    This location serves:" << endl;
 			os << tab << "    " << "    -> As primary:";
-			for (size_t c = 0; c < n_cities; ++c) {
+			for (int c = 0; c < n_cities; ++c) {
 				if (cit_by_prim[c] == l) {
 					os << " " << c;
 				}
 			}
 			os << endl;
 			os << tab << "    " << "    -> As secondary:";
-			for (size_t c = 0; c < n_cities; ++c) {
+			for (int c = 0; c < n_cities; ++c) {
 				if (cit_by_sec[c] == l) {
 					os << " " << c;
 				}
@@ -252,7 +252,7 @@ void interface::print(ostream& os, const string& tab) const {
 	os << endl;
 	
 	os << tab << "Cities:" << endl;
-	for (size_t c = 0; c < cities.size(); ++c) {
+	for (int c = 0; c < n_cities; ++c) {
 		os << tab << "City " << c << " served by:" << endl;
 		
 		os << tab << "    - Primary location: ";

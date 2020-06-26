@@ -64,7 +64,7 @@ void print_usage() {
 	cout << endl;
 }
 
-local_search_policy parse_policy(int argc, char *argv[], int i) {
+local_search_policy parse_policy(int, char *argv[], int i) {
 	local_search_policy lsp = First_Improvement;
 	if (strcmp(argv[i], "First") == 0) {
 		lsp = First_Improvement;

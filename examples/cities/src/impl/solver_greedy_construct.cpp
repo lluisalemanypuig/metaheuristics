@@ -5,8 +5,8 @@
 double solver::greedy_construct() noexcept(false) {
 	const double inf = numeric_limits<double>::max();
 	
-	set<size_t> used_locations;
-	size_t K = 0;
+	set<int> used_locations;
+	int K = 0;
 	
 	/* LOCATION ASSIGNATION */
 	
@@ -16,8 +16,8 @@ double solver::greedy_construct() noexcept(false) {
 		double candidate_min_cost = inf;
 		double dist_min_can = inf;
 		
-		for (size_t city_idx = 0; city_idx < n_cities; ++city_idx) {
-			for (size_t loc_idx = 0; loc_idx < n_locations; ++loc_idx) {
+		for (int city_idx = 0; city_idx < n_cities; ++city_idx) {
+			for (int loc_idx = 0; loc_idx < n_locations; ++loc_idx) {
 				
 				if (not (cit_by_prim[city_idx] == loc_idx or cit_by_sec[city_idx] == loc_idx)) {
 					if (separated_by_D(loc_idx, used_locations)) {
@@ -51,8 +51,8 @@ double solver::greedy_construct() noexcept(false) {
 			}
 		}
 		
-		size_t city_idx = city_and_loc.first;
-		size_t loc_idx = city_and_loc.second.first;
+		int city_idx = city_and_loc.first;
+		int loc_idx = city_and_loc.second.first;
 		role r = city_and_loc.second.second;
 		
 		if (city_idx < n_cities and loc_idx < n_locations and r != none) {
@@ -82,18 +82,18 @@ double solver::greedy_construct() noexcept(false) {
 	//cin >> step;
 	
 	double solution_cost = 0.0;
-	set<size_t>::const_iterator ul_cit;
+	set<int>::const_iterator ul_cit;
 	
 	// for every used location ...
 	for (ul_cit = used_locations.begin(); ul_cit != used_locations.end(); ++ul_cit) {
 		
-		size_t loc_idx = *ul_cit;
+		int loc_idx = *ul_cit;
 		
 		// ... find the centre ...
-		size_t centre_idx;
+		int centre_idx;
 		bool centre_found = false;
 		
-		size_t ct_idx = 0;
+		int ct_idx = 0;
 		while (ct_idx < n_centres and not centre_found) {
 			
 			// ... that is the cheapest ...

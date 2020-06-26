@@ -26,14 +26,14 @@ const
 	}
 }
 
-bool solver::at_least_one_centre(size_t city_idx, size_t loc_idx, double pf, double df, size_t& cca) const {
+bool solver::at_least_one_centre(int city_idx, int loc_idx, double pf, double df, int& cca) const {
 	const double dist = dist_city_loc(city_idx, loc_idx);
 	
 	bool alo = false;
-	size_t ct_idx = 0;
+	int ct_idx = 0;
 	while (ct_idx < n_centres and not alo) {
 		
-		size_t centre_idx = sorted_centres[ct_idx];
+		int centre_idx = sorted_centres[ct_idx];
 		
 		// capacity not exceeded ...
 		if (cap_location[loc_idx] + pf*cities[city_idx].get_population() <= centres[centre_idx].get_capacity()) {
@@ -53,8 +53,8 @@ bool solver::at_least_one_centre(size_t city_idx, size_t loc_idx, double pf, dou
 	return alo;
 }
 
-double solver::greedy_cost_dist(size_t city_idx, size_t loc_idx, role r) const {
-	size_t cca = n_centres;
+double solver::greedy_cost_dist(int city_idx, int loc_idx, role r) const {
+	int cca = n_centres;
 	
 	bool alo;
 	if (r == primary) {
@@ -106,8 +106,8 @@ double solver::greedy_cost_dist(size_t city_idx, size_t loc_idx, role r) const {
 	return cost;
 }
 
-double solver::greedy_cost_pop(size_t city_idx, size_t loc_idx, role r) const {
-	size_t cca = n_centres;
+double solver::greedy_cost_pop(int city_idx, int loc_idx, role r) const {
+	int cca = n_centres;
 	
 	bool alo;
 	if (r == primary) {
@@ -165,8 +165,8 @@ double solver::greedy_cost_pop(size_t city_idx, size_t loc_idx, role r) const {
 	return cost;
 }
 
-double solver::greedy_cost_dist_pop(size_t city_idx, size_t loc_idx, role r) const {
-	size_t cca = n_centres;
+double solver::greedy_cost_dist_pop(int city_idx, int loc_idx, role r) const {
+	int cca = n_centres;
 	
 	bool alo;
 	if (r == primary) {

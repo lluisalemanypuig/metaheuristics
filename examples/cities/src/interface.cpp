@@ -15,8 +15,8 @@ double interface::evaluate() const {
 bool interface::sanity_check(ostream& err, const string& tab) const {
 	bool is_sane = true;
 	
-	for (size_t loc_idx = 0; loc_idx < n_locations; ++loc_idx) {
-		size_t centre_idx = location_centre_type[loc_idx];
+	for (int loc_idx = 0; loc_idx < n_locations; ++loc_idx) {
+		int centre_idx = location_centre_type[loc_idx];
 		if (centre_idx != -1) {
 			
 			if (capacity_exceeded(loc_idx, centre_idx)) {
@@ -37,8 +37,8 @@ bool interface::sanity_check(ostream& err, const string& tab) const {
 		}
 	}
 	
-	for (size_t l1 = 0; l1 < n_locations; ++l1) {	
-		for (size_t l2 = l1 + 1; l2 < n_locations; ++l2) {
+	for (int l1 = 0; l1 < n_locations; ++l1) {
+		for (int l2 = l1 + 1; l2 < n_locations; ++l2) {
 			if (location_centre_type[l1] != -1 and location_centre_type[l2] != -1) {
 				
 				if (locations[l1].distance(locations[l2]) < D) {
@@ -51,7 +51,7 @@ bool interface::sanity_check(ostream& err, const string& tab) const {
 		}
 	}
 	
-	for (size_t c = 0; c < n_cities; ++c) {
+	for (int c = 0; c < n_cities; ++c) {
 		
 		if (cit_by_prim[c] == -1 and cit_by_sec[c] == -1) {
 			is_sane = false;
@@ -94,7 +94,7 @@ bool interface::sanity_check(ostream& err, const string& tab) const {
 
 // PROTECTED
 
-void interface::cities_served_by_location(size_t loc_idx, vector<role>& cities_served, size_t& how_many) const {
+void interface::cities_served_by_location(int loc_idx, vector<role>& cities_served, int& how_many) const {
 	how_many = 0;
 	for (size_t c = 0; c < cities.size(); ++c) {
 		cities_served[c] = none;
@@ -110,6 +110,6 @@ void interface::cities_served_by_location(size_t loc_idx, vector<role>& cities_s
 	}
 }
 
-double interface::dist_city_loc(size_t city_idx, size_t loc_idx) const {
+double interface::dist_city_loc(int city_idx, int loc_idx) const {
 	return cities[city_idx].get_position().distance(locations[loc_idx]);
 }

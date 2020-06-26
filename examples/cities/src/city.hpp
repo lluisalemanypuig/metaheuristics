@@ -9,7 +9,7 @@
 class city {
 	public:
 		city() = default;
-		city(const point& l, size_t p);
+		city(const point& l, int p);
 		~city() = default;
 		
 		// OPERATORS
@@ -21,16 +21,16 @@ class city {
 		// SETTERS
 		
 		void set_position(const point& l);
-		void set_population(size_t p);
+		void set_population(int p);
 		
 		// GETTERS
 		
 		point& get_position();
 		const point& get_position() const;
-		size_t get_population() const;
+		int get_population() const;
 
 	private:
 		point location;
-		size_t population;
+		int population;
 };
 

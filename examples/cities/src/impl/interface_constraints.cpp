@@ -4,12 +4,12 @@
 
 /* Constraint checking */
 
-bool interface::separated_by_D(size_t loc_idx) const {
+bool interface::separated_by_D(int loc_idx) const {
 	const point& FOCUS = locations[loc_idx];
 	bool separated = true;
 	
 	// check for every location ...
-	size_t l = 0;
+	int l = 0;
 	while (l < n_locations and separated) {
 		
 		// ... that is not 'loc_idx' and has a centre installed ...
@@ -29,12 +29,12 @@ bool interface::separated_by_D(size_t loc_idx) const {
 	return separated;
 }
 
-bool interface::separated_by_D(size_t loc_idx, const set<size_t>& locs) const {
+bool interface::separated_by_D(int loc_idx, const set<int>& locs) const {
 	const point& FOCUS = locations[loc_idx];
 	bool separated = true;
 	
 	// check for every location in 'locs' ...
-	set<size_t>::const_iterator cit = locs.begin();
+	set<int>::const_iterator cit = locs.begin();
 	while (cit != locs.end() and separated) {
 		
 		// ... that is not at least at a distance of D to 'loc_idx' ...
@@ -50,13 +50,13 @@ bool interface::separated_by_D(size_t loc_idx, const set<size_t>& locs) const {
 	return separated;
 }
 
-bool interface::working_distance_exceeded(size_t loc_idx, size_t centre_idx) const {
+bool interface::working_distance_exceeded(int loc_idx, int centre_idx) const {
 	const double wd = centres[centre_idx].get_working_distance();
 	const point& loc_pos = locations[loc_idx];
 	
 	bool distance_execeeded = false;
 	
-	size_t city_idx = 0;
+	int city_idx = 0;
 	while (city_idx < n_cities and not distance_execeeded) {
 		if (cit_by_prim[city_idx] == loc_idx or cit_by_sec[city_idx] == loc_idx) {
 			
@@ -86,13 +86,13 @@ bool interface::working_distance_exceeded(size_t loc_idx, size_t centre_idx) con
 	return distance_execeeded;
 }
 
-bool interface::capacity_exceeded(size_t loc_idx, size_t centre_idx) const {
+bool interface::capacity_exceeded(int loc_idx, int centre_idx) const {
 	bool cap_exceeded = false;
 	
 	double max_cap = centres[centre_idx].get_capacity();
 	double loc_cap = 0.0;
 	
-	size_t city_idx = 0;
+	int city_idx = 0;
 	while (city_idx < n_cities and not cap_exceeded) {
 		if (cit_by_prim[city_idx] == loc_idx) {
 			loc_cap += cities[city_idx].get_population();
@@ -111,7 +111,7 @@ bool interface::capacity_exceeded(size_t loc_idx, size_t centre_idx) const {
 	return cap_exceeded;
 }
 
-bool interface::joined_constraints_satisfied(size_t loc_idx, size_t centre_idx) const {
+bool interface::joined_constraints_satisfied(int loc_idx, int centre_idx) const {
 	const double max_cap = centres[centre_idx].get_capacity();
 	const double wd = centres[centre_idx].get_working_distance();
 	const point& loc_pos = locations[loc_idx];
@@ -119,7 +119,7 @@ bool interface::joined_constraints_satisfied(size_t loc_idx, size_t centre_idx) 
 	double loc_cap = 0.0;
 	bool constraints_satisfied = true;
 	
-	size_t city_idx = 0;
+	int city_idx = 0;
 	while (city_idx < n_cities and constraints_satisfied) {
 		
 		if (cit_by_prim[city_idx] == loc_idx or cit_by_sec[city_idx] == loc_idx) {

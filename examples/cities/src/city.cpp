@@ -4,7 +4,7 @@
 
 /* PUBLIC */
 
-city::city(const point& l, size_t p) : location(l), population(p) {
+city::city(const point& l, int p) : location(l), population(p) {
 }
 
 /* OPERATORS */
@@ -23,7 +23,7 @@ void city::set_position(const point& l) {
 	location = l;
 }
 
-void city::set_population(size_t p) {
+void city::set_population(int p) {
 	population = p;
 }
 
@@ -37,7 +37,7 @@ const point& city::get_position() const {
 	return location;
 }
 
-size_t city::get_population() const {
+int city::get_population() const {
 	return population;
 }
 

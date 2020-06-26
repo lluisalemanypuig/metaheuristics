@@ -35,9 +35,9 @@ class interface : public problem<> {
 		
 		/* GETTERS */
 		
-		size_t get_n_cities() const;
-		size_t get_n_locations() const;
-		size_t get_n_centre_types() const;
+		int get_n_cities() const;
+		int get_n_locations() const;
+		int get_n_centre_types() const;
 		
 		// ----------------------------
 		// -- PROBLEM IMPLEMENTATION --
@@ -69,16 +69,16 @@ class interface : public problem<> {
 
 		double D;
 
-		size_t n_locations;
-		size_t n_centres;
-		size_t n_cities;
+		int n_locations;
+		int n_centres;
+		int n_cities;
 
 		vector<point> locations;
 		vector<city> cities;
 		vector<centre_type> centres;
 
-		vector<size_t> sorted_cities;
-		vector<size_t> sorted_centres;
+		vector<int> sorted_cities;
+		vector<int> sorted_centres;
 
 		/* Instance solution */
 
@@ -115,30 +115,30 @@ class interface : public problem<> {
 
 		// Check that there is a distance of at least D to the rest of
 		// locations with a centre installed.
-		bool separated_by_D(size_t loc_idx) const;
+		bool separated_by_D(int loc_idx) const;
 
 		// Check that there is a distance of at least D to the locations
 		// in 'locs'
-		bool separated_by_D(size_t loc_idx, const set<size_t>& locs) const;
+		bool separated_by_D(int loc_idx, const set<int>& locs) const;
 
 		// Assuming that the location is assigned to serve some cities,
 		// check that the working distance would be exceeded in case
 		// 'centre_idx' was to be installed in that location.
 		// Returns true if exceeded.
-		bool working_distance_exceeded(size_t loc_idx, size_t centre_idx) const;
+		bool working_distance_exceeded(int loc_idx, int centre_idx) const;
 
 		// Assuming that the location is assigned to serve some cities,
 		// check whether the capacity would be exceeded in case 'centre_idx'
 		// was to be installed in that location.
 		// Returns true if exceeded.
-		bool capacity_exceeded(size_t loc_idx, size_t centre_idx) const;
+		bool capacity_exceeded(int loc_idx, int centre_idx) const;
 
 		// Assuming that the location is assigned to serve some cities,
 		// check that the working distance and capacity constraints
 		// would be satisfied in case 'centre_idx' was to be installed
 		// in that location.
 		// Returns true if satisfied.
-		bool joined_constraints_satisfied(size_t loc_idx, size_t centre_idx) const;
+		bool joined_constraints_satisfied(int loc_idx, int centre_idx) const;
 
 		// Sets to 'orimary' the positions 'c' in 'cities_served' such that
 		//     cit_by_prim[c] == loc_idx or
@@ -146,12 +146,12 @@ class interface : public problem<> {
 		//     cit_by_sec[c] == loc_idx
 		// and sets to 'none' the rest and stores in 'how_many' the amounts
 		// of positions set to 'primary' or 'secondary'.
-		void cities_served_by_location(size_t loc_idx, vector<role>& cities_served, size_t& how_many) const;
+		void cities_served_by_location(int loc_idx, vector<role>& cities_served, int& how_many) const;
 
 		/* Utils */
 
 		// Returns the distance between the city 'city_idx' and the
 		// location 'loc_idx'
-		double dist_city_loc(size_t city_idx, size_t loc_idx) const;
+		double dist_city_loc(int city_idx, int loc_idx) const;
 };
 
