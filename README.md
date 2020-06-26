@@ -28,7 +28,7 @@ every algorithm, generate the html documentation with Doxygen issuing the follow
 command:
 
     cd /path/to/lib/metaheurisitcs/
-    doxygoen doxyconfig/doxyfile
+    doxygen doxyconfig/doxyfile
 
 ## Dependencies
 
