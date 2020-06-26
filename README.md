@@ -37,12 +37,12 @@ command:
 Since the Makefiles are already provided, a 'make' tool is needed to compile
 the library and the examples.
 
-Finally, a compiler that supports C++11 is mandatory.
+Finally, a compiler that supports C++17 is mandatory.
 
 ## Compilation
 
-In order to compile the library one needs a compiler that supports the C++11 standard, in particular
-the flag -std=c++11, and the _make_ tool:
+In order to compile the library one needs a compiler that supports the C++17 standard, in particular
+the flag -std=c++17, and the _make_ tool:
 
     cd /path/to/lib/metaheurisitcs/build
     make -f Makefile release
