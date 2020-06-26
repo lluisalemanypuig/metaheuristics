@@ -1,2 +1,4 @@
-metaheuristics-debug
-metaheuristics-release
+build-debug
+build-release
+
+*.pro.user
