@@ -1,14 +1,14 @@
 #include "solver.hpp"
 
-/// PUBLIC
+/* PUBLIC */
 
-double solver::greedy_construct() throw(infeasible_exception) {
+double solver::greedy_construct() noexcept(false) {
 	const double inf = numeric_limits<double>::max();
 	
 	set<size_t> used_locations;
 	size_t K = 0;
 	
-	/// LOCATION ASSIGNATION
+	/* LOCATION ASSIGNATION */
 	
 	while (K < 2*n_cities) {
 		
@@ -77,7 +77,7 @@ double solver::greedy_construct() throw(infeasible_exception) {
 		++K;
 	}
 	
-	/// CENTRE ASSIGNATION
+	/* CENTRE ASSIGNATION */
 	
 	//cin >> step;
 	

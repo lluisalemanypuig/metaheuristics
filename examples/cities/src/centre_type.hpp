@@ -1,37 +1,32 @@
 #pragma once
 
-/// C++ includes
-#include <cstddef>
-
 class centre_type {
-	private:
-		double working_distance;
-		size_t centre_capacity;
-		double installation_cost;
-		
 	public:
-		centre_type();
-		centre_type(double wd, size_t cc, double ic);
-		~centre_type();
+		centre_type() = default;
+		centre_type(double wd, double cc, double ic);
+		~centre_type() = default;
 		
-		/// OPERATORS
-		
-		centre_type& operator= (const centre_type& ct);
-		
+		// OPERATORS
+
 		// compares two centre types by their installation cost
 		bool operator< (const centre_type& ct) const;
 		bool operator> (const centre_type& ct) const;
 		
-		/// SETTERS
+		// SETTERS
 		
 		void set_working_distance(double wd);
-		void set_capacity(size_t cc);
+		void set_capacity(double cc);
 		void set_installation_cost(double ic);
 		
-		/// GETTERS
+		// GETTERS
 		
 		double get_working_distance() const;
-		size_t get_capacity() const;
+		double get_capacity() const;
 		double get_installation_cost() const;
+
+	private:
+		double working_distance = 0.0;
+		double centre_capacity = 0.0;
+		double installation_cost = 0.0;
 };
 

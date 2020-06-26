@@ -1,25 +1,13 @@
 #include "city.hpp"
 
-/// PRIVATE
+/* PRIVATE */
 
-/// PUBLIC
-
-city::city() {
-}
+/* PUBLIC */
 
 city::city(const point& l, size_t p) : location(l), population(p) {
 }
 
-city::~city() {
-}
-
-/// OPERATORS
-
-city& city::operator= (const city& c) {
-	location = c.location;
-	population = c.population;
-	return *this;
-}
+/* OPERATORS */
 
 bool city::operator< (const city& c) const {
 	return population < c.population;
@@ -29,7 +17,7 @@ bool city::operator> (const city& c) const {
 	return population > c.population;
 }
 
-/// SETTERS
+/* SETTERS */
 
 void city::set_position(const point& l) {
 	location = l;
@@ -39,7 +27,7 @@ void city::set_population(size_t p) {
 	population = p;
 }
 
-/// GETTERS
+/* GETTERS */
 
 point& city::get_position() {
 	return location;

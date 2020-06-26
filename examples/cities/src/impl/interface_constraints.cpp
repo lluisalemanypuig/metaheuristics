@@ -1,8 +1,8 @@
 #include "interface.hpp"
 
-/// PROTECTED
+// PROTECTED
 
-/// Constraint checking
+/* Constraint checking */
 
 bool interface::separated_by_D(size_t loc_idx) const {
 	const point& FOCUS = locations[loc_idx];

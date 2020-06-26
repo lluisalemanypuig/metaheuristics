@@ -9,14 +9,13 @@ using namespace std;
 /// metaheuristics includes
 #include <metaheuristics/algorithms.hpp>
 #include <metaheuristics/structures.hpp>
-
-/// Custom includes
-#include "solver.hpp"
-
 using namespace metaheuristics;
 using namespace structures;
 using namespace algorithms;
 using namespace random;
+
+/// Custom includes
+#include "solver.hpp"
 
 void print_usage() {
 	cout << "Locations, Cities, and Centres" << endl;
@@ -80,7 +79,6 @@ local_search_policy parse_policy(int argc, char *argv[], int i) {
 }
 
 class local_search_params {
-	private:
 	public:
 		size_t MAX_ITERATIONS;
 		local_search_policy POLICY;
@@ -107,7 +105,6 @@ void parse_local_search_params(int argc, char *argv[], local_search_params& ls_p
 }
 
 class grasp_params {
-	private:
 	public:
 		size_t MAX_IT_LOCAL;
 		size_t MAX_IT_GRASP;
@@ -144,7 +141,6 @@ void parse_grasp_params(int argc, char *argv[], grasp_params& params) {
 }
 
 class rkga_params {
-	private:
 	public:
 		size_t NUM_GENERATIONS;
 		size_t POPULATION_SIZE;
@@ -182,7 +178,6 @@ void parse_rkga_params(int argc, char *argv[], rkga_params& params) {
 }
 
 class brkga_params {
-	private:
 	public:
 		size_t NUM_GENERATIONS;
 		size_t POPULATION_SIZE;
@@ -308,8 +303,7 @@ int main(int argc, char *argv[]) {
 		cerr << "File " << input_filename << " does not exist" << endl;
 		return 1;
 	}
-	
-	bool sane;
+
 	solver *s = new solver();
 	s->read_from_file(fin);
 	//s->print_input_data();
@@ -324,7 +318,7 @@ int main(int argc, char *argv[]) {
 		
 		try {
 			double eval = s->greedy_construct();
-			sane = s->sanity_check();
+			bool sane = s->sanity_check(cerr);
 			cout << "    Is initial solution sane? " << (sane ? "Yes" : "No") << endl;
 			
 			if (seed) {
@@ -336,7 +330,7 @@ int main(int argc, char *argv[]) {
 			//cout << "    Local search solution:" << endl;
 			//s->print("    ");
 			
-			sane = s->sanity_check();
+			sane = s->sanity_check(cerr);
 			cout << "    Is final solution sane? " << (sane ? "Yes" : "No") << endl;
 			cout << "    Final solution's cost: " << -eval << endl;
 			if (use_optimal_value) {
@@ -374,7 +368,7 @@ int main(int argc, char *argv[]) {
 		cout << endl;
 		cout << endl;
 		
-		bool sane = s->sanity_check();
+		const bool sane = s->sanity_check(cerr);
 		cout << "    Is final solution sane? " << (sane ? "Yes" : "No") << endl;
 		cout << "    Final solution's cost: " << -eval << endl;
 		if (use_optimal_value) {
@@ -403,7 +397,7 @@ int main(int argc, char *argv[]) {
 		//cout << "    BRKGA solution:" << endl;
 		//s->print("    ");
 		
-		bool sane = s->sanity_check();
+		const bool sane = s->sanity_check(cerr);
 		cout << endl << "    Is final solution sane? " << (sane ? "Yes" : "No") << endl;
 		cout << "    Final solution's cost: " << -eval << endl;
 		if (use_optimal_value) {
@@ -433,7 +427,7 @@ int main(int argc, char *argv[]) {
 		//cout << "    BRKGA solution:" << endl;
 		//s->print("    ");
 		
-		bool sane = s->sanity_check();
+		const bool sane = s->sanity_check(cerr);
 		cout << endl << "    Is final solution sane? " << (sane ? "Yes" : "No") << endl;
 		cout << "    Final solution's cost: " << -eval << endl;
 		if (use_optimal_value) {

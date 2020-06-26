@@ -1,11 +1,8 @@
 #include "point.hpp"
 
-/// PRIVATE
+/* PRIVATE */
 
-/// PUBLIC
-
-point::point() {
-}
+/* PUBLIC */
 
 point::point(double _x, double _y) : x(_x), y(_y) {
 }
@@ -15,10 +12,7 @@ point::point(const point& p) {
 	y = p.y;
 }
 
-point::~point() {
-}
-
-/// OPERATORS
+/* OPERATORS */
 
 point& point::operator= (const point& p) {
 	x = p.x;
@@ -26,7 +20,7 @@ point& point::operator= (const point& p) {
 	return *this;
 }
 
-/// SETTERS
+/* SETTERS */
 
 void point::set(double _x, double _y) {
 	x = _x;
@@ -41,7 +35,7 @@ void point::set_y(double _y) {
 	y = _y;
 }
 
-/// GETTERS
+/* GETTERS */
 
 double point::get_x() const {
 	return x;

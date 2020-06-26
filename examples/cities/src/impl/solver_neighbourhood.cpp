@@ -208,7 +208,7 @@ bool solver::find_better_centre(size_t loc_idx, size_t& centre_idx) const {
 	return centre_found;
 }
 
-/// PUBLIC
+/* PUBLIC */
 
 void solver::best_neighbour(pair<problem *, double>& bn, const local_search_policy& lsp) {
 	n_neighbours_explored = 0;

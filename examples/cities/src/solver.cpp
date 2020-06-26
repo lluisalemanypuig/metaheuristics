@@ -1,15 +1,6 @@
 #include "solver.hpp"
 
-/// PRIVATE
-
-/// PUBLIC
-
-solver::solver() : interface() {
-}
-
-solver::~solver() {
-	
-}
+// PUBLIC
 
 problem<> *solver::empty() const {
 	solver *s = new solver();

@@ -1,34 +1,6 @@
 #include "interface.hpp"
 
-/// PRIVATE
-
-/// PROTECTED
-
-void interface::cities_served_by_location(size_t loc_idx, vector<role>& cities_served, size_t& how_many) const {
-	how_many = 0;
-	for (size_t c = 0; c < cities.size(); ++c) {
-		cities_served[c] = none;
-		
-		if (cit_by_prim[c] == loc_idx) {
-			cities_served[c] = primary;
-			++how_many;
-		}
-		else if (cit_by_sec[c] == loc_idx) {
-			cities_served[c] = secondary;
-			++how_many;
-		}
-	}
-}
-
-double interface::dist_city_loc(size_t city_idx, size_t loc_idx) const {
-	return cities[city_idx].get_position().distance(locations[loc_idx]);
-}
-
-/// PUBLIC
-
-interface::interface() : problem() { }
-
-interface::~interface() { }
+// PUBLIC
 
 double interface::evaluate() const {
 	double c = 0.0;
@@ -40,7 +12,7 @@ double interface::evaluate() const {
 	return -c;
 }
 
-bool interface::sanity_check(const string& tab, ostream& err) const {
+bool interface::sanity_check(ostream& err, const string& tab) const {
 	bool is_sane = true;
 	
 	for (size_t loc_idx = 0; loc_idx < n_locations; ++loc_idx) {
@@ -120,3 +92,24 @@ bool interface::sanity_check(const string& tab, ostream& err) const {
 	return is_sane;
 }
 
+// PROTECTED
+
+void interface::cities_served_by_location(size_t loc_idx, vector<role>& cities_served, size_t& how_many) const {
+	how_many = 0;
+	for (size_t c = 0; c < cities.size(); ++c) {
+		cities_served[c] = none;
+
+		if (cit_by_prim[c] == loc_idx) {
+			cities_served[c] = primary;
+			++how_many;
+		}
+		else if (cit_by_sec[c] == loc_idx) {
+			cities_served[c] = secondary;
+			++how_many;
+		}
+	}
+}
+
+double interface::dist_city_loc(size_t city_idx, size_t loc_idx) const {
+	return cities[city_idx].get_position().distance(locations[loc_idx]);
+}

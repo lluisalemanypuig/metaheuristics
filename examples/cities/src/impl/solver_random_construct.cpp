@@ -8,9 +8,9 @@ typedef pair<double, candidate> eval_candidate;
 typedef set<eval_candidate>::const_iterator scit;
 typedef vector<eval_candidate>::const_iterator vcit;
 
-/// PUBLIC
+/* PUBLIC */
 
-double solver::random_construct(drandom_generator<> *RNG, double alpha) throw(infeasible_exception) {
+double solver::random_construct(drandom_generator<> *RNG, double alpha) noexcept(false) {
 	set<size_t> used_locations;
 	
 	/// LOCATION ASSIGNATION

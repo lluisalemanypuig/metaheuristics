@@ -1,6 +1,6 @@
 #include "interface.hpp"
 
-/// NON-CLASS PRIVATE
+// auxiliary functions
 
 inline
 void __read_line_values(istream& in, vector<double>& values) {
@@ -32,7 +32,7 @@ void __read_line_values(istream& in, vector<size_t>& values) {
 	in >> right_bracket >> semicolon;
 }
 
-/// PUBLIC
+// PUBLIC
 
 void interface::read_from_file(istream& in) {
 	string field;
@@ -213,7 +213,7 @@ size_t interface::get_n_centre_types() const {
 	return n_centres;
 }
 
-void interface::print(const string& tab, ostream& os) const {
+void interface::print(ostream& os, const string& tab) const {
 	os << tab << "Installed centres:" << endl;
 	double totalCost = 0.0;
 	

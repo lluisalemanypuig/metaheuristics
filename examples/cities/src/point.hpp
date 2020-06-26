@@ -1,21 +1,18 @@
 #pragma once
 
-/// C++ includes
+// C++ includes
 #include <fstream>
 #include <cmath>
 using namespace std;
 
 class point {
-	private:
-		double x, y;
-	
 	public:
-		point();
+		point() = default;
 		point(double x, double y);
 		point(const point& p);
-		~point();
+		~point() = default;
 		
-		/// OPERATORS
+		/* OPERATORS */
 		
 		inline friend
 		ostream& operator<< (ostream& os, const point& p) {
@@ -25,13 +22,13 @@ class point {
 		
 		point& operator= (const point& p);
 		
-		/// SETTERS
+		/* SETTERS */
 		
 		void set(double x, double y);
 		void set_x(double x);
 		void set_y(double y);
 		
-		/// GETTERS
+		/* GETTERS */
 		
 		double get_x() const;
 		double get_y() const;
@@ -48,5 +45,9 @@ class point {
 		double distance2(const point& p, const point& q) {
 			return p.distance2(q);
 		}
+
+	private:
+		double x = 0.0;
+		double y = 0.0;
 };
 

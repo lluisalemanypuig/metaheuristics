@@ -4,9 +4,9 @@
 
 typedef pair<double, size_t> sorted_chromosome;
 
-/// PUBLIC
+/* PUBLIC */
 
-double solver::decode(const chromosome& c) throw(infeasible_exception) {
+double solver::decode(const chromosome& c) noexcept(false) {
 	const size_t n_genes = c.size();
 	
 	vector<sorted_chromosome> vc(n_genes);
