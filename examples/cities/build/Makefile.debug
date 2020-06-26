@@ -2,10 +2,13 @@
 #############
 # DEBUG FLAGS
 
-DEB_FLAGS = -O0 $(GEN_FLAGS)					\
+DEB_FLAGS = -std=c++17 -O0 $(GEN_FLAGS)			\
 			-DLOCAL_SEARCH_DEBUG				\
+			-DLOCAL_SEARCH_VERBOSE				\
 			-DGRASP_DEBUG						\
-			-DGENETICS_DEBUG
+			-DGRASP_VERBOSE						\
+			-DGENETICS_DEBUG					\
+			-DGENETICS_VERBOSE
 
 ###############
 # DEBUG OBJECTS

@@ -2,7 +2,7 @@
 #############
 # DEBUG FLAGS
 
-DEB_FLAGS = -O0 $(GEN_FLAGS)
+DEB_FLAGS = -std=c++17 -O0 $(GEN_FLAGS)
 
 ###############
 # DEBUG OBJECTS

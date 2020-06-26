@@ -2,7 +2,7 @@
 ###############
 # RELEASE FLAGS
 
-REL_FLAGS = -O3 -DNDEBUG $(GEN_FLAGS)
+REL_FLAGS = -std=c++17 -O3 -DNDEBUG $(GEN_FLAGS)
 
 ###############
 # RELEASE OBJECTS
