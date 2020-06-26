@@ -23,12 +23,8 @@
 
 #pragma once
 
-// C includes
-#include <assert.h>
-
 // C++ includes
 #include <random>
-using namespace std;
 
 namespace metaheuristics {
 namespace random {
@@ -57,10 +53,6 @@ template<
 				// int, double, unsigned int, size_t, ...
 >
 class random_generator {
-	protected:
-		/// Random engine.
-		G gen;
-		
 	public:
 		/// Class constructor.
 		random_generator();
@@ -94,6 +86,10 @@ class random_generator {
 		/// Generate @e N uniform values and stores them in @e u
 		virtual void make_n_uniform(T *u, size_t N) = 0;
 
+	protected:
+		/// Random engine.
+		G gen;
+
 }; // -- class random_generator
 
 /**
@@ -106,18 +102,11 @@ class random_generator {
  * @param T The type of the numbers generated (int, char, unsigned int, ...).
  */
 template<
-	class G = default_random_engine,	// class used for the random engine
-	typename dT = size_t				// type of the discrete distributions
-										// int, char, unsigned int, size_t, ...
+	class G = std::default_random_engine, // class used for the random engine
+	typename dT = size_t				  // type of the discrete distributions
+										  // int, char, unsigned int, size_t, ...
 >
 class drandom_generator : public random_generator<G,dT> {
-	private:
-		/// Object to generate integer numbers uniformly at random.
-		uniform_int_distribution<dT> *U;
-
-		/// Object to generate the numbers following a binomial distribution.
-		binomial_distribution<dT> *B;
-		
 	public:
 		/// Constructor.
 		drandom_generator();
@@ -131,6 +120,13 @@ class drandom_generator : public random_generator<G,dT> {
 		dT get_binomial();
 		
 		void make_n_uniform(dT *u, size_t N);
+
+	private:
+		/// Object to generate integer numbers uniformly at random.
+		std::uniform_int_distribution<dT> *U;
+
+		/// Object to generate the numbers following a binomial distribution.
+		std::binomial_distribution<dT> *B;
 		
 }; // -- class drandom_generator
 
@@ -143,15 +139,11 @@ class drandom_generator : public random_generator<G,dT> {
  * @param T The type of the numbers generated (double, float).
  */
 template<
-	class G = default_random_engine,	// class used for the random engine
-	typename cT = double				// type of the continuous distributions
-										// float, double
+	class G = std::default_random_engine, // class used for the random engine
+	typename cT = double				  // type of the continuous distributions
+										  // float, double
 >
 class crandom_generator : public random_generator<G,cT> {
-	private:
-		/// Object to generate floating point numbers uniformly at random.
-		uniform_real_distribution<cT> *U;
-		
 	public:
 		/// Constructor.
 		crandom_generator();
@@ -169,7 +161,11 @@ class crandom_generator : public random_generator<G,cT> {
 		cT get_binomial();
 		
 		void make_n_uniform(cT *u, size_t N);
-		
+
+	private:
+		/// Object to generate floating point numbers uniformly at random.
+		std::uniform_real_distribution<cT> *U;
+
 }; // -- class crandom_generator
 
 } // -- namespace random

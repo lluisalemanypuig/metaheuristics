@@ -21,36 +21,42 @@
  * 
  *********************************************************************/
 
+#pragma once
+
 #include <metaheuristics/algorithms/local_search/local_search.hpp>
+
+// C++ includes
+#include <iostream>
+#if defined (LOCAL_SEARCH_VERBOSE)
+#include <iomanip>
+#endif
+
+// metaheuristics includes
+#include <metaheuristics/misc/time.hpp>
+#if defined (LOCAL_SEARCH_DEBUG)
+#include <metaheuristics/macros.hpp>
+#endif
 
 namespace metaheuristics {
 namespace algorithms {
 
-// PRIVATE
-
 // PUBLIC
 
 template<class G>
-local_search<G>::local_search() : metaheuristic<G>() {
-	MAX_ITER = -1; // infinite amount of iterations
-	
-	reset_algorithm();
-}
-
-template<class G>
-local_search<G>::local_search(size_t max, const local_search_policy& lsp) : metaheuristic<G>() {
+local_search<G>::local_search(
+	size_t max, const structures::local_search_policy& lsp
+)
+: metaheuristic<G>()
+{
 	MAX_ITER = max;
 	LSP = lsp;
 	reset_algorithm();
 }
 
-template<class G>
-local_search<G>::~local_search() { }
-
 // SETTERS
 
 template<class G>
-void local_search<G>::set_local_search_policy(const local_search_policy& lsp) {
+void local_search<G>::set_local_search_policy(const structures::local_search_policy& lsp) {
 	LSP = lsp;
 }
 
@@ -84,7 +90,7 @@ size_t local_search<G>::get_n_iterations() const {
 }
 
 template<class G>
-local_search_policy local_search<G>::get_local_search_policy() const {
+structures::local_search_policy local_search<G>::get_local_search_policy() const {
 	return LSP;
 }
 
@@ -94,65 +100,68 @@ size_t local_search<G>::get_max_iterations() const {
 }
 
 template<class G>
-bool local_search<G>::execute_algorithm(problem<G> *best, double& current_best_f) {
+bool local_search<G>::execute_algorithm(structures::problem<G> *best, double& current_best_f) {
 	// set the algorithm to its initial state
 	reset_algorithm();
 	
 	#if defined (LOCAL_SEARCH_VERBOSE)
-		cout << setw(8)  << " "
-			 << setw(15) << "Local Search"
-			 << setw(18) << "Elaps. Time (s)"
-			 << setw(18) << "Obj. Function"
-			 << setw(12) << "Iter./" << MAX_ITER
-			 << setw(25) << "# Neighbours explored"
-			 << endl;
-		
-		cout << setw(8)  << " "
-			 << setw(15) << " "
-			 << setw(18) << 0.0
-			 << setw(18) << current_best_f
-			 << setw(12) << 0
-			 << setw(25) << 0
-			 << endl;
+	std::cout
+		<< setw(8)  << " "
+		<< setw(15) << "Local Search"
+		<< setw(18) << "Elaps. Time (s)"
+		<< setw(18) << "Obj. Function"
+		<< setw(12) << "Iter./" << MAX_ITER
+		<< setw(25) << "# Neighbours explored"
+		<< std::endl;
+
+	std::cout
+		<< setw(8)  << " "
+		<< setw(15) << " "
+		<< setw(18) << 0.0
+		<< setw(18) << current_best_f
+		<< setw(12) << 0
+		<< setw(25) << 0
+		<< std::endl;
 	#endif
 	
 	// 
-	time_point bbegin, bend, begin, end;
+	timing::time_point bbegin, bend, begin, end;
 	
 	bool improvement = true;
 	
-	bbegin = now();
+	bbegin = timing::now();
 	while (ITERATION <= MAX_ITER and improvement) {
-		pair<problem<G>*, double> neighbour;
-		neighbour.first = NULL;
+		std::pair<structures::problem<G>*, double> neighbour;
+		neighbour.first = nullptr;
 		neighbour.second = current_best_f;
 		
-		begin = now();
+		begin = timing::now();
 		best->best_neighbour(neighbour, LSP);
-		end = now();
-		neighbourhood_time += elapsed_seconds(begin, end);
+		end = timing::now();
+		neighbourhood_time += timing::elapsed_seconds(begin, end);
 		
-		if (neighbour.first != NULL) {
+		if (neighbour.first != nullptr) {
 			
-			#if defined (LOCAL_SEARCH_debug)
-				if (not best->sanity_check()) {
-					cerr << "local_search<G>::execute_algorithm - Sanity check failed on" << endl;
-					cerr << "    solution returned by 'best_neighbour'." << endl;
-					best->print("", cerr);
-				}
+			#if defined (LOCAL_SEARCH_DEBUG)
+			if (not best->sanity_check(std::cerr)) {
+				std::cerr << MH_ERROR << std::endl;
+				std::cerr << "    Sanity check failed on solution returned by 'best_neighbour'." << std::endl;
+				best->print(std::cerr, "");
+			}
 			#endif
 			
 			if (neighbour.second > current_best_f) {
 				current_best_f = neighbour.second;
 				
 				#if defined (LOCAL_SEARCH_VERBOSE)
-					cout << setw(8)  << " "
-						 << setw(15) << " "
-						 << setw(18) << elapsed_seconds(bbegin, now())
-						 << setw(18) << current_best_f
-						 << setw(12) << ITERATION
-						 << setw(25) << best->get_n_neighbours_explored()
-						 << endl;
+				std::cout
+					<< setw(8)  << " "
+					<< setw(15) << " "
+					<< setw(18) << timing::elapsed_seconds(bbegin, timing::now())
+					<< setw(18) << current_best_f
+					<< setw(12) << ITERATION
+					<< setw(25) << best->get_n_neighbours_explored()
+					<< std::endl;
 				#endif
 				
 				best->copy(neighbour.first);
@@ -169,21 +178,21 @@ bool local_search<G>::execute_algorithm(problem<G> *best, double& current_best_f
 		
 		++ITERATION;
 	}
-	bend = now();
-	total_time = elapsed_seconds(bbegin, bend);
+	bend = timing::now();
+	total_time = timing::elapsed_seconds(bbegin, bend);
 	
 	return true;
 }
 
 template<class G>
 void local_search<G>::print_performance() const {
-	cout << "Local Search algorithm performance:" << endl;
-	cout << "    Number of iterations:                   " << ITERATION << endl;
-	cout << "    Total execution time:                   " << total_time << " s" << endl;
-	cout << "    Average iteration time:                 " << total_time/ITERATION << " s" << endl;
-	cout << "    Total neihgbourhood exploration time:   " << neighbourhood_time << " s" << endl;
-	cout << "    Average neihgbourhood exploration time: " << neighbourhood_time/ITERATION << " s" << endl;
-	cout << endl;
+	std::cout << "Local Search algorithm performance:" << std::endl;
+	std::cout << "    Number of iterations:                   " << ITERATION << std::endl;
+	std::cout << "    Total execution time:                   " << total_time << " s" << std::endl;
+	std::cout << "    Average iteration time:                 " << total_time/ITERATION << " s" << std::endl;
+	std::cout << "    Total neihgbourhood exploration time:   " << neighbourhood_time << " s" << std::endl;
+	std::cout << "    Average neihgbourhood exploration time: " << neighbourhood_time/ITERATION << " s" << std::endl;
+	std::cout << std::endl;
 }
 
 } // -- namespace algorithms

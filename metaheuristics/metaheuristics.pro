@@ -1,6 +1,6 @@
 TEMPLATE = lib
 
-CONFIG += c++11 static
+CONFIG += c++1z static
 CONFIG -= app_bundle
 QT     -= core gui
 
@@ -36,7 +36,7 @@ HEADERS += \
 	algorithms/local_search/local_search.cpp \
 	algorithms/metaheuristic.hpp \
 	algorithms/metaheuristic.cpp \
-	misc.hpp \
+	macros.hpp \
 	misc/time.hpp \
 	namespaces.hpp \
 	random/random_generator.hpp \

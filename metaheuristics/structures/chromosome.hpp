@@ -23,16 +23,8 @@
 
 #pragma once
 
-// C includes
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-
 // C++ includes
 #include <fstream>
-#include <vector>
-#include <limits>
-using namespace std;
 
 namespace metaheuristics {
 namespace structures {
@@ -45,15 +37,9 @@ namespace structures {
  * (see @ref genes).
  */
 class chromosome {
-	private:
-		/// The list of values between 0 and 1
-		double *genes;
-		/// The size of @ref genes
-		size_t n_genes;
-		
 	public:
 		/// Default constructor
-		chromosome();
+		chromosome() = default;
 		/// Destructor
 		~chromosome();
 		
@@ -75,7 +61,7 @@ class chromosome {
 		
 		/// Operator <<
 		inline friend
-		ostream& operator<< (ostream& os, const chromosome& c) {
+		std::ostream& operator<< (std::ostream& os, const chromosome& c) {
 			os << "{";
 			if (c.n_genes > 0) {
 				os << c.genes[0];
@@ -128,6 +114,12 @@ class chromosome {
 		 * @returns Returns the value of @ref n_genes
 		 */
 		size_t size() const;
+
+	private:
+		/// The list of values between 0 and 1
+		double *genes = nullptr;
+		/// The size of @ref genes
+		size_t n_genes = 0;
 };
 
 } // -- namespace structures

@@ -24,14 +24,10 @@
 #pragma once
 
 // metaheuristic includes
-#include <metaheuristics/random/random_generator.hpp>
 #include <metaheuristics/structures/problem.hpp>
 
 namespace metaheuristics {
 namespace algorithms {
-
-using namespace structures;
-using namespace random;
 
 /**
  * @brief Interface for the two functions common to all algorithms.
@@ -46,22 +42,18 @@ using namespace random;
  * @param G The type of engine used by the random number generators.
  */
 template<
-	class G = default_random_engine
+	class G = std::default_random_engine
 >
 class metaheuristic {
-	protected:
-		/// Variable telling whether the number generators should be seeded or not.
-		bool seed_rng;
-		
 	public:
 		/**
 		 * @brief Default constructor.
 		 * 
 		 * Variable @ref seed_rng is initialised to @e false.
 		 */
-		metaheuristic();
+		metaheuristic() = default;
 		/// Destructor.
-		virtual ~metaheuristic();
+		virtual ~metaheuristic() = default;
 		
 		// MODIFIERS
 		
@@ -86,7 +78,11 @@ class metaheuristic {
 		 * @returns Returns true if it terminates succesfully. Returns
 		 * false if otherwise.
 		 */
-		virtual bool execute_algorithm(problem<G> *p, double& c) = 0;
+		virtual bool execute_algorithm(structures::problem<G> *p, double& c) = 0;
+
+	protected:
+		/// Variable telling whether the number generators should be seeded or not.
+		bool seed_rng = false;
 };
 
 /// Shorthand for the genetic_algorithm class template

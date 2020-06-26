@@ -21,7 +21,22 @@
  * 
  *********************************************************************/
 
+#pragma once
+
 #include <metaheuristics/algorithms/grasp/grasp.hpp>
+
+// C++ includes
+#include <limits>
+#include <iostream>
+
+#if defined (GRASP_VERBOSE)
+#include <iomanip>
+#endif
+
+// metaheuristics includes
+#if defined (GRASP_DEBUG)
+#include <metaheuristics/macros.hpp>
+#endif
 
 namespace metaheuristics {
 namespace algorithms {
@@ -31,16 +46,10 @@ namespace algorithms {
 // PUBLIC
 
 template<class G>
-grasp<G>::grasp() : metaheuristic<G>() {
-	MAX_ITER_GRASP = MAX_ITER_LOCAL = -1;	// infinite amount of iterations
-	alpha = 1.0;	// completely randomized construction
-}
-
-template<class G>
 grasp<G>::grasp
 (
 	size_t mg, size_t ml, double a,
-	const local_search_policy& lsp
+	const structures::local_search_policy& lsp
 )
 : metaheuristic<G>()
 {
@@ -50,13 +59,10 @@ grasp<G>::grasp
 	LSP = lsp;
 }
 
-template<class G>
-grasp<G>::~grasp() { }
-
 // SETTERS
 
 template<class G>
-void grasp<G>::set_local_search_policy(const local_search_policy& lsp) {
+void grasp<G>::set_local_search_policy(const structures::local_search_policy& lsp) {
 	LSP = lsp;
 }
 
@@ -99,7 +105,7 @@ double grasp<G>::get_local_search_time() const {
 }
 
 template<class G>
-local_search_policy grasp<G>::get_local_search_policy() const {
+structures::local_search_policy grasp<G>::get_local_search_policy() const {
 	return LSP;
 }
 
@@ -114,85 +120,91 @@ size_t grasp<G>::get_max_iterations_local() const {
 }
 
 template<class G>
-bool grasp<G>::execute_algorithm(problem<G> *best, double& current_best_f) {
+bool grasp<G>::execute_algorithm(structures::problem<G> *best, double& current_best_f) {
 	// set algorithm to its initial state
 	reset_algorithm();
 	
 	// timing variables
-	time_point bbegin, bend, begin, end;
+	timing::time_point bbegin, bend, begin, end;
 	
 	local_search<G> ls(MAX_ITER_LOCAL, LSP);
-	current_best_f = -numeric_limits<double>::max();
+	current_best_f = -std::numeric_limits<double>::max();
 	
 	#if defined (GRASP_VERBOSE)
-		cout << setw(8)  << "GRASP"
-			 << setw(15) << " "
-			 << setw(18) << "Elaps. Time (s)"
-			 << setw(18) << "Obj. Function"
-			 << setw(12) << "Iter./" << MAX_ITER_GRASP << endl;
+	std::cout
+		<< setw(8)  << "GRASP"
+		<< setw(15) << " "
+		<< setw(18) << "Elaps. Time (s)"
+		<< setw(18) << "Obj. Function"
+		<< setw(12) << "Iter./" << MAX_ITER_GRASP
+		<< std::endl;
 	#endif
 	
-	bbegin = now();
+	bbegin = timing::now();
 	for (size_t it = 1; it <= MAX_ITER_GRASP; ++it) {
-		problem<G> *r = best->empty();
+		structures::problem<G> *r = best->empty();
 		
 		try {
-			begin = now();
+			begin = timing::now();
 			double rcc = r->random_construct(&drng, alpha);
-			end = now();
-			construct_time += elapsed_seconds(begin, end);
+			end = timing::now();
+			construct_time += timing::elapsed_seconds(begin, end);
 			
 			#if defined (GRASP_DEBUG)
-				if (not r->sanity_check()) {
-					cerr << "grasp<G>::execute_algorithm - Sanity check failed on" << endl;
-					cerr << "    solution returned by 'random_construct'." << endl;
-					r->print("", cerr);
-				}
+			if (not r->sanity_check(std::cerr)) {
+				std::cerr << MH_ERROR << std::endl;
+				std::cerr << "    Sanity check failed on solution returned by 'random_construct'." << std::endl;
+				r->print(std::cerr, "");
+			}
 			#endif
 			
 			#if defined (GRASP_VERBOSE)
-				if (rcc > current_best_f) {
-					cout << setw(8) << "**R.C.";
-				}
-				else {
-					cout << setw(8) << "R.C.";
-				}
-			
-				cout << setw(15) << " "
-					 << setw(18) << elapsed_seconds(bbegin, now())
-					 << setw(18) << rcc
-					 << setw(12) << it << endl;
+			if (rcc > current_best_f) {
+				std::cout << setw(8) << "**R.C.";
+			}
+			else {
+				std::cout << setw(8) << "R.C.";
+			}
+
+			std::cout
+				<< setw(15) << " "
+				<< setw(18) << timing::elapsed_seconds(bbegin, timing::now())
+				<< setw(18) << rcc
+				<< setw(12) << it
+				<< std::endl;
 			#endif
 			
 			double lsc = rcc;
-			begin = now();
+			begin = timing::now();
 			ls.execute_algorithm(r, lsc);
-			end = now();
-			local_search_time += elapsed_seconds(begin, end);
+			end = timing::now();
+			local_search_time += timing::elapsed_seconds(begin, end);
 			
 			#if defined (GRASP_DEBUG)
-				if (not r->sanity_check()) {
-					cerr << "grasp<G>::execute_algorithm - Sanity check failed on" << endl;
-					cerr << "    solution returned by local search algorithm." << endl;
-					r->print("", cerr);
-				}
+			if (not r->sanity_check(std::cerr)) {
+				std::cerr << MH_ERROR << std::endl;
+				std::cerr << "Sanity check failed on solution returned by local search algorithm." << std::endl;
+				r->print(std::cerr, "");
+			}
 			#endif
 			
 			#if defined (GRASP_VERBOSE)
-				if (lsc > rcc and lsc != numeric_limits<double>::max()) {
-					cout << setw(8) << " ";
-				
-					if (lsc > current_best_f) {
-						cout << setw(15) << "**L.S.";
-					}
-					else {
-						cout << setw(15) << "L.S.";
-					}
-				
-					cout << setw(18) << elapsed_seconds(bbegin, now())
-						 << setw(18) << lsc
-						 << setw(12) << it << endl;
+			if (lsc > rcc and lsc != numeric_limits<double>::max()) {
+				std::cout << setw(8) << " ";
+
+				if (lsc > current_best_f) {
+					std::cout << setw(15) << "**L.S.";
 				}
+				else {
+					std::cout << setw(15) << "L.S.";
+				}
+
+				std::cout
+					<< setw(18) << timing::elapsed_seconds(bbegin, timing::now())
+					<< setw(18) << lsc
+					<< setw(12) << it
+					<< std::endl;
+			}
 			#endif
 			
 			if (lsc > current_best_f) {
@@ -200,46 +212,47 @@ bool grasp<G>::execute_algorithm(problem<G> *best, double& current_best_f) {
 				best->copy(r);
 			}
 		}
-		catch (const infeasible_exception& e) {
-			//cerr << "bool grasp<G>::execute_algorithm: caught infeasible solution exception in iteration " << it << endl;
-			//cerr << e.what() << endl;
-			
-			end = now();
-			construct_time += elapsed_seconds(begin, end);
+		catch (const structures::infeasible_exception& e) {
+			end = timing::now();
+			construct_time += timing::elapsed_seconds(begin, end);
 			
 			#if defined (GRASP_VERBOSE)
-				cout << setw(8)  << "R.C."
-					 << setw(15) << " "
-					 << setw(18) << elapsed_seconds(bbegin, now())
-					 << setw(18) << -1
-					 << setw(12) << it << endl;
-				
-				cout << setw(8)  << " "
-					 << setw(15) << "L.S."
-					 << setw(18) << elapsed_seconds(bbegin, now())
-					 << setw(18) << -1
-					 << setw(12) << it << endl;
+			std::cout
+				<< setw(8)  << "R.C."
+				<< setw(15) << " "
+				<< setw(18) << timing::elapsed_seconds(bbegin, timing::now())
+				<< setw(18) << -1
+				<< setw(12) << it
+				<< std::endl;
+
+			std::cout
+				<< setw(8)  << " "
+				<< setw(15) << "L.S."
+				<< setw(18) << timing::elapsed_seconds(bbegin, timing::now())
+				<< setw(18) << -1
+				<< setw(12) << it
+				<< std::endl;
 			#endif
 		}
 		
 		delete r;
 	}
-	bend = now();
-	total_time = elapsed_seconds(bbegin, bend);
+	bend = timing::now();
+	total_time = timing::elapsed_seconds(bbegin, bend);
 	
 	return true;
 }
 
 template<class G>
 void grasp<G>::print_performance() const {
-	cout << "GRASP metaheuristic performance (for a total of " << MAX_ITER_GRASP << " iterations):" << endl;
-	cout << "    Total execution time:      " << total_time << " s" << endl;
-	cout << "    Average iteration time:    " << total_time/MAX_ITER_GRASP << " s" << endl;
-	cout << "    Total construction time:   " << construct_time << " s" << endl;
-	cout << "    Average construction time: " << construct_time/MAX_ITER_GRASP << " s" << endl;
-	cout << "    Total local search time:	" << local_search_time << " s" << endl;
-	cout << "    Average local search time:	" << local_search_time/MAX_ITER_GRASP << " s" << endl;
-	cout << endl;
+	std::cout << "GRASP metaheuristic performance (for a total of " << MAX_ITER_GRASP << " iterations):" << std::endl;
+	std::cout << "    Total execution time:      " << total_time << " s" << std::endl;
+	std::cout << "    Average iteration time:    " << total_time/MAX_ITER_GRASP << " s" << std::endl;
+	std::cout << "    Total construction time:   " << construct_time << " s" << std::endl;
+	std::cout << "    Average construction time: " << construct_time/MAX_ITER_GRASP << " s" << std::endl;
+	std::cout << "    Total local search time:	" << local_search_time << " s" << std::endl;
+	std::cout << "    Average local search time:	" << local_search_time/MAX_ITER_GRASP << " s" << std::endl;
+	std::cout << std::endl;
 }
 
 } // -- namespace algorithms

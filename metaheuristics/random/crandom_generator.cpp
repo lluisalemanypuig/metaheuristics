@@ -21,7 +21,12 @@
  * 
  *********************************************************************/
 
+#pragma once
+
 #include <metaheuristics/random/random_generator.hpp>
+
+// C++ includes
+#include <cassert>
 
 namespace metaheuristics {
 namespace random {
@@ -46,7 +51,7 @@ void crandom_generator<G,cT>::init_uniform(cT a, cT b) {
 		delete U;
 		U = nullptr;
 	}
-	U = new uniform_real_distribution<cT>(a, b);
+	U = new std::uniform_real_distribution<cT>(a, b);
 }
 
 template<class G, typename cT>

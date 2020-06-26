@@ -25,9 +25,8 @@
 
 // C++ includes
 #include <fstream>
-using namespace std;
 
-// Custom includes
+// metaheursitics includes
 #include <metaheuristics/structures/chromosome.hpp>
 
 namespace metaheuristics {
@@ -112,22 +111,16 @@ class allocator_individual {
  * (see @ref c) and its value of fitness (see @ref fitness).
  */
 class individual {
-	private:
-		/// The chromosome of the individual.
-		chromosome c;
-		/// The fitness of the individual.
-		double fitness;
-	
 	public:
 		/// Default constructor.
-		individual();
+		individual() = default;
 		/**
 		 * @brief Constructor with number of genes.
 		 * @param n Number of genes of chromosome @ref c.
 		 */
 		individual(size_t n);
 		/// Destructor.
-		~individual();
+		~individual() = default;
 		
 		// MEMORY HANDLING
 		
@@ -151,7 +144,7 @@ class individual {
 		
 		/// Operator <<.
 		inline friend
-		ostream& operator<< (ostream& os, const individual& i) {
+		std::ostream& operator<< (std::ostream& os, const individual& i) {
 			os << "fitness= " << i.fitness << ", chromosome= " << i.c;
 			return os;
 		}
@@ -196,6 +189,12 @@ class individual {
 		 * @returns Returns the i-th value of @ref chromosome::genes.
 		 */
 		double get_gene(size_t i) const;
+
+	private:
+		/// The chromosome of the individual.
+		chromosome c;
+		/// The fitness of the individual.
+		double fitness = 0.0;
 };
 
 } // -- namespace structures

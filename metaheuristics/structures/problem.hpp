@@ -24,9 +24,7 @@
 #pragma once
 
 // C++ includes
-#include <iostream>
 #include <fstream>
-using namespace std;
 
 // metaheuristics includes
 #include <metaheuristics/structures/infeasible_exception.hpp>
@@ -36,8 +34,6 @@ using namespace std;
 
 namespace metaheuristics {
 namespace structures {
-
-using namespace random;
 
 /**
  * @brief Definition of the problem to be solved.
@@ -53,21 +49,14 @@ using namespace random;
  * @ref random_construct(drandom_generator<G,size_t>*, double).
  */
 template<
-	class G = default_random_engine
+	class G = std::default_random_engine
 >
 class problem {
-	protected:
-		/**
-		 * @brief Number of neighbours explored in the execution of
-		 * the procedure.
-		 */
-		size_t n_neighbours_explored;
-	
 	public:
 		/// Default constructor.
-		problem();
+		problem() = default;
 		/// Destructor.
-		virtual ~problem();
+		virtual ~problem() = default;
 		
 		// Constructing a solution
 		
@@ -87,7 +76,7 @@ class problem {
 		 * 
 		 * @returns Returns the evaluation of the solution.
 		 */
-		virtual double greedy_construct() throw(infeasible_exception) = 0;
+		virtual double greedy_construct() noexcept(false) = 0;
 		
 		/**
 		 * @brief Find the best neighbour of this problem.
@@ -105,7 +94,10 @@ class problem {
 		 * @post Sets @ref n_neighbours_explored to the amounts of
 		 * neighbours explored in this procedure.
 		 */
-		virtual void best_neighbour(pair<problem*, double>& best_neighbour, const local_search_policy& p = Best_Improvement) = 0;
+		virtual void best_neighbour(
+			std::pair<problem*, double>& best_neighbour,
+			const local_search_policy& p = Best_Improvement
+		) = 0;
 		
 		/**
 		 * @brief Constructs a randomized solution using the restricted
@@ -123,13 +115,17 @@ class problem {
 		 * @param[in] alpha Parameter used to build the Restricted Candidate List.
 		 * @returns Returns the evaluation of the solution.
 		 */
-		virtual double random_construct(drandom_generator<G,size_t> *rng, double alpha) throw(infeasible_exception) = 0;
+		virtual double random_construct(
+			random::drandom_generator<G,size_t> *rng,
+			double alpha
+		)
+		noexcept(false) = 0;
 		
 		/**
 		 * @brief Constructs a solution from a given chromosome.
 		 * @returns Returns the evaluation of the solution (its cost).
 		 */
-		virtual double decode(const chromosome& c) throw(infeasible_exception) = 0;
+		virtual double decode(const chromosome& c) noexcept(false) = 0;
 		
 		// Evaluating a solution
 		
@@ -146,14 +142,16 @@ class problem {
 		 * 
 		 * Basically, enough information so as to understand the solution properly.
 		 */
-		virtual void print(const string& tab = "", ostream& os = cout) const = 0;
+		virtual void print(std::ostream& os, const std::string& tab = "")
+		const = 0;
 		
 		/**
 		 * @brief Checks all constraints regarding solution feasibility.
 		 * @returns Returns true if the solution is feasible. Returns false
 		 * if otherwise.
 		 */
-		virtual bool sanity_check(const string& tab = "", ostream& os = cerr) const = 0;
+		virtual bool sanity_check(std::ostream& os, const std::string& tab = "")
+		const = 0;
 		
 		// Memory handling
 		
@@ -198,6 +196,13 @@ class problem {
 		 * This function returns the value of @ref n_neighbours_explored.
 		 */
 		size_t get_n_neighbours_explored() const;
+
+	protected:
+		/**
+		 * @brief Number of neighbours explored in the execution of
+		 * the procedure.
+		 */
+		size_t n_neighbours_explored = 0;
 };
 
 } // -- namespace structures

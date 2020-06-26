@@ -26,7 +26,6 @@
 namespace metaheuristics {
 namespace structures {
 
-
 /**
  * @brief Local Search Policy.
  * 

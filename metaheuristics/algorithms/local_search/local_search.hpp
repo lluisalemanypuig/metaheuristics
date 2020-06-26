@@ -24,22 +24,15 @@
 #pragma once
 
 // C++ includes
-#include <iostream>
-#include <iomanip>
 #include <random>
-using namespace std;
 
-// Custom includes
+// metaheursitics includes
 #include <metaheuristics/algorithms/metaheuristic.hpp>
 #include <metaheuristics/structures/policies.hpp>
 #include <metaheuristics/structures/problem.hpp>
-#include <metaheuristics/misc/time.hpp>
 
 namespace metaheuristics {
 namespace algorithms {
-
-using namespace structures;
-using namespace timing;
 
 /**
  * @brief Local Search heuristic algorithm.
@@ -89,25 +82,12 @@ using namespace timing;
  * @param G The type of the engine of the random generator (see metaheuristics::drng).
  */
 template<
-	class G = default_random_engine
+	class G = std::default_random_engine
 >
 class local_search : public metaheuristic<G> {
-	private:
-		/// Total execution time of the algorithm.
-		double total_time;
-		/// Total execution time to explore the different neighbourhoods.
-		double neighbourhood_time;
-		
-		/// Maximum number of iterations.
-		size_t MAX_ITER;
-		/// Current iteration of the algorithm.
-		size_t ITERATION;
-		/// Policy of the local search.
-		local_search_policy LSP;
-				
 	public:
 		/// Default constructor.
-		local_search();
+		local_search() = default;
 		/// 
 		/**
 		 * @brief Constructor with maximum number of iterations and search policy.
@@ -115,9 +95,9 @@ class local_search : public metaheuristic<G> {
 		 * @param lsp Local Search policy (see
 		 * @ref metaheuristics::structures::local_search_policy).
 		 */
-		local_search(size_t m, const local_search_policy& lsp);
+		local_search(size_t m, const structures::local_search_policy& lsp);
 		/// Destructor
-		~local_search();
+		~local_search() = default;
 		
 		// SETTERS
 		
@@ -126,7 +106,7 @@ class local_search : public metaheuristic<G> {
 		 * 
 		 * Sets the value of @ref LSP to @e lsp.
 		 */
-		void set_local_search_policy(const local_search_policy& lsp);
+		void set_local_search_policy(const structures::local_search_policy& lsp);
 		/**
 		 * @brief Sets the maximum number of iterations of the algorithm.
 		 * 
@@ -166,7 +146,7 @@ class local_search : public metaheuristic<G> {
 		 * @brief Returns the policy of the search.
 		 * @returns Returns the value of @ref LSP.
 		 */
-		local_search_policy get_local_search_policy() const;
+		structures::local_search_policy get_local_search_policy() const;
 		/**
 		 * @brief Returns the number of iterations.
 		 * @returns Returns the value of @ref MAX_ITER.
@@ -184,7 +164,7 @@ class local_search : public metaheuristic<G> {
 		 * @param[out] c The cost of the solution stored at @e p at the
 		 * end of the execution of the algorithm.
 		 */
-		bool execute_algorithm(problem<G> *p, double& c);
+		bool execute_algorithm(structures::problem<G> *p, double& c);
 		
 		/**
 		 * @brief Prints a summary of the performance of the algorithm.
@@ -200,6 +180,19 @@ class local_search : public metaheuristic<G> {
 		\endverbatim
 		 */
 		void print_performance() const;
+
+	private:
+		/// Total execution time of the algorithm.
+		double total_time = 0;
+		/// Total execution time to explore the different neighbourhoods.
+		double neighbourhood_time = 0;
+
+		/// Maximum number of iterations.
+		size_t MAX_ITER = -1;
+		/// Current iteration of the algorithm.
+		size_t ITERATION = 1;
+		/// Policy of the local search.
+		structures::local_search_policy LSP;
 };
 
 } // -- namespace algorithms

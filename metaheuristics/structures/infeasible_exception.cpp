@@ -23,6 +23,9 @@
 
 #include <metaheuristics/structures/infeasible_exception.hpp>
 
+// C++ includes
+using namespace std;
+
 namespace metaheuristics {
 namespace structures {
 	

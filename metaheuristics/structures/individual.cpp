@@ -26,16 +26,10 @@
 namespace metaheuristics {
 namespace structures {
 
-individual::individual() {
-	fitness = 0.0;
-}
-
 individual::individual(size_t n) {
 	fitness = 0.0;
 	c.set_size(n);
 }
-
-individual::~individual() { }
 
 // MEMORY HANDLING
 		

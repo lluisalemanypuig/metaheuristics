@@ -23,13 +23,15 @@
 
 #include <metaheuristics/structures/chromosome.hpp>
 
+// C includes
+#include <stdlib.h>
+#include <string.h>
+
+// C++ includes
+#include <cassert>
+
 namespace metaheuristics {
 namespace structures {
-	
-chromosome::chromosome() {
-	n_genes = 0;
-	genes = nullptr;
-}
 
 chromosome::~chromosome() {
 	clear();
@@ -40,7 +42,7 @@ chromosome::~chromosome() {
 void chromosome::init() {
 	assert(0 < n_genes);
 	
-	genes = (double *)malloc(n_genes*sizeof(double));
+	genes = static_cast<double *>(malloc(n_genes*sizeof(double)));
 }
 
 void chromosome::clear() {
@@ -57,11 +59,10 @@ chromosome& chromosome::operator= (const chromosome& c) {
 	if (n_genes != c.n_genes) {
 		clear();
 		n_genes = c.n_genes;
-		genes = (double *)malloc(n_genes*sizeof(double));
+		genes = static_cast<double *>(malloc(n_genes*sizeof(double)));
 	}
 	
 	memcpy(genes, c.genes, n_genes*sizeof(double));
-	
 	return *this;
 }
 

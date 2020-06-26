@@ -24,31 +24,16 @@
 #pragma once
 
 // C++ includes
-#include <iostream>
-#include <utility>
-#include <iomanip>
 #include <vector>
 #include <random>
-using namespace std;
-
-// C++ includes
 #include <limits>
-using namespace std;
 
-// Custom includes
+// metaheursitics includes
 #include <metaheuristics/algorithms/genetic_algorithms/genetic_algorithm.hpp>
-#include <metaheuristics/random/random_generator.hpp>
-#include <metaheuristics/structures/chromosome.hpp>
-#include <metaheuristics/structures/individual.hpp>
 #include <metaheuristics/structures/problem.hpp>
-#include <metaheuristics/misc/time.hpp>
 
 namespace metaheuristics {
 namespace algorithms {
-
-using namespace structures;
-using namespace random;
-using namespace timing;
 
 /**
  * @brief Implementation of the RKGA.
@@ -93,31 +78,12 @@ using namespace timing;
  * @param G The type of the engine of the random generator (see metaheuristics::drng).
  */
 template<
-	class G = default_random_engine
+	class G = std::default_random_engine
 >
 class rkga : public genetic_algorithm<G> {
-	private:
-		/**
-		 * @brief Implementation of the parents choice.
-		 * 
-		 * Choose two individuals at random from @ref genetic_algorithm::population.
-		 * @e p1 and @e p2 are two indices within the range [0, @ref genetic_algorithm::pop_size).
-		 */
-		void get_two_parents(size_t& p1, size_t& p2);
-		
-	protected:
-		
-		// Sanity check
-		/**
-		 * @brief Makes sure that the different populations sizes are correct.
-		 * 
-		 * Checks that @ref genetic_algorithm::N_MUTANT < @ref genetic_algorithm::pop_size. Basically, a sanity check.
-		 */
-		bool are_set_sizes_correct() const;
-		
 	public:
 		/// Default constructor
-		rkga();
+		rkga() = default;
 		/**
 		 * @brief Constructor with parameters.
 		 * @param p_size The total size of the population (see @ref genetic_algorithm::pop_size).
@@ -128,7 +94,7 @@ class rkga : public genetic_algorithm<G> {
 		 */
 		rkga(size_t p_size, size_t m_size, size_t n_gen, size_t chrom_size, double i_prob);
 		/// Destructor.
-		virtual ~rkga();
+		virtual ~rkga() = default;
 		
 		/**
 		 * @brief Sets the internal variables to its initial state.
@@ -148,7 +114,7 @@ class rkga : public genetic_algorithm<G> {
 		 * @param[out] c The cost of the solution stored at @e p at the
 		 * end of the execution of the algorithm.
 		 */
-		bool execute_algorithm(problem<G> *p, double& c);
+		bool execute_algorithm(structures::problem<G> *p, double& c);
 		
 		/**
 		 * @brief Prints the performance of the algorithm.
@@ -165,6 +131,25 @@ class rkga : public genetic_algorithm<G> {
 		\endverbatim
 		 */
 		void print_performance() const;
+
+	protected:
+
+		// Sanity check
+		/**
+		 * @brief Makes sure that the different populations sizes are correct.
+		 *
+		 * Checks that @ref genetic_algorithm::N_MUTANT < @ref genetic_algorithm::pop_size. Basically, a sanity check.
+		 */
+		bool are_set_sizes_correct() const;
+
+	private:
+		/**
+		 * @brief Implementation of the parents choice.
+		 *
+		 * Choose two individuals at random from @ref genetic_algorithm::population.
+		 * @e p1 and @e p2 are two indices within the range [0, @ref genetic_algorithm::pop_size).
+		 */
+		void get_two_parents(size_t& p1, size_t& p2);
 };
 
 } // -- namespace algorithms

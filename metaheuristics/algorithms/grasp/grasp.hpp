@@ -24,13 +24,9 @@
 #pragma once
 
 // C++ includes
-#include <iostream>
-#include <iomanip>
 #include <random>
-#include <limits>
-using namespace std;
 
-// Custom includes
+// metaheursitics includes
 #include <metaheuristics/algorithms/metaheuristic.hpp>
 #include <metaheuristics/algorithms/local_search/local_search.hpp>
 #include <metaheuristics/random/random_generator.hpp>
@@ -39,10 +35,6 @@ using namespace std;
 
 namespace metaheuristics {
 namespace algorithms {
-
-using namespace structures;
-using namespace random;
-using namespace timing;
 
 /**
  * @brief GRASP metaheuristic algorithm.
@@ -109,41 +101,20 @@ using namespace timing;
  * @param G The type of the engine of the random generator (see metaheuristics::drng).
  */
 template<
-	class G = default_random_engine
+	class G = std::default_random_engine
 >
 class grasp : public metaheuristic<G> {
-	private:
-		/// Discrete random number generator
-		drandom_generator<G,size_t> drng;
-		
-		/// Total execution time of the algorithm.
-		double total_time;
-		/// Total execution time spent in constructing the initial
-		/// randomised solution.
-		double construct_time;
-		/// Total execution time spent in the Local Search.
-		double local_search_time;
-		
-		/// Maximum number of iterations of the GRASP algorithm.
-		size_t MAX_ITER_GRASP;
-		/// Maximum number of iterations of the Local Search procedure.
-		size_t MAX_ITER_LOCAL;
-		/// Parameter used to construct the Restricted Candidate List.
-		double alpha;
-		/// Policy for the Local Search procedure.
-		local_search_policy LSP;
-		
 	public:
 		/// Default constructor.
-		grasp();
+		grasp() = default;
 		/// Constructor with several parameters.
 		grasp
 		(
 			size_t m_GRASP, size_t m_LOCAL, double a,
-			const local_search_policy& lsp
+			const structures::local_search_policy& lsp
 		);
 		/// Destructor.
-		~grasp();
+		~grasp() = default;
 		
 		// SETTERS
 		
@@ -152,7 +123,7 @@ class grasp : public metaheuristic<G> {
 		 * 
 		 * Sets the value of @ref LSP to @e lsp.
 		 */
-		void set_local_search_policy(const local_search_policy& lsp); 
+		void set_local_search_policy(const structures::local_search_policy& lsp);
 		/**
 		 * @brief Sets the maximum number of iterations of the GRASP algorithm.
 		 * 
@@ -201,7 +172,7 @@ class grasp : public metaheuristic<G> {
 		 * @brief Returns the policy of the search.
 		 * @returns Returns the value of @ref LSP.
 		 */
-		local_search_policy get_local_search_policy() const;
+		structures::local_search_policy get_local_search_policy() const;
 		/**
 		 * @brief Returns the maximum number of iterations of the GRASP algorithm.
 		 * @returns Returns the value of @ref MAX_ITER_GRASP.
@@ -224,7 +195,7 @@ class grasp : public metaheuristic<G> {
 		 * @param[out] c The cost of the solution stored at @e p at the
 		 * end of the execution of the algorithm.
 		 */
-		bool execute_algorithm(problem<G> *p, double& c);
+		bool execute_algorithm(structures::problem<G> *p, double& c);
 		
 		/**
 		 * @brief Prints a summary of the performance of the algorithm.
@@ -241,6 +212,27 @@ class grasp : public metaheuristic<G> {
 		\endverbatim
 		 */
 		void print_performance() const;
+
+	private:
+		/// Discrete random number generator
+		random::drandom_generator<G,size_t> drng;
+
+		/// Total execution time of the algorithm.
+		double total_time = 0.0;
+		/// Total execution time spent in constructing the initial
+		/// randomised solution.
+		double construct_time = 0.0;
+		/// Total execution time spent in the Local Search.
+		double local_search_time = 0.0;
+
+		/// Maximum number of iterations of the GRASP algorithm.
+		size_t MAX_ITER_GRASP = -1;
+		/// Maximum number of iterations of the Local Search procedure.
+		size_t MAX_ITER_LOCAL = -1;
+		/// Parameter used to construct the Restricted Candidate List.
+		double alpha = 1.0;
+		/// Policy for the Local Search procedure.
+		structures::local_search_policy LSP;
 };
 
 } // -- namespace algorithms
