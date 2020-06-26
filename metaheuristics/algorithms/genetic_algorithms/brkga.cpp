@@ -1,6 +1,8 @@
 /*********************************************************************
+ *
  * Collection of heuristic and metaheuristic algorithms
- * Copyright (C) 2018  Lluís Alemany Puig
+ *
+ * Copyright (C) 2018-2020  Lluís Alemany Puig
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
